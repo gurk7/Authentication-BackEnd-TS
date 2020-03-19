@@ -3,15 +3,15 @@ import { IUserRetriever } from "../abstractions/IUserRetriever";
 import jwt = require("jsonwebtoken");
 
 export class LoginHandler implements ILoginHandler {
-  userRetriever: IUserRetriever;
-  tokenSecretOrPublicKey: string;
+  private userRetriever: IUserRetriever;
+  private tokenSecretOrPublicKey: string;
 
   constructor(userRetriever: IUserRetriever, tokenSecretOrPublicKey: string) {
     this.userRetriever = userRetriever;
     this.tokenSecretOrPublicKey = tokenSecretOrPublicKey;
   }
 
-  async HandleLogin(req: any, res: any) {
+  public async HandleLogin(req: any, res: any) {
     let username: string = req.body.username;
     let password: string = req.body.password;
 
