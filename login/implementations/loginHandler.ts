@@ -1,14 +1,14 @@
 import { ILoginHandler } from "../abstractions/ILoginHandler";
 import { IUserRetriever } from "../abstractions/IUserRetriever";
-import jwt = require("jsonwebtoken");
+import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
 
 export class LoginHandler implements ILoginHandler {
   private userRetriever: IUserRetriever;
-  private tokenSecretOrPublicKey: string;
+  private tokenRetriever: ITokenRetriever;
 
-  constructor(userRetriever: IUserRetriever, tokenSecretOrPublicKey: string) {
+  constructor(userRetriever: IUserRetriever, tokenRetriever: ITokenRetriever) {
     this.userRetriever = userRetriever;
-    this.tokenSecretOrPublicKey = tokenSecretOrPublicKey;
+    this.tokenRetriever = tokenRetriever;
   }
 
   public async HandleLogin(req: any, res: any) {
@@ -18,20 +18,17 @@ export class LoginHandler implements ILoginHandler {
     let user = await this.userRetriever.RetrieveUser(username, password);
     if (user) {
       console.log(`retrieved user ${user.username}`);
-      let token = jwt.sign(
-        { username: username },
-        this.tokenSecretOrPublicKey,
-        {
-          expiresIn: "24h" // expires in 24shours
-        }
-      );
-      // return the JWT token for the future API calls
+
+      let token = this.tokenRetriever.RetrieveToken(user);
+      console.log(`retrieved for user ${user.username} the token: ${token} `);
+
       res.json({
         success: true,
         message: "Authentication successful!",
         token: token
       });
     } else {
+      console.log(`can't retrieve token for user ${username}`);
       res.json({
         success: false,
         message: "Authenctication Failed! username or password is incorrect"
