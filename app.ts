@@ -7,6 +7,12 @@ import { IUserRetriever } from "./login/abstractions/IUserRetriever";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
 import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
 import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
+import { JwtTokenExtractor } from "./tokens/implementations/jwtTokenExtractor";
+import { ITokenExtractor } from "./tokens/abstractions/ITokenExtractor";
+import { ITokenValidator } from "./tokens/abstractions/ITokenValidator";
+import { JwtTokenValidator } from "./tokens/implementations/jwtTokenValidator";
+import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
+import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
 
 // Create a new express application instance
 const app: express.Application = express();
@@ -38,6 +44,19 @@ let loginHandler: ILoginHandler = new LoginHandler(
 
 app.post("/login", (req, res) => {
   loginHandler.HandleLogin(req, res);
+});
+
+let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
+let jwtTokenValidator: ITokenValidator = new JwtTokenValidator(
+  tokenSecretOrPublicKey,
+  jwtTokenExtractor
+);
+let mockMissionCreator: IMissionCreator = new MockMissionCreator();
+
+app.post("/mission", (req, res, next) => {
+  jwtTokenValidator.ValidateToken(req, res, () => {
+    mockMissionCreator.CreateMission(req, res);
+  });
 });
 
 const port: number = 3000;
