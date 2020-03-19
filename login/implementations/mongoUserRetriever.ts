@@ -2,7 +2,7 @@ import { IUserRetriever } from "../abstractions/IUserRetriever";
 import { connect } from "mongodb";
 import { User } from "../../entities/user";
 
-class MongoUserRetriever implements IUserRetriever {
+export class MongoUserRetriever implements IUserRetriever {
   mongoUrl: string;
 
   constructor(mongoUrl: string) {
