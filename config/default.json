@@ -12,6 +12,6 @@
     "defaultRoute": "/"
   },
   "ports": {
-    "listeningPort": 5000
+    "listeningPort": 3000
   }
 }
