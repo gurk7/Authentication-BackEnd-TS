@@ -1,5 +1,5 @@
 import { IUserRetriever } from "../abstractions/IUserRetriever";
-import { connect } from "mongodb";
+import { connect, MongoClient } from "mongodb";
 import { User } from "../../entities/user";
 
 export class MongoUserRetriever implements IUserRetriever {
@@ -10,7 +10,7 @@ export class MongoUserRetriever implements IUserRetriever {
   }
 
   async RetrieveUser(username: string, password: string) {
-    const client = await connect(this.mongoUrl);
+    const client = await connect(this.mongoUrl, { useUnifiedTopology: true });
     const db = client.db("authentication");
     const collection = db.collection("users");
 
