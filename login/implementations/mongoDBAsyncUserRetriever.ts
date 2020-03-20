@@ -1,9 +1,9 @@
-import { IUserRetriever } from "../abstractions/IUserRetriever";
-import { connect, MongoClient } from "mongodb";
+import { connect } from "mongodb";
 import { User } from "../../entities/user";
+import { IAsyncUserRetriever } from "../abstractions/IAsyncUserRetriever";
 
-export class MongoUserRetriever implements IUserRetriever {
-  mongoUrl: string;
+export class MongoDBAsyncUserRetriever implements IAsyncUserRetriever {
+  private mongoUrl: string;
 
   constructor(mongoUrl: string) {
     this.mongoUrl = mongoUrl;
