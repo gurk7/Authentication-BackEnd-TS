@@ -1,3 +1,3 @@
 export interface ITokenValidator {
-  ValidateToken(req: any, res: any, next: any): any;
+  ValidateToken(req: any, res: any, next: () => void): any;
 }

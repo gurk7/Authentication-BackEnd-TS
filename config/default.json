@@ -1,0 +1,14 @@
+{
+  "tokens": {
+    "tokenSecretOrPublicKey": "worldisfullofdevelopers",
+    "tokenExpirationTime": "24h"
+  },
+  "routes": {
+    "loginRoute": "/login",
+    "missionRoute": "/mission",
+    "defaultRoute": "/"
+  },
+  "ports": {
+    "listeningPort": 3000
+  }
+}
