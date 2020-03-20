@@ -2,6 +2,14 @@ import express = require("express");
 import bodyParser = require("body-parser");
 const config = require("config");
 
+//dotenv can be used if we want to have one environment file.
+// const dotenv = require("dotenv");
+// dotenv.config();
+//if we want to have many environments custom-env is the way
+require("custom-env").env("dev", "./config/environments");
+let mongoConnectionString = process.env.CONNECTION_STRING as string;
+console.log(`yaya ${mongoConnectionString}`);
+
 import { LoginHandler } from "./login/implementations/loginHandler";
 import { MongoUserRetriever } from "./login/implementations/mongoUserRetriever";
 import { IUserRetriever } from "./login/abstractions/IUserRetriever";
@@ -16,11 +24,9 @@ import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
 
 const routesConfig = config.get("routes");
-const mongoConfig = config.get("mongo");
 const tokensConfig = config.get("tokens");
 const portsConfig = config.get("ports");
 
-let mongoConnectionString = mongoConfig.get("mongoConnectionString");
 let tokenSecretOrPublicKey = tokensConfig.get("tokenSecretOrPublicKey");
 let tokenExpirationTime = tokensConfig.get("tokenExpirationTime");
 

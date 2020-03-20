@@ -1,7 +1,4 @@
 {
-  "mongo": {
-    "mongoConnectionString": "mongodb://localhost:27017/"
-  },
   "tokens": {
     "tokenSecretOrPublicKey": "worldisfullofdevelopers",
     "tokenExpirationTime": "24h"
