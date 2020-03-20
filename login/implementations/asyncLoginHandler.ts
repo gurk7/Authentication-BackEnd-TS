@@ -3,7 +3,7 @@ import { IUserRetriever } from "../abstractions/IUserRetriever";
 import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
 import { User } from "../../entities/user";
 
-export class LoginHandler implements ILoginHandler<Promise<void>> {
+export class AsyncLoginHandler implements ILoginHandler<Promise<void>> {
   private userRetriever: IUserRetriever<Promise<User | null>>;
   private tokenRetriever: ITokenRetriever;
 
