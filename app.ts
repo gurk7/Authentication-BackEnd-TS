@@ -67,7 +67,7 @@ let listeningPort = portsConfig.listeningPort;
 
 //#region initialize objects
 
-//#region logIn
+//#region log in
 
 let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
@@ -83,7 +83,7 @@ let loginHandler: ILoginHandler = new LoginHandler(
 
 //#endregion
 
-//#region tokenValidator
+//#region token validator
 
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let jwtTokenValidator: ITokenValidator = new JwtTokenValidator(
