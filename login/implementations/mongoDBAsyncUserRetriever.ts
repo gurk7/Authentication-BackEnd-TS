@@ -1,8 +1,8 @@
 import { connect } from "mongodb";
 import { User } from "../../entities/user";
-import { IDBAsyncUserRetriever } from "../abstractions/IDBAsyncUserRetriever";
+import { IAsyncUserRetriever } from "../abstractions/IAsyncUserRetriever";
 
-export class MongoDBAsyncUserRetriever implements IDBAsyncUserRetriever {
+export class MongoDBAsyncUserRetriever implements IAsyncUserRetriever {
   private mongoUrl: string;
 
   constructor(mongoUrl: string) {

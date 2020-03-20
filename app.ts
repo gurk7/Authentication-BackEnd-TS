@@ -9,7 +9,7 @@ import config = require("config");
 //#region inner imports
 
 import { AsyncLoginHandler } from "./login/implementations/asyncLoginHandler";
-import { IDBAsyncUserRetriever } from "./login/abstractions/IDBAsyncUserRetriever";
+import { IAsyncUserRetriever } from "./login/abstractions/IAsyncUserRetriever";
 import { MongoDBAsyncUserRetriever } from "./login/implementations/mongoDBAsyncUserRetriever";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
 import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
@@ -73,11 +73,11 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
-let mongoUserRetriever: IDBAsyncUserRetriever = new MongoDBAsyncUserRetriever(
+let mongoDBAsyncUserRetriever: IAsyncUserRetriever = new MongoDBAsyncUserRetriever(
   mongoConnectionString
 );
 let loginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
-  mongoUserRetriever,
+  mongoDBAsyncUserRetriever,
   jwtTokenRetriever
 );
 

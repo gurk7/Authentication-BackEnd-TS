@@ -4,5 +4,5 @@ import { User } from "../../entities/user";
 //when retrieving User from a DB we will must use Promise.
 //(using async await also returns a Promise under the surface)
 
-export interface IDBAsyncUserRetriever
+export interface IAsyncUserRetriever
   extends IUserRetriever<Promise<User | null>> {}
