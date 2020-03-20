@@ -1,9 +1,9 @@
 import { connect } from "mongodb";
 import { User } from "../../entities/user";
-import { IDBUserRetriever } from "../abstractions/IDBUserRetriever";
+import { IDBAsyncUserRetriever } from "../abstractions/IDBAsyncUserRetriever";
 
-export class MongoDBUserRetriever implements IDBUserRetriever {
-  mongoUrl: string;
+export class MongoDBAsyncUserRetriever implements IDBAsyncUserRetriever {
+  private mongoUrl: string;
 
   constructor(mongoUrl: string) {
     this.mongoUrl = mongoUrl;

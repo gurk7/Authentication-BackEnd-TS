@@ -9,7 +9,8 @@ import config = require("config");
 //#region inner imports
 
 import { AsyncLoginHandler } from "./login/implementations/asyncLoginHandler";
-import { MongoDBUserRetriever } from "./login/implementations/mongoDBUserRetriever";
+import { IDBAsyncUserRetriever } from "./login/abstractions/IDBAsyncUserRetriever";
+import { MongoDBAsyncUserRetriever } from "./login/implementations/mongoDBAsyncUserRetriever";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
 import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
 import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
@@ -22,7 +23,6 @@ import { MockMissionCreator } from "./missions/implementations/mockMissionCreato
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { IDBUserRetriever } from "./login/abstractions/IDBUserRetriever";
 
 //#endregion
 
@@ -73,7 +73,7 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
-let mongoUserRetriever: IDBUserRetriever = new MongoDBUserRetriever(
+let mongoUserRetriever: IDBAsyncUserRetriever = new MongoDBAsyncUserRetriever(
   mongoConnectionString
 );
 let loginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
