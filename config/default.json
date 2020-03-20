@@ -4,7 +4,8 @@
     "tokenExpirationTime": "24h"
   },
   "routes": {
-    "loginRoute": "/login",
+    "loginFromCacheRoute": "/login/cache",
+    "loginFromMongoDBRoute": "/login/mongo",
     "missionRoute": "/mission",
     "defaultRoute": "/"
   },

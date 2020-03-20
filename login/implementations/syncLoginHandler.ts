@@ -1,21 +1,25 @@
 import { ILoginHandler } from "../abstractions/ILoginHandler";
-import { IUserRetriever } from "../abstractions/IUserRetriever";
 import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
+import { ISyncUserRetriever } from "../abstractions/ISyncUserRetriever";
 
-export class LoginHandler implements ILoginHandler {
-  private userRetriever: IUserRetriever;
+export class SyncLoginHandler implements ILoginHandler<void> {
+  private syncUserRetriever: ISyncUserRetriever;
   private tokenRetriever: ITokenRetriever;
 
-  constructor(userRetriever: IUserRetriever, tokenRetriever: ITokenRetriever) {
-    this.userRetriever = userRetriever;
+  constructor(
+    userRetriever: ISyncUserRetriever,
+    tokenRetriever: ITokenRetriever
+  ) {
+    this.syncUserRetriever = userRetriever;
     this.tokenRetriever = tokenRetriever;
   }
 
-  public async HandleLogin(req: any, res: any) {
+  public HandleLogin(req: any, res: any) {
     let username: string = req.body.username;
     let password: string = req.body.password;
 
-    let user = await this.userRetriever.RetrieveUser(username, password);
+    let user = this.syncUserRetriever.RetrieveUser(username, password);
+
     if (user) {
       console.log(`retrieved user ${user.username}`);
 

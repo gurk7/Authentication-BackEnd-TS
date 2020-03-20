@@ -1,10 +1,17 @@
 export class RoutesConfiguration {
-  loginRoute: string;
+  loginFromMongoDBRoute: string;
+  loginFromCacheRoute: string;
   missionRoute: string;
   defaultRoute: string;
 
-  constructor(loginRoute: string, missionRoute: string, defaultRoute: string) {
-    this.loginRoute = loginRoute;
+  constructor(
+    loginFromMongoDBRoute: string,
+    loginFromCacheRoute: string,
+    missionRoute: string,
+    defaultRoute: string
+  ) {
+    this.loginFromMongoDBRoute = loginFromMongoDBRoute;
+    this.loginFromCacheRoute = loginFromCacheRoute;
     this.missionRoute = missionRoute;
     this.defaultRoute = defaultRoute;
   }
