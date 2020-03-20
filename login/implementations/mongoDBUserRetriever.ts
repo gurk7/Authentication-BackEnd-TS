@@ -1,8 +1,8 @@
-import { IUserRetriever } from "../abstractions/IUserRetriever";
-import { connect, MongoClient } from "mongodb";
+import { connect } from "mongodb";
 import { User } from "../../entities/user";
+import { IDBUserRetriever } from "../abstractions/IDBUserRetriever";
 
-export class MongoUserRetriever implements IUserRetriever {
+export class MongoDBUserRetriever implements IDBUserRetriever {
   mongoUrl: string;
 
   constructor(mongoUrl: string) {

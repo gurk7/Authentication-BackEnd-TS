@@ -1,12 +1,16 @@
 import { ILoginHandler } from "../abstractions/ILoginHandler";
 import { IUserRetriever } from "../abstractions/IUserRetriever";
 import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
+import { User } from "../../entities/user";
 
-export class LoginHandler implements ILoginHandler {
-  private userRetriever: IUserRetriever;
+export class LoginHandler implements ILoginHandler<Promise<void>> {
+  private userRetriever: IUserRetriever<Promise<User | null>>;
   private tokenRetriever: ITokenRetriever;
 
-  constructor(userRetriever: IUserRetriever, tokenRetriever: ITokenRetriever) {
+  constructor(
+    userRetriever: IUserRetriever<Promise<User | null>>,
+    tokenRetriever: ITokenRetriever
+  ) {
     this.userRetriever = userRetriever;
     this.tokenRetriever = tokenRetriever;
   }
