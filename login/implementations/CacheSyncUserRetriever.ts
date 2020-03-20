@@ -1,7 +1,7 @@
 import { User } from "../../entities/user";
 import { ISyncUserRetriever } from "../abstractions/ISyncUserRetriever";
 
-export class MongoDBAsyncUserRetriever implements ISyncUserRetriever {
+export class CacheSyncUserRetriever implements ISyncUserRetriever {
   private allowedUser: User;
 
   constructor(allowedUser: User) {

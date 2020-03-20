@@ -23,6 +23,10 @@ import { MockMissionCreator } from "./missions/implementations/mockMissionCreato
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
+import { ISyncUserRetriever } from "./login/abstractions/ISyncUserRetriever";
+import { CacheSyncUserRetriever } from "./login/implementations/CacheSyncUserRetriever";
+import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
+import { User } from "./entities/user";
 
 //#endregion
 
@@ -52,7 +56,8 @@ let tokenExpirationTime = tokensConfig.tokenExpirationTime;
 
 //#region routes
 
-let loginRoute = routesConfig.loginRoute;
+let loginFromMongoDBRoute = routesConfig.loginFromMongoDBRoute;
+let loginFromCacheRoute = routesConfig.loginFromCacheRoute;
 let missionRoute = routesConfig.missionRoute;
 
 //#endregion
@@ -73,13 +78,26 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
+//#region async
 let mongoDBAsyncUserRetriever: IAsyncUserRetriever = new MongoDBAsyncUserRetriever(
   mongoConnectionString
 );
-let loginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
+let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
   mongoDBAsyncUserRetriever,
   jwtTokenRetriever
 );
+//#endregion
+
+//#region sync
+let allowedUser: User = new User("china", "china");
+let cacheSyncUserRetriever: ISyncUserRetriever = new CacheSyncUserRetriever(
+  allowedUser
+);
+let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
+  cacheSyncUserRetriever,
+  jwtTokenRetriever
+);
+//#endregion
 
 //#endregion
 
@@ -112,8 +130,12 @@ app.use(
   bodyParser.json()
 );
 
-app.post(loginRoute, (req, res) => {
-  loginHandler.HandleLogin(req, res);
+app.post(loginFromMongoDBRoute, (req, res) => {
+  asyncLoginHandler.HandleLogin(req, res);
+});
+
+app.post(loginFromCacheRoute, (req, res) => {
+  syncLoginHandler.HandleLogin(req, res);
 });
 
 app.post(missionRoute, (req, res) => {

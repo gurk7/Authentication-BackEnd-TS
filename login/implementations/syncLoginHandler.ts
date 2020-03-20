@@ -2,7 +2,7 @@ import { ILoginHandler } from "../abstractions/ILoginHandler";
 import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
 import { ISyncUserRetriever } from "../abstractions/ISyncUserRetriever";
 
-export class syncLoginHandler implements ILoginHandler<void> {
+export class SyncLoginHandler implements ILoginHandler<void> {
   private syncUserRetriever: ISyncUserRetriever;
   private tokenRetriever: ITokenRetriever;
 
