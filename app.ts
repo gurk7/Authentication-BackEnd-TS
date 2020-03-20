@@ -1,5 +1,6 @@
 import express = require("express");
 import bodyParser = require("body-parser");
+const config = require("config");
 
 import { LoginHandler } from "./login/implementations/loginHandler";
 import { MongoUserRetriever } from "./login/implementations/mongoUserRetriever";
@@ -14,6 +15,20 @@ import { JwtTokenValidator } from "./tokens/implementations/jwtTokenValidator";
 import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
 
+const routesConfig = config.get("routes");
+const mongoConfig = config.get("mongo");
+const tokensConfig = config.get("tokens");
+const portsConfig = config.get("ports");
+
+let mongoConnectionString = mongoConfig.get("mongoConnectionString");
+let tokenSecretOrPublicKey = tokensConfig.get("tokenSecretOrPublicKey");
+let tokenExpirationTime = tokensConfig.get("tokenExpirationTime");
+
+let loginRoute = routesConfig.get("loginRoute");
+let missionRoute = routesConfig.get("missionRoute");
+
+let listeningPort = portsConfig.get("listeningPort");
+
 // Create a new express application instance
 const app: express.Application = express();
 
@@ -24,25 +39,19 @@ app.use(
   bodyParser.json()
 );
 
-app.get("/", function(req, res) {
-  res.send("Hello World!");
-});
-
-var url = "mongodb://localhost:27017/";
-let tokenSecretOrPublicKey = "worldisfullofdevelopers";
-let tokenExpirationTime = "24h";
-
 let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
-let mongoUserRetriever: IUserRetriever = new MongoUserRetriever(url);
+let mongoUserRetriever: IUserRetriever = new MongoUserRetriever(
+  mongoConnectionString
+);
 let loginHandler: ILoginHandler = new LoginHandler(
   mongoUserRetriever,
   jwtTokenRetriever
 );
 
-app.post("/login", (req, res) => {
+app.post(loginRoute, (req, res) => {
   loginHandler.HandleLogin(req, res);
 });
 
@@ -53,11 +62,11 @@ let jwtTokenValidator: ITokenValidator = new JwtTokenValidator(
 );
 let mockMissionCreator: IMissionCreator = new MockMissionCreator();
 
-app.post("/mission", (req, res, next) => {
+app.post(missionRoute, (req, res) => {
   jwtTokenValidator.ValidateToken(req, res, () => {
     mockMissionCreator.CreateMission(req, res);
   });
 });
 
-const port: number = 3000;
+const port: number = listeningPort;
 app.listen(port, () => console.log(`Server is listening on port: ${port}`));
