@@ -1,6 +1,12 @@
+//#region outer imports
+
 import express = require("express");
 import bodyParser = require("body-parser");
-const config = require("config");
+import config = require("config");
+
+//#endregion
+
+//#region inner imports
 
 import { LoginHandler } from "./login/implementations/loginHandler";
 import { MongoUserRetriever } from "./login/implementations/mongoUserRetriever";
@@ -14,30 +20,54 @@ import { ITokenValidator } from "./tokens/abstractions/ITokenValidator";
 import { JwtTokenValidator } from "./tokens/implementations/jwtTokenValidator";
 import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
+import { RoutesConfiguration } from "./config/entities/routes";
+import { TokensConfiguration } from "./config/entities/tokens";
+import { PortsConfiguration } from "./config/entities/ports";
 
-const routesConfig = config.get("routes");
-const mongoConfig = config.get("mongo");
-const tokensConfig = config.get("tokens");
-const portsConfig = config.get("ports");
+//#endregion
 
-let mongoConnectionString = mongoConfig.get("mongoConnectionString");
-let tokenSecretOrPublicKey = tokensConfig.get("tokenSecretOrPublicKey");
-let tokenExpirationTime = tokensConfig.get("tokenExpirationTime");
+//#region environment variables
 
-let loginRoute = routesConfig.get("loginRoute");
-let missionRoute = routesConfig.get("missionRoute");
+//dotenv can be used if we want to have one environment file.
+// const dotenv = require("dotenv");
+// dotenv.config();
+//if we want to have many environments custom-env is the way
+require("custom-env").env("dev", "./config/environments");
+let mongoConnectionString = process.env.CONNECTION_STRING as string;
 
-let listeningPort = portsConfig.get("listeningPort");
+//#endregion
 
-// Create a new express application instance
-const app: express.Application = express();
+//#region configuration
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  }),
-  bodyParser.json()
-);
+const routesConfig = config.get<RoutesConfiguration>("routes");
+const tokensConfig = config.get<TokensConfiguration>("tokens");
+const portsConfig = config.get<PortsConfiguration>("ports");
+
+//#region tokens
+
+let tokenSecretOrPublicKey = tokensConfig.tokenSecretOrPublicKey;
+let tokenExpirationTime = tokensConfig.tokenExpirationTime;
+
+//#endregion
+
+//#region routes
+
+let loginRoute = routesConfig.loginRoute;
+let missionRoute = routesConfig.missionRoute;
+
+//#endregion
+
+//#region ports
+
+let listeningPort = portsConfig.listeningPort;
+
+//#endregion
+
+//#endregion
+
+//#region initialize objects
+
+//#region log in
 
 let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
@@ -51,16 +81,40 @@ let loginHandler: ILoginHandler = new LoginHandler(
   jwtTokenRetriever
 );
 
-app.post(loginRoute, (req, res) => {
-  loginHandler.HandleLogin(req, res);
-});
+//#endregion
+
+//#region token validator
 
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let jwtTokenValidator: ITokenValidator = new JwtTokenValidator(
   tokenSecretOrPublicKey,
   jwtTokenExtractor
 );
+
+//#endregion
+
+//#region missions
+
 let mockMissionCreator: IMissionCreator = new MockMissionCreator();
+
+//#endregion
+
+//#endregion
+
+//#region express API
+
+const app: express.Application = express();
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  }),
+  bodyParser.json()
+);
+
+app.post(loginRoute, (req, res) => {
+  loginHandler.HandleLogin(req, res);
+});
 
 app.post(missionRoute, (req, res) => {
   jwtTokenValidator.ValidateToken(req, res, () => {
@@ -68,5 +122,8 @@ app.post(missionRoute, (req, res) => {
   });
 });
 
-const port: number = listeningPort;
-app.listen(port, () => console.log(`Server is listening on port: ${port}`));
+app.listen(listeningPort, () =>
+  console.log(`Server is listening on port: ${listeningPort}`)
+);
+
+//#endregion
