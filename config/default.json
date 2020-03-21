@@ -1,6 +1,6 @@
 {
   "tokens": {
-    "tokenSecretOrPublicKey": "worldisfullofdevelopers",
+    "tokenSecretOrPublicKey": "pandemic",
     "tokenExpirationTime": "24h"
   },
   "routes": {
@@ -11,5 +11,8 @@
   },
   "ports": {
     "listeningPort": 3000
+  },
+  "ssl": {
+    "passphrase": "gurk7"
   }
 }
