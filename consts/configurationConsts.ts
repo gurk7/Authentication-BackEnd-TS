@@ -1,6 +1,6 @@
 export class ConigurationConsts {
-  public routes = "routes";
-  public ports = "ports";
-  public ssl = "ssl";
-  public tokens = "tokens";
+  public static readonly routes = "routes";
+  public static readonly ports = "ports";
+  public static readonly ssl = "ssl";
+  public static readonly tokens = "tokens";
 }

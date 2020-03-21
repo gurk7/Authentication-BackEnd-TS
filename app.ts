@@ -47,16 +47,10 @@ let mongoConnectionString = process.env.CONNECTION_STRING as string;
 
 //#region configuration
 
-let configurationConsts = new ConigurationConsts();
-
-const routesConfig = config.get<RoutesConfiguration>(
-  configurationConsts.routes
-);
-const tokensConfig = config.get<TokensConfiguration>(
-  configurationConsts.tokens
-);
-const portsConfig = config.get<PortsConfiguration>(configurationConsts.ports);
-const sslConig = config.get<SSLConfiguration>(configurationConsts.ssl);
+const routesConfig = config.get<RoutesConfiguration>(ConigurationConsts.routes);
+const tokensConfig = config.get<TokensConfiguration>(ConigurationConsts.tokens);
+const portsConfig = config.get<PortsConfiguration>(ConigurationConsts.ports);
+const sslConig = config.get<SSLConfiguration>(ConigurationConsts.ssl);
 
 //#region tokens
 
