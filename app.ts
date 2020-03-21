@@ -1,6 +1,8 @@
 //#region outer imports
 
 import express = require("express");
+import https = require("https");
+import fs = require("fs");
 import bodyParser = require("body-parser");
 import config = require("config");
 
@@ -27,6 +29,8 @@ import { ISyncUserRetriever } from "./login/abstractions/ISyncUserRetriever";
 import { CacheSyncUserRetriever } from "./login/implementations/CacheSyncUserRetriever";
 import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
 import { User } from "./entities/user";
+import { SSLConfiguration } from "./config/entities/ssl";
+import { ConigurationConsts } from "./consts/configurationConsts";
 
 //#endregion
 
@@ -43,9 +47,16 @@ let mongoConnectionString = process.env.CONNECTION_STRING as string;
 
 //#region configuration
 
-const routesConfig = config.get<RoutesConfiguration>("routes");
-const tokensConfig = config.get<TokensConfiguration>("tokens");
-const portsConfig = config.get<PortsConfiguration>("ports");
+let configurationConsts = new ConigurationConsts();
+
+const routesConfig = config.get<RoutesConfiguration>(
+  configurationConsts.routes
+);
+const tokensConfig = config.get<TokensConfiguration>(
+  configurationConsts.tokens
+);
+const portsConfig = config.get<PortsConfiguration>(configurationConsts.ports);
+const sslConig = config.get<SSLConfiguration>(configurationConsts.ssl);
 
 //#region tokens
 
@@ -65,6 +76,12 @@ let missionRoute = routesConfig.missionRoute;
 //#region ports
 
 let listeningPort = portsConfig.listeningPort;
+
+//#endregion
+
+//#region ssl
+
+let passphrase = sslConig.passphrase;
 
 //#endregion
 
@@ -148,8 +165,17 @@ app.post(missionRoute, (req, res) => {
   });
 });
 
-app.listen(listeningPort, () =>
-  console.log(`Server is listening on port: ${listeningPort}`)
-);
+https
+  .createServer(
+    {
+      key: fs.readFileSync("./ssl/key.pem"),
+      cert: fs.readFileSync("./ssl/cert.pem"),
+      passphrase: passphrase
+    },
+    app
+  )
+  .listen(listeningPort, () =>
+    console.log(`Server is listening on port: ${listeningPort}`)
+  );
 
 //#endregion
