@@ -130,6 +130,8 @@ app.use(
   bodyParser.json()
 );
 
+//#region log in API
+
 app.post(loginFromMongoDBRoute, (req, res) => {
   asyncLoginHandler.HandleLogin(req, res);
 });
@@ -137,6 +139,8 @@ app.post(loginFromMongoDBRoute, (req, res) => {
 app.post(loginFromCacheRoute, (req, res) => {
   syncLoginHandler.HandleLogin(req, res);
 });
+
+//#endregion
 
 app.post(missionRoute, (req, res) => {
   jwtTokenValidator.ValidateToken(req, res, () => {
