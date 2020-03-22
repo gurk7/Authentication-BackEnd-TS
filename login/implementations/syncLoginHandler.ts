@@ -1,30 +1,35 @@
 import { ILoginHandler } from "../abstractions/ILoginHandler";
 import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
-import { ISyncUserRetriever } from "../abstractions/ISyncUserRetriever";
+import { ISyncUserAuthenticator } from "../abstractions/ISyncUserAuthenticator";
+import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
 
 export class SyncLoginHandler implements ILoginHandler<void> {
-  private syncUserRetriever: ISyncUserRetriever;
+  private userFromRequestExtractor: IUserFromRequestExtractor;
+  private syncUserRetriever: ISyncUserAuthenticator;
   private tokenRetriever: ITokenRetriever;
 
   constructor(
-    userRetriever: ISyncUserRetriever,
+    userFromRequestExtractor: IUserFromRequestExtractor,
+    userRetriever: ISyncUserAuthenticator,
     tokenRetriever: ITokenRetriever
   ) {
+    this.userFromRequestExtractor = userFromRequestExtractor;
     this.syncUserRetriever = userRetriever;
     this.tokenRetriever = tokenRetriever;
   }
 
-  public HandleLogin(req: any, res: any) {
-    let username: string = req.body.username;
-    let password: string = req.body.password;
+  public handleLogin(req: any, res: any) {
+    let inputUser = this.userFromRequestExtractor.extract(req);
 
-    let user = this.syncUserRetriever.RetrieveUser(username, password);
+    let isUserAuthenticated = this.syncUserRetriever.authenticate(inputUser);
 
-    if (user) {
-      console.log(`retrieved user ${user.username}`);
+    if (isUserAuthenticated) {
+      console.log(`retrieved user ${inputUser.username}`);
 
-      let token = this.tokenRetriever.RetrieveToken(user);
-      console.log(`retrieved for user ${user.username} the token: ${token} `);
+      let token = this.tokenRetriever.RetrieveToken(inputUser);
+      console.log(
+        `retrieved for user ${inputUser.username} the token: ${token} `
+      );
 
       res.json({
         success: true,
@@ -32,7 +37,7 @@ export class SyncLoginHandler implements ILoginHandler<void> {
         token: token
       });
     } else {
-      console.log(`can't retrieve token for user ${username}`);
+      console.log(`can't retrieve token for user ${inputUser.username}`);
       res.json({
         success: false,
         message: "Authenctication Failed! username or password is incorrect"
