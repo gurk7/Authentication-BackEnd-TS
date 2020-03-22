@@ -26,7 +26,6 @@ import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
 import { ISyncUserAuthenticator } from "./login/abstractions/userAuthenticator/ISyncUserAuthenticator";
-import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/CacheSyncUserAuthenticator";
 import { SyncLoginHandler } from "./login/implementations/loginHandler/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
@@ -36,6 +35,7 @@ import { IUserFromRequestExtractor } from "./login/abstractions/IUserFromRequest
 import { UserFromRequestExtractor } from "./login/implementations/userFromRequestExtractor";
 import { IAuthenticationHttpResponseCreator } from "./login/abstractions/IAuthenticationHttpResponseCreator";
 import { AuthenticationHttpResponseCreator } from "./login/implementations/authenticationHttpResponseCreator";
+import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/cacheSyncUserAuthenticator";
 
 //#endregion
 
