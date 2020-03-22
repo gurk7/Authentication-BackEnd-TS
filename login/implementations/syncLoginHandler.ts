@@ -31,7 +31,7 @@ export class SyncLoginHandler implements ILoginHandler<void> {
 
     if (isUserAuthenticated) {
       let token = this.tokenRetriever.retrieve(inputUser);
-      this.authenticationHttpResponseCreator.createResponseforAuthenticatedUser(
+      this.authenticationHttpResponseCreator.createResponseForAuthenticatedUser(
         inputUser,
         token,
         res

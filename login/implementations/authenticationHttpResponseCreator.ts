@@ -3,7 +3,7 @@ import { User } from "../../entities/user";
 
 export class AuthenticationHttpResponseCreator
   implements IAuthenticationHttpResponseCreator {
-  createResponseforAuthenticatedUser(
+  createResponseForAuthenticatedUser(
     authonticatedUser: User,
     token: string,
     res: any
