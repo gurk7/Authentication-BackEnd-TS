@@ -11,8 +11,8 @@ import config = require("config");
 //#region inner imports
 
 import { AsyncLoginHandler } from "./login/implementations/asyncLoginHandler";
-import { IAsyncUserRetriever } from "./login/abstractions/IAsyncUserRetriever";
-import { MongoDBAsyncUserRetriever } from "./login/implementations/mongoDBAsyncUserRetriever";
+import { IAsyncUserAuthenticator } from "./login/abstractions/IAsyncUserAuthenticator";
+import { MongoDBAsyncUserAuthenticator } from "./login/implementations/mongoDBAsyncUserAuthenticator";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
 import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
 import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
@@ -25,8 +25,8 @@ import { MockMissionCreator } from "./missions/implementations/mockMissionCreato
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { ISyncUserRetriever } from "./login/abstractions/ISyncUserRetriever";
-import { CacheSyncUserRetriever } from "./login/implementations/CacheSyncUserRetriever";
+import { ISyncUserAuthenticator } from "./login/abstractions/ISyncUserAuthenticator";
+import { CacheSyncUserAuthenticator } from "./login/implementations/CacheSyncUserAuthenticator";
 import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
@@ -93,7 +93,7 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
 
 //#region async (MongoDB)
 
-let mongoDBAsyncUserRetriever: IAsyncUserRetriever = new MongoDBAsyncUserRetriever(
+let mongoDBAsyncUserRetriever: IAsyncUserAuthenticator = new MongoDBAsyncUserAuthenticator(
   mongoConnectionString
 );
 let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
@@ -106,7 +106,7 @@ let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
 //#region sync (Cache)
 
 let allowedUsers: User[] = [new User("china", "china")];
-let cacheSyncUserRetriever: ISyncUserRetriever = new CacheSyncUserRetriever(
+let cacheSyncUserRetriever: ISyncUserAuthenticator = new CacheSyncUserAuthenticator(
   allowedUsers
 );
 let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
@@ -150,11 +150,11 @@ app.use(
 //#region log in API
 
 app.post(loginFromMongoDBRoute, (req, res) => {
-  asyncLoginHandler.HandleLogin(req, res);
+  asyncLoginHandler.handleLogin(req, res);
 });
 
 app.post(loginFromCacheRoute, (req, res) => {
-  syncLoginHandler.HandleLogin(req, res);
+  syncLoginHandler.handleLogin(req, res);
 });
 
 //#endregion
