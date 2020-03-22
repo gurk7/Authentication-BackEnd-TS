@@ -32,6 +32,8 @@ import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
+import { IUserFromRequestExtractor } from "./login/abstractions/IUserFromRequestExtractor";
+import { UserFromRequestExtractor } from "./login/implementations/userFromRequestExtractor";
 
 //#endregion
 
@@ -86,6 +88,8 @@ let passphrase = sslConig.passphrase;
 
 //#region log in
 
+let userFromRequestExtractor: IUserFromRequestExtractor = new UserFromRequestExtractor();
+
 let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
@@ -93,11 +97,12 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
 
 //#region async (MongoDB)
 
-let mongoDBAsyncUserRetriever: IAsyncUserAuthenticator = new MongoDBAsyncUserAuthenticator(
+let mongoDBAsyncUserAuthenticator: IAsyncUserAuthenticator = new MongoDBAsyncUserAuthenticator(
   mongoConnectionString
 );
 let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
-  mongoDBAsyncUserRetriever,
+  userFromRequestExtractor,
+  mongoDBAsyncUserAuthenticator,
   jwtTokenRetriever
 );
 
@@ -106,11 +111,12 @@ let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
 //#region sync (Cache)
 
 let allowedUsers: User[] = [new User("china", "china")];
-let cacheSyncUserRetriever: ISyncUserAuthenticator = new CacheSyncUserAuthenticator(
+let cacheSyncUserAuthenticator: ISyncUserAuthenticator = new CacheSyncUserAuthenticator(
   allowedUsers
 );
 let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
-  cacheSyncUserRetriever,
+  userFromRequestExtractor,
+  cacheSyncUserAuthenticator,
   jwtTokenRetriever
 );
 
