@@ -1,14 +1,14 @@
 import { User } from "../../entities/user";
 
 export interface IAuthenticationHttpResponseCreator {
-  createResponseforAuthenticatedUser(
+  createResponseForAuthenticatedUser(
     authonticatedUser: User,
     token: string,
     res: any
   ): void;
 
   createResponseForUnAuthenticatedUser(
-    unauthenticatedUser: User,
+    unAuthenticatedUser: User,
     res: any
   ): void;
 }
