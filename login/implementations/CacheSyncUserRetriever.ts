@@ -2,18 +2,17 @@ import { User } from "../../entities/user";
 import { ISyncUserRetriever } from "../abstractions/ISyncUserRetriever";
 
 export class CacheSyncUserRetriever implements ISyncUserRetriever {
-  private allowedUser: User;
+  private allowedUsers: User[];
 
-  constructor(allowedUser: User) {
-    this.allowedUser = allowedUser;
+  constructor(allowedUsers: User[]) {
+    this.allowedUsers = allowedUsers;
   }
 
   RetrieveUser(username: string, password: string) {
-    if (
-      this.allowedUser.username === username &&
-      this.allowedUser.password === password
-    ) {
-      return this.allowedUser;
+    for (let user of this.allowedUsers) {
+      if (user.username === username && user.password === password) {
+        return user;
+      }
     }
     return null;
   }

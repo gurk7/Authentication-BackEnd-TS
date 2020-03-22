@@ -90,7 +90,9 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
-//#region async
+
+//#region async (MongoDB)
+
 let mongoDBAsyncUserRetriever: IAsyncUserRetriever = new MongoDBAsyncUserRetriever(
   mongoConnectionString
 );
@@ -98,17 +100,20 @@ let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
   mongoDBAsyncUserRetriever,
   jwtTokenRetriever
 );
+
 //#endregion
 
-//#region sync
-let allowedUser: User = new User("china", "china");
+//#region sync (Cache)
+
+let allowedUsers: User[] = [new User("china", "china")];
 let cacheSyncUserRetriever: ISyncUserRetriever = new CacheSyncUserRetriever(
-  allowedUser
+  allowedUsers
 );
 let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
   cacheSyncUserRetriever,
   jwtTokenRetriever
 );
+
 //#endregion
 
 //#endregion
