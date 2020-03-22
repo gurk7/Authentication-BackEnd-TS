@@ -11,8 +11,8 @@ import config = require("config");
 //#region inner imports
 
 import { AsyncLoginHandler } from "./login/implementations/asyncLoginHandler";
-import { IAsyncUserRetriever } from "./login/abstractions/IAsyncUserRetriever";
-import { MongoDBAsyncUserRetriever } from "./login/implementations/mongoDBAsyncUserRetriever";
+import { IAsyncUserAuthenticator } from "./login/abstractions/IAsyncUserAuthenticator";
+import { MongoDBAsyncUserAuthenticator } from "./login/implementations/mongoDBAsyncUserAuthenticator";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
 import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
 import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
@@ -25,13 +25,15 @@ import { MockMissionCreator } from "./missions/implementations/mockMissionCreato
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { ISyncUserRetriever } from "./login/abstractions/ISyncUserRetriever";
-import { CacheSyncUserRetriever } from "./login/implementations/CacheSyncUserRetriever";
+import { ISyncUserAuthenticator } from "./login/abstractions/ISyncUserAuthenticator";
+import { CacheSyncUserAuthenticator } from "./login/implementations/CacheSyncUserAuthenticator";
 import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
+import { IUserFromRequestExtractor } from "./login/abstractions/IUserFromRequestExtractor";
+import { UserFromRequestExtractor } from "./login/implementations/userFromRequestExtractor";
 
 //#endregion
 
@@ -86,29 +88,38 @@ let passphrase = sslConig.passphrase;
 
 //#region log in
 
+let userFromRequestExtractor: IUserFromRequestExtractor = new UserFromRequestExtractor();
+
 let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
-//#region async
-let mongoDBAsyncUserRetriever: IAsyncUserRetriever = new MongoDBAsyncUserRetriever(
+
+//#region async (MongoDB)
+
+let mongoDBAsyncUserAuthenticator: IAsyncUserAuthenticator = new MongoDBAsyncUserAuthenticator(
   mongoConnectionString
 );
 let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
-  mongoDBAsyncUserRetriever,
+  userFromRequestExtractor,
+  mongoDBAsyncUserAuthenticator,
   jwtTokenRetriever
 );
+
 //#endregion
 
-//#region sync
-let allowedUser: User = new User("china", "china");
-let cacheSyncUserRetriever: ISyncUserRetriever = new CacheSyncUserRetriever(
-  allowedUser
+//#region sync (Cache)
+
+let allowedUsers: User[] = [new User("china", "china")];
+let cacheSyncUserAuthenticator: ISyncUserAuthenticator = new CacheSyncUserAuthenticator(
+  allowedUsers
 );
 let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
-  cacheSyncUserRetriever,
+  userFromRequestExtractor,
+  cacheSyncUserAuthenticator,
   jwtTokenRetriever
 );
+
 //#endregion
 
 //#endregion
@@ -145,11 +156,11 @@ app.use(
 //#region log in API
 
 app.post(loginFromMongoDBRoute, (req, res) => {
-  asyncLoginHandler.HandleLogin(req, res);
+  asyncLoginHandler.handleLogin(req, res);
 });
 
 app.post(loginFromCacheRoute, (req, res) => {
-  syncLoginHandler.HandleLogin(req, res);
+  syncLoginHandler.handleLogin(req, res);
 });
 
 //#endregion
