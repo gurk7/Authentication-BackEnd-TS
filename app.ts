@@ -10,7 +10,7 @@ import config = require("config");
 
 //#region inner imports
 
-import { AsyncLoginHandler } from "./login/implementations/asyncLoginHandler";
+import { AsyncLoginHandler } from "./login/implementations/loginHandler/asyncLoginHandler";
 import { IAsyncUserAuthenticator } from "./login/abstractions/userAuthenticator/IAsyncUserAuthenticator";
 import { MongoDBAsyncUserAuthenticator } from "./login/implementations/userAuthenticator/mongoDBAsyncUserAuthenticator";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
@@ -27,7 +27,7 @@ import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
 import { ISyncUserAuthenticator } from "./login/abstractions/userAuthenticator/ISyncUserAuthenticator";
 import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/CacheSyncUserAuthenticator";
-import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
+import { SyncLoginHandler } from "./login/implementations/loginHandler/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";

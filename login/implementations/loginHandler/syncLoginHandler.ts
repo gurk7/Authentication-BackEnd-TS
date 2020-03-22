@@ -1,8 +1,8 @@
-import { ILoginHandler } from "../abstractions/ILoginHandler";
-import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
-import { ISyncUserAuthenticator } from "../abstractions/userAuthenticator/ISyncUserAuthenticator";
-import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
-import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
+import { ILoginHandler } from "../../abstractions/ILoginHandler";
+import { ITokenRetriever } from "../../../tokens/abstractions/ITokenRetriever";
+import { ISyncUserAuthenticator } from "../../abstractions/userAuthenticator/ISyncUserAuthenticator";
+import { IUserFromRequestExtractor } from "../../abstractions/IUserFromRequestExtractor";
+import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenticationHttpResponseCreator";
 
 export class SyncLoginHandler implements ILoginHandler<void> {
   private userFromRequestExtractor: IUserFromRequestExtractor;
