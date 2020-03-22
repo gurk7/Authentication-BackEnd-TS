@@ -28,7 +28,7 @@ export class SyncLoginHandler implements ILoginHandler<void> {
     if (isUserAuthenticated) {
       console.log(`retrieved user ${inputUser.username}`);
 
-      let token = this.tokenRetriever.RetrieveToken(inputUser);
+      let token = this.tokenRetriever.retrieve(inputUser);
       console.log(
         `retrieved for user ${inputUser.username} the token: ${token} `
       );
