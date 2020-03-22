@@ -31,6 +31,7 @@ import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
+import { SSLConsts } from "./consts/sslConsts";
 
 //#endregion
 
@@ -162,8 +163,8 @@ app.post(missionRoute, (req, res) => {
 https
   .createServer(
     {
-      key: fs.readFileSync("./ssl/key.pem"),
-      cert: fs.readFileSync("./ssl/cert.pem"),
+      key: fs.readFileSync(SSLConsts.encryptionKeyFileLocation),
+      cert: fs.readFileSync(SSLConsts.certificationFileLocation),
       passphrase: passphrase
     },
     app
