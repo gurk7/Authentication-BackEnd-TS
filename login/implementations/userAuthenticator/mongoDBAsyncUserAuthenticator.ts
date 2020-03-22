@@ -17,6 +17,7 @@ export class MongoDBAsyncUserAuthenticator implements IAsyncUserAuthenticator {
     let query = { username: inputUser.username, password: inputUser.password };
 
     let returnedMongoUser = await collection.findOne<User>(query);
+    client.close();
 
     if (returnedMongoUser) {
       return inputUser.equals(returnedMongoUser);
