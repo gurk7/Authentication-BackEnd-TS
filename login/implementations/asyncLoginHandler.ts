@@ -5,29 +5,29 @@ import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtra
 
 export class AsyncLoginHandler implements ILoginHandler<Promise<void>> {
   private userFromRequestExtractor: IUserFromRequestExtractor;
-  private asyncUserRetriever: IAsyncUserAuthenticator;
+  private asyncUserAuthenticator: IAsyncUserAuthenticator;
   private tokenRetriever: ITokenRetriever;
 
   constructor(
     userFromRequestExtractor: IUserFromRequestExtractor,
-    userRetriever: IAsyncUserAuthenticator,
+    asyncUserAuthenticator: IAsyncUserAuthenticator,
     tokenRetriever: ITokenRetriever
   ) {
     this.userFromRequestExtractor = userFromRequestExtractor;
-    this.asyncUserRetriever = userRetriever;
+    this.asyncUserAuthenticator = asyncUserAuthenticator;
     this.tokenRetriever = tokenRetriever;
   }
 
   public async handleLogin(req: any, res: any) {
     let inputUser = this.userFromRequestExtractor.extract(req);
 
-    let isUserAuthenticated = await this.asyncUserRetriever.authenticate(
+    let isUserAuthenticated = await this.asyncUserAuthenticator.authenticate(
       inputUser
     );
     if (isUserAuthenticated === true) {
       console.log(`retrieved user ${inputUser.username}`);
 
-      let token = this.tokenRetriever.RetrieveToken(inputUser);
+      let token = this.tokenRetriever.retrieve(inputUser);
       console.log(
         `retrieved for user ${inputUser.username} the token: ${token} `
       );
