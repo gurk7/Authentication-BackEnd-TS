@@ -26,7 +26,7 @@ import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
 import { ISyncUserAuthenticator } from "./login/abstractions/ISyncUserAuthenticator";
-import { CacheSyncUserAuthenticator } from "./login/implementations/CacheSyncUserAuthenticator";
+import { CacheSyncUserAuthenticator } from "./login/implementations/cacheSyncUserAuthenticator";
 import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
