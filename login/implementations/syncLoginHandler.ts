@@ -5,23 +5,25 @@ import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtra
 
 export class SyncLoginHandler implements ILoginHandler<void> {
   private userFromRequestExtractor: IUserFromRequestExtractor;
-  private syncUserRetriever: ISyncUserAuthenticator;
+  private syncUserAuthenticator: ISyncUserAuthenticator;
   private tokenRetriever: ITokenRetriever;
 
   constructor(
     userFromRequestExtractor: IUserFromRequestExtractor,
-    userRetriever: ISyncUserAuthenticator,
+    syncUserAuthenticator: ISyncUserAuthenticator,
     tokenRetriever: ITokenRetriever
   ) {
     this.userFromRequestExtractor = userFromRequestExtractor;
-    this.syncUserRetriever = userRetriever;
+    this.syncUserAuthenticator = syncUserAuthenticator;
     this.tokenRetriever = tokenRetriever;
   }
 
   public handleLogin(req: any, res: any) {
     let inputUser = this.userFromRequestExtractor.extract(req);
 
-    let isUserAuthenticated = this.syncUserRetriever.authenticate(inputUser);
+    let isUserAuthenticated = this.syncUserAuthenticator.authenticate(
+      inputUser
+    );
 
     if (isUserAuthenticated) {
       console.log(`retrieved user ${inputUser.username}`);
