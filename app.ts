@@ -35,7 +35,7 @@ import { IUserFromRequestExtractor } from "./login/abstractions/IUserFromRequest
 import { UserFromRequestExtractor } from "./login/implementations/userFromRequestExtractor";
 import { IAuthenticationHttpResponseCreator } from "./login/abstractions/IAuthenticationHttpResponseCreator";
 import { AuthenticationHttpResponseCreator } from "./login/implementations/authenticationHttpResponseCreator";
-import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/cacheSyncUserAuthenticator";
+import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/CacheSyncUserAuthenticator";
 
 //#endregion
 
