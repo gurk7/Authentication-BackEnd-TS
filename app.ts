@@ -10,9 +10,9 @@ import config = require("config");
 
 //#region inner imports
 
-import { AsyncLoginHandler } from "./login/implementations/asyncLoginHandler";
-import { IAsyncUserAuthenticator } from "./login/abstractions/IAsyncUserAuthenticator";
-import { MongoDBAsyncUserAuthenticator } from "./login/implementations/mongoDBAsyncUserAuthenticator";
+import { AsyncLoginHandler } from "./login/implementations/loginHandler/asyncLoginHandler";
+import { IAsyncUserAuthenticator } from "./login/abstractions/userAuthenticator/IAsyncUserAuthenticator";
+import { MongoDBAsyncUserAuthenticator } from "./login/implementations/userAuthenticator/mongoDBAsyncUserAuthenticator";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
 import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
 import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
@@ -25,9 +25,9 @@ import { MockMissionCreator } from "./missions/implementations/mockMissionCreato
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { ISyncUserAuthenticator } from "./login/abstractions/ISyncUserAuthenticator";
-import { CacheSyncUserAuthenticator } from "./login/implementations/cacheSyncUserAuthenticator";
-import { SyncLoginHandler } from "./login/implementations/syncLoginHandler";
+import { ISyncUserAuthenticator } from "./login/abstractions/userAuthenticator/ISyncUserAuthenticator";
+import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/CacheSyncUserAuthenticator";
+import { SyncLoginHandler } from "./login/implementations/loginHandler/syncLoginHandler";
 import { User } from "./entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
