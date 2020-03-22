@@ -1,5 +1,5 @@
-import { User } from "../../entities/user";
-import { ISyncUserAuthenticator } from "../abstractions/ISyncUserAuthenticator";
+import { User } from "../../../entities/user";
+import { ISyncUserAuthenticator } from "../../abstractions/userAuthenticator/ISyncUserAuthenticator";
 
 export class CacheSyncUserAuthenticator implements ISyncUserAuthenticator {
   private allowedUsers: User[];
