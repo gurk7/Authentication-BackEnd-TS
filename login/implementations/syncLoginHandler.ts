@@ -1,6 +1,6 @@
 import { ILoginHandler } from "../abstractions/ILoginHandler";
 import { ITokenRetriever } from "../../tokens/abstractions/ITokenRetriever";
-import { ISyncUserAuthenticator } from "../abstractions/ISyncUserAuthenticator";
+import { ISyncUserAuthenticator } from "../abstractions/userAuthenticator/ISyncUserAuthenticator";
 import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
 import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
 
