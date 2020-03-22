@@ -34,6 +34,8 @@ import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
 import { IUserFromRequestExtractor } from "./login/abstractions/IUserFromRequestExtractor";
 import { UserFromRequestExtractor } from "./login/implementations/userFromRequestExtractor";
+import { IAuthenticationHttpResponseCreator } from "./login/abstractions/IAuthenticationHttpResponseCreator";
+import { AuthenticationHttpResponseCreator } from "./login/implementations/authenticationHttpResponseCreator";
 
 //#endregion
 
@@ -95,6 +97,8 @@ let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
   tokenExpirationTime
 );
 
+let authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator = new AuthenticationHttpResponseCreator();
+
 //#region async (MongoDB)
 
 let mongoDBAsyncUserAuthenticator: IAsyncUserAuthenticator = new MongoDBAsyncUserAuthenticator(
@@ -103,7 +107,8 @@ let mongoDBAsyncUserAuthenticator: IAsyncUserAuthenticator = new MongoDBAsyncUse
 let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
   userFromRequestExtractor,
   mongoDBAsyncUserAuthenticator,
-  jwtTokenRetriever
+  jwtTokenRetriever,
+  authenticationHttpResponseCreator
 );
 
 //#endregion
@@ -117,7 +122,8 @@ let cacheSyncUserAuthenticator: ISyncUserAuthenticator = new CacheSyncUserAuthen
 let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
   userFromRequestExtractor,
   cacheSyncUserAuthenticator,
-  jwtTokenRetriever
+  jwtTokenRetriever,
+  authenticationHttpResponseCreator
 );
 
 //#endregion
