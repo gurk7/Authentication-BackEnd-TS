@@ -11,7 +11,7 @@ export class JwtTokenCreator implements ITokenCreator {
     this.expirationTime = expirationTime;
   }
 
-  retrieve(user: User) {
+  create(user: User) {
     return jwt.sign({ username: user.username }, this.secretOrPublicKey, {
       expiresIn: this.expirationTime
     });
