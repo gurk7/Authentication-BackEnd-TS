@@ -20,8 +20,8 @@ import { AsyncLoginHandler } from "./login/implementations/loginHandler/asyncLog
 import { IAsyncUserAuthenticator } from "./login/abstractions/userAuthenticator/IAsyncUserAuthenticator";
 import { MongoDBAsyncUserAuthenticator } from "./login/implementations/userAuthenticator/mongoDBAsyncUserAuthenticator";
 import { ILoginHandler } from "./login/abstractions/ILoginHandler";
-import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
-import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
+import { JwtTokenCreator } from "./tokens/implementations/jwtTokenCreator";
+import { ITokenCreator } from "./tokens/abstractions/ITokenCreator";
 import { JwtTokenExtractor } from "./tokens/implementations/jwtTokenExtractor";
 import { ITokenExtractor } from "./tokens/abstractions/ITokenExtractor";
 import { IDecodedTokenRetriever } from "./tokens/abstractions/IDecodedTokenRetriever";
@@ -122,7 +122,7 @@ const activeDirectory = new AD({
 
 let userFromRequestExtractor: IUserFromRequestExtractor = new UserFromRequestExtractor();
 
-let jwtTokenRetriever: ITokenRetriever = new JwtTokenRetriever(
+let jwtTokenCreator: ITokenCreator = new JwtTokenCreator(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
@@ -137,7 +137,7 @@ let mongoDBAsyncUserAuthenticator: IAsyncUserAuthenticator = new MongoDBAsyncUse
 let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
   userFromRequestExtractor,
   mongoDBAsyncUserAuthenticator,
-  jwtTokenRetriever,
+  jwtTokenCreator,
   authenticationHttpResponseCreator
 );
 
@@ -151,11 +151,12 @@ let activeDirectoryAsyncUserAuthenticator: IAsyncUserAuthenticator = new ActiveD
 let asyncActiveDirectoryLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
   userFromRequestExtractor,
   activeDirectoryAsyncUserAuthenticator,
-  jwtTokenRetriever,
+  jwtTokenCreator,
   authenticationHttpResponseCreator
 );
 
 //#endregion
+
 //#region sync (Cache)
 
 let allowedUsers: User[] = [new User("china", "china")];
@@ -165,7 +166,7 @@ let cacheSyncUserAuthenticator: ISyncUserAuthenticator = new CacheSyncUserAuthen
 let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
   userFromRequestExtractor,
   cacheSyncUserAuthenticator,
-  jwtTokenRetriever,
+  jwtTokenCreator,
   authenticationHttpResponseCreator
 );
 

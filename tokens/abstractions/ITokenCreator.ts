@@ -1,5 +1,5 @@
 import { User } from "../../entities/authentication/user";
 
-export interface ITokenRetriever {
+export interface ITokenCreator {
   retrieve(user: User): string;
 }

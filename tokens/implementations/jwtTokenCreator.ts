@@ -1,8 +1,8 @@
-import { ITokenRetriever } from "../abstractions/ITokenRetriever";
+import { ITokenCreator } from "../abstractions/ITokenCreator";
 import { User } from "../../entities/authentication/user";
 import jwt = require("jsonwebtoken");
 
-export class JwtTokenRetriever implements ITokenRetriever {
+export class JwtTokenCreator implements ITokenCreator {
   private secretOrPublicKey: string;
   private expirationTime: string;
 
