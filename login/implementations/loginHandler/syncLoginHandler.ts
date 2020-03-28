@@ -1,5 +1,5 @@
 import { ILoginHandler } from "../../abstractions/ILoginHandler";
-import { ITokenRetriever } from "../../../tokens/abstractions/ITokenRetriever";
+import { ITokenCreator } from "../../../tokens/abstractions/ITokenCreator";
 import { ISyncUserAuthenticator } from "../../abstractions/userAuthenticator/ISyncUserAuthenticator";
 import { IUserFromRequestExtractor } from "../../abstractions/IUserFromRequestExtractor";
 import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenticationHttpResponseCreator";
@@ -7,18 +7,18 @@ import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenti
 export class SyncLoginHandler implements ILoginHandler<void> {
   private userFromRequestExtractor: IUserFromRequestExtractor;
   private syncUserAuthenticator: ISyncUserAuthenticator;
-  private tokenRetriever: ITokenRetriever;
+  private tokenCreator: ITokenCreator;
   private authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator;
 
   constructor(
     userFromRequestExtractor: IUserFromRequestExtractor,
     syncUserAuthenticator: ISyncUserAuthenticator,
-    tokenRetriever: ITokenRetriever,
+    tokenCreator: ITokenCreator,
     authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator
   ) {
     this.userFromRequestExtractor = userFromRequestExtractor;
     this.syncUserAuthenticator = syncUserAuthenticator;
-    this.tokenRetriever = tokenRetriever;
+    this.tokenCreator = tokenCreator;
     this.authenticationHttpResponseCreator = authenticationHttpResponseCreator;
   }
 
@@ -30,7 +30,7 @@ export class SyncLoginHandler implements ILoginHandler<void> {
     );
 
     if (isUserAuthenticated) {
-      let token = this.tokenRetriever.retrieve(inputUser);
+      let token = this.tokenCreator.retrieve(inputUser);
       this.authenticationHttpResponseCreator.createResponseForAuthenticatedUser(
         inputUser,
         token,
