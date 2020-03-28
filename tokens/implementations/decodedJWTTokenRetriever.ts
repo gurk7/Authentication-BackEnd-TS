@@ -14,24 +14,21 @@ export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
     this.converter = converter;
   }
 
-  retrieveDecodedToken(req: any){
+  retrieveDecodedToken(req: any) {
     let token = this.tokenExtractor.ExtractToken(req);
     console.log(`extracted token: ${token}`);
-    try
-    {
+
+    try {
       let decoded = jwt.verify(token, this.secretOrPublicKey);
-      try
-      {
+      try {
         return this.converter.convert(decoded);
-      }  
-      catch(e)
-      {
+      }
+      catch (e) {
         console.log(`can't convert token from object to DecodedJWTUser. token: ${token}`);
         console.log(e);
       }
     }
-    catch(e)
-    {
+    catch (e) {
       console.log(`can't retrieve decoded token for ${token}`);
       console.log(e);
     }

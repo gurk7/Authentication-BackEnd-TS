@@ -12,7 +12,7 @@ export class AuthorizationHandler implements IAuthorizationHandler {
     }
 
     async handleAuthorization(req: any, res: any, next: any) {
-        let decodedtoken = this.decodedTokenRetriever.retrieveDecodedToken(req, res);
+        let decodedtoken = this.decodedTokenRetriever.retrieveDecodedToken(req);
 
         if (decodedtoken) {
             let isAuthorized = await this.userAuthorizer.authorize(decodedtoken);

@@ -182,7 +182,7 @@ let decodedTokenRetriever: IDecodedTokenRetriever = new DecodedJWTTokenRetriever
 
 let userAuthorizer: IUserAuthorizer = new ActiveDirectoryByGroupMemberUserAuthorizer(activeDirectory, "Allowed Users");
 
-let authorizationValidator: IAuthorizationHandler = new AuthorizationHandler(decodedTokenRetriever, userAuthorizer);
+let authorizationHandler: IAuthorizationHandler = new AuthorizationHandler(decodedTokenRetriever, userAuthorizer);
 
 //#endregion
 
@@ -222,7 +222,7 @@ app.post(loginFromCacheRoute, (req, res) => {
 //#endregion
 
 app.post(missionRoute, (req, res) => {
-  authorizationValidator.handleAuthorization(req, res, () =>
+  authorizationHandler.handleAuthorization(req, res, () =>
     mockMissionCreator.CreateMission(req, res)
   );
 });
