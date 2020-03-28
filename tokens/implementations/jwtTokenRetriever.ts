@@ -1,5 +1,5 @@
 import { ITokenRetriever } from "../abstractions/ITokenRetriever";
-import { User } from "../../entities/user";
+import { User } from "../../entities/authentication/user";
 import jwt = require("jsonwebtoken");
 
 export class JwtTokenRetriever implements ITokenRetriever {

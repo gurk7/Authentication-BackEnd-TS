@@ -1,4 +1,4 @@
-import { User } from "../../../entities/user";
+import { User } from "../../../entities/authentication/user";
 import { ISyncUserAuthenticator } from "../../abstractions/userAuthenticator/ISyncUserAuthenticator";
 
 export class CacheSyncUserAuthenticator implements ISyncUserAuthenticator {

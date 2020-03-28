@@ -6,6 +6,12 @@ import fs = require("fs");
 import bodyParser = require("body-parser");
 import config = require("config");
 
+//#region js packages
+
+const AD = require("ad");
+
+//#endregion
+
 //#endregion
 
 //#region inner imports
@@ -18,8 +24,8 @@ import { JwtTokenRetriever } from "./tokens/implementations/jwtTokenRetriever";
 import { ITokenRetriever } from "./tokens/abstractions/ITokenRetriever";
 import { JwtTokenExtractor } from "./tokens/implementations/jwtTokenExtractor";
 import { ITokenExtractor } from "./tokens/abstractions/ITokenExtractor";
-import { ITokenValidator } from "./tokens/abstractions/ITokenValidator";
-import { JwtTokenValidator } from "./tokens/implementations/jwtTokenValidator";
+import { IDecodedTokenRetriever } from "./tokens/abstractions/IDecodedTokenRetriever";
+import { DecodedJWTTokenRetriever } from "./tokens/implementations/decodedJWTTokenRetriever";
 import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
 import { RoutesConfiguration } from "./config/entities/routes";
@@ -27,7 +33,7 @@ import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
 import { ISyncUserAuthenticator } from "./login/abstractions/userAuthenticator/ISyncUserAuthenticator";
 import { SyncLoginHandler } from "./login/implementations/loginHandler/syncLoginHandler";
-import { User } from "./entities/user";
+import { User } from "./entities/authentication/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
@@ -36,6 +42,14 @@ import { UserFromRequestExtractor } from "./login/implementations/userFromReques
 import { IAuthenticationHttpResponseCreator } from "./login/abstractions/IAuthenticationHttpResponseCreator";
 import { AuthenticationHttpResponseCreator } from "./login/implementations/authenticationHttpResponseCreator";
 import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/cacheSyncUserAuthenticator";
+import { LDAPConfiguration } from "./config/entities/ldap";
+import { ActiveDirectoryAsyncUserAuthenticator } from './login/implementations/userAuthenticator/activeDirectory/activeDirectoryAsyncUserAuthenticator'
+import { ObjectToDecodedJWTConverter } from "./authorization/implementations/objectToDecodedJWTConverter";
+import { IObjectToDecodedJWTConverter } from './authorization/abstractions/IObjectToDecodedJWTConverter';
+import { IUserAuthorizer } from "./authorization/abstractions/IUserAuthorizer";
+import { ActiveDirectoryByGroupMemberUserAuthorizer } from "./authorization/implementations/activeDirectory/activeDirectoryByGroupMemberUserAuthorizer";
+import { IAuthorizationValidator } from "./authorization/abstractions/IAuthorizationValidator";
+import { AuthorizationValidator } from "./authorization/implementations/authorizationValidator";
 
 //#endregion
 
@@ -56,6 +70,7 @@ const routesConfig = config.get<RoutesConfiguration>(ConigurationConsts.routes);
 const tokensConfig = config.get<TokensConfiguration>(ConigurationConsts.tokens);
 const portsConfig = config.get<PortsConfiguration>(ConigurationConsts.ports);
 const sslConig = config.get<SSLConfiguration>(ConigurationConsts.ssl);
+const ldapConfig = config.get<LDAPConfiguration>(ConigurationConsts.ldap);
 
 //#region tokens
 
@@ -67,6 +82,7 @@ let tokenExpirationTime = tokensConfig.tokenExpirationTime;
 //#region routes
 
 let loginFromMongoDBRoute = routesConfig.loginFromMongoDBRoute;
+let loginFromActiveDirectory = routesConfig.loginFromActiveDirectoryRoute;
 let loginFromCacheRoute = routesConfig.loginFromCacheRoute;
 let missionRoute = routesConfig.missionRoute;
 
@@ -81,6 +97,20 @@ let listeningPort = portsConfig.listeningPort;
 //#region ssl
 
 let passphrase = sslConig.passphrase;
+
+//#endregion
+
+//#region ldap
+
+let url = ldapConfig.url;
+let userFullyQualifiedDomainName = ldapConfig.userFullyQualifiedDomainName;
+let password = ldapConfig.password;
+
+const activeDirectory = new AD({
+  url: url,
+  user: userFullyQualifiedDomainName,
+  pass: password
+})
 
 //#endregion
 
@@ -113,6 +143,19 @@ let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
 
 //#endregion
 
+//#region async (ActiveDirectory)
+
+let activeDirectoryAsyncUserAuthenticator: IAsyncUserAuthenticator = new ActiveDirectoryAsyncUserAuthenticator(
+  activeDirectory
+);
+let asyncActiveDirectoryLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
+  userFromRequestExtractor,
+  activeDirectoryAsyncUserAuthenticator,
+  jwtTokenRetriever,
+  authenticationHttpResponseCreator
+);
+
+//#endregion
 //#region sync (Cache)
 
 let allowedUsers: User[] = [new User("china", "china")];
@@ -130,13 +173,15 @@ let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
 
 //#endregion
 
-//#region token validator
+//#region authorization
 
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
-let jwtTokenValidator: ITokenValidator = new JwtTokenValidator(
-  tokenSecretOrPublicKey,
-  jwtTokenExtractor
-);
+let decodedJWTConverter: IObjectToDecodedJWTConverter = new ObjectToDecodedJWTConverter();
+let decodedTokenRetriever: IDecodedTokenRetriever = new DecodedJWTTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
+
+let userAuthorizer : IUserAuthorizer = new ActiveDirectoryByGroupMemberUserAuthorizer(activeDirectory, "Allowed Users");
+
+let authorizationValidator : IAuthorizationValidator = new AuthorizationValidator(decodedTokenRetriever, userAuthorizer);
 
 //#endregion
 
@@ -165,6 +210,10 @@ app.post(loginFromMongoDBRoute, (req, res) => {
   asyncLoginHandler.handleLogin(req, res);
 });
 
+app.post(loginFromActiveDirectory, (req, res) => {
+  asyncActiveDirectoryLoginHandler.handleLogin(req, res);
+})
+
 app.post(loginFromCacheRoute, (req, res) => {
   syncLoginHandler.handleLogin(req, res);
 });
@@ -172,8 +221,15 @@ app.post(loginFromCacheRoute, (req, res) => {
 //#endregion
 
 app.post(missionRoute, (req, res) => {
-  jwtTokenValidator.ValidateToken(req, res, () => {
-    mockMissionCreator.CreateMission(req, res);
+  authorizationValidator.validateAuthorization(req, res)
+  .then(isAuthorized => {
+    if(isAuthorized){
+      return mockMissionCreator.CreateMission(req, res);
+    }
+    else
+    {
+      return res.json("user is not authorized");
+    }
   });
 });
 

@@ -1,5 +1,5 @@
 import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
-import { User } from "../../entities/user";
+import { User } from "../../entities/authentication/user";
 
 export class AuthenticationHttpResponseCreator
   implements IAuthenticationHttpResponseCreator {

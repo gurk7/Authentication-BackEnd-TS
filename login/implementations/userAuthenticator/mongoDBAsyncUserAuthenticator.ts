@@ -1,5 +1,5 @@
 import { connect } from "mongodb";
-import { User } from "../../../entities/user";
+import { User } from "../../../entities/authentication/user";
 import { IAsyncUserAuthenticator } from "../../abstractions/userAuthenticator/IAsyncUserAuthenticator";
 
 export class MongoDBAsyncUserAuthenticator implements IAsyncUserAuthenticator {
