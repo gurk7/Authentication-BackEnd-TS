@@ -48,8 +48,8 @@ import { ObjectToDecodedJWTConverter } from "./authorization/implementations/obj
 import { IObjectToDecodedJWTConverter } from './authorization/abstractions/IObjectToDecodedJWTConverter';
 import { IUserAuthorizer } from "./authorization/abstractions/IUserAuthorizer";
 import { ActiveDirectoryByGroupMemberUserAuthorizer } from "./authorization/implementations/activeDirectory/activeDirectoryByGroupMemberUserAuthorizer";
-import { IAuthorizationValidator } from "./authorization/abstractions/IAuthorizationValidator";
-import { AuthorizationValidator } from "./authorization/implementations/authorizationValidator";
+import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
+import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler";
 
 //#endregion
 
@@ -179,9 +179,9 @@ let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let decodedJWTConverter: IObjectToDecodedJWTConverter = new ObjectToDecodedJWTConverter();
 let decodedTokenRetriever: IDecodedTokenRetriever = new DecodedJWTTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
 
-let userAuthorizer : IUserAuthorizer = new ActiveDirectoryByGroupMemberUserAuthorizer(activeDirectory, "Allowed Users");
+let userAuthorizer: IUserAuthorizer = new ActiveDirectoryByGroupMemberUserAuthorizer(activeDirectory, "Allowed Users");
 
-let authorizationValidator : IAuthorizationValidator = new AuthorizationValidator(decodedTokenRetriever, userAuthorizer);
+let authorizationValidator: IAuthorizationHandler = new AuthorizationHandler(decodedTokenRetriever, userAuthorizer);
 
 //#endregion
 
@@ -221,16 +221,9 @@ app.post(loginFromCacheRoute, (req, res) => {
 //#endregion
 
 app.post(missionRoute, (req, res) => {
-  authorizationValidator.validateAuthorization(req, res)
-  .then(isAuthorized => {
-    if(isAuthorized){
-      return mockMissionCreator.CreateMission(req, res);
-    }
-    else
-    {
-      return res.json("user is not authorized");
-    }
-  });
+  authorizationValidator.handleAuthorization(req, res, () =>
+    mockMissionCreator.CreateMission(req, res)
+  );
 });
 
 https

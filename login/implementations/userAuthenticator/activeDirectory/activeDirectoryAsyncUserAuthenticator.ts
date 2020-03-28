@@ -10,9 +10,17 @@ export class ActiveDirectoryAsyncUserAuthenticator implements IAsyncUserAuthenti
     }
 
     async authenticate(inputUser: User) {
-        let isUserAuthenticated: boolean = await this.activeDirectory.user(inputUser.username).authenticate(inputUser.password);
-        console.log(`user ${inputUser.username} is authenticated: ${isUserAuthenticated}`);
+        try
+        {
+            let isUserAuthenticated: boolean = await this.activeDirectory.user(inputUser.username).authenticate(inputUser.password);
+            console.log(`user ${inputUser.username} is authenticated: ${isUserAuthenticated}`);
 
-        return isUserAuthenticated;
+            return isUserAuthenticated;
+        }
+        catch(e)
+        {
+            console.log(`can't authenticate user from active directory. user: ${inputUser.username}`);
+            return false;
+        }
     }
 };
