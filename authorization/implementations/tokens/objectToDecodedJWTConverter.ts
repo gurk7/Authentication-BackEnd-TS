@@ -1,5 +1,5 @@
-import { IObjectToDecodedJWTConverter } from '../abstractions/IObjectToDecodedJWTConverter';
-import { DecodedJWTAuthenticatedUser } from '../../entities/authorization/decodedJWTAuthenticatedUser';
+import { IObjectToDecodedJWTConverter } from '../../abstractions/tokens/IObjectToDecodedJWTConverter';
+import { DecodedJWTAuthenticatedUser } from '../../../entities/authorization/decodedJWTAuthenticatedUser';
 
 export class ObjectToDecodedJWTConverter implements IObjectToDecodedJWTConverter {
 

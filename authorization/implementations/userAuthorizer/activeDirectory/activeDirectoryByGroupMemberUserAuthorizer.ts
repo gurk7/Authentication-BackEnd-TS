@@ -1,5 +1,5 @@
-import { DecodedJWTAuthenticatedUser } from "../../../entities/authorization/decodedJWTAuthenticatedUser";
-import { IUserAuthorizer } from "../../abstractions/IUserAuthorizer";
+import { DecodedJWTAuthenticatedUser } from "../../../../entities/authorization/decodedJWTAuthenticatedUser";
+import { IUserAuthorizer } from "../../../abstractions/userAuthorizer/IUserAuthorizer";
 
 //Authenticate a user by validating that he is in a specific group in active directory
 export class ActiveDirectoryByGroupMemberUserAuthorizer implements IUserAuthorizer {
@@ -16,8 +16,8 @@ export class ActiveDirectoryByGroupMemberUserAuthorizer implements IUserAuthoriz
       .user(decodedJWTAuthenticatedUser.username)
       .isMemberOf(this.groupName);
 
-      console.log(`user ${decodedJWTAuthenticatedUser.username}
-      is member: ${isUserMemberOfGroup} of the group: ${this.groupName}`);
+      console.log(`user ${decodedJWTAuthenticatedUser.username} `  + 
+      `is member: ${isUserMemberOfGroup} of the group: ${this.groupName}`);
       
       return isUserMemberOfGroup;
   }

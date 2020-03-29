@@ -1,4 +1,4 @@
-import { ITokenExtractor } from "../abstractions/ITokenExtractor";
+import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
 
 export class JwtTokenExtractor implements ITokenExtractor {
   ExtractToken(req: any) {

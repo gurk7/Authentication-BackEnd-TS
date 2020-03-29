@@ -1,7 +1,7 @@
 import jwt = require("jsonwebtoken");
-import { IDecodedTokenRetriever } from "../abstractions/IDecodedTokenRetriever";
-import { ITokenExtractor } from "../abstractions/ITokenExtractor";
-import { IObjectToDecodedJWTConverter } from "../../authorization/abstractions/IObjectToDecodedJWTConverter";
+import { IDecodedTokenRetriever } from "../../abstractions/tokens/IDecodedTokenRetriever";
+import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
+import { IObjectToDecodedJWTConverter } from "../../abstractions/tokens/IObjectToDecodedJWTConverter";
 
 export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
   private secretOrPublicKey: string;

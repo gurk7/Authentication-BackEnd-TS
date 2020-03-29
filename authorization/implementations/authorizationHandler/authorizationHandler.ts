@@ -1,6 +1,6 @@
-import { IAuthorizationHandler } from "../abstractions/IAuthorizationHandler";
-import { IDecodedTokenRetriever } from '../../tokens/abstractions/IDecodedTokenRetriever';
-import { IUserAuthorizer } from '../abstractions/IUserAuthorizer';
+import { IAuthorizationHandler } from "../../abstractions/authorizationHandler/IAuthorizationHandler";
+import { IDecodedTokenRetriever } from '../../abstractions/tokens/IDecodedTokenRetriever';
+import { IUserAuthorizer } from '../../abstractions/userAuthorizer/IUserAuthorizer';
 
 export class AuthorizationHandler implements IAuthorizationHandler {
     private decodedTokenRetriever: IDecodedTokenRetriever;

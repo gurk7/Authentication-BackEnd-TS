@@ -16,40 +16,40 @@ const AD = require("ad");
 
 //#region inner imports
 
-import { AsyncLoginHandler } from "./login/implementations/loginHandler/asyncLoginHandler";
-import { IAsyncUserAuthenticator } from "./login/abstractions/userAuthenticator/IAsyncUserAuthenticator";
-import { MongoDBAsyncUserAuthenticator } from "./login/implementations/userAuthenticator/mongoDBAsyncUserAuthenticator";
-import { ILoginHandler } from "./login/abstractions/ILoginHandler";
-import { JwtTokenCreator } from "./tokens/implementations/jwtTokenCreator";
-import { ITokenCreator } from "./tokens/abstractions/ITokenCreator";
-import { JwtTokenExtractor } from "./tokens/implementations/jwtTokenExtractor";
-import { ITokenExtractor } from "./tokens/abstractions/ITokenExtractor";
-import { IDecodedTokenRetriever } from "./tokens/abstractions/IDecodedTokenRetriever";
-import { DecodedJWTTokenRetriever } from "./tokens/implementations/decodedJWTTokenRetriever";
+import { AsyncLoginHandler } from "./authentication/implementations/loginHandler/asyncLoginHandler";
+import { IAsyncUserAuthenticator } from "./authentication/abstractions/userAuthenticator/IAsyncUserAuthenticator";
+import { MongoDBAsyncUserAuthenticator } from "./authentication/implementations/userAuthenticator/mongoDBAsyncUserAuthenticator";
+import { ILoginHandler } from "./authentication/abstractions/loginHandler/ILoginHandler";
+import { JwtTokenCreator } from "./authentication/implementations/tokens/jwtTokenCreator";
+import { ITokenCreator } from "./authentication/abstractions/tokens/ITokenCreator";
+import { JwtTokenExtractor } from "./authorization/implementations/tokens/jwtTokenExtractor";
+import { ITokenExtractor } from "./authorization/abstractions/tokens/ITokenExtractor";
+import { IDecodedTokenRetriever } from "./authorization/abstractions/tokens/IDecodedTokenRetriever";
+import { DecodedJWTTokenRetriever } from "./authorization/implementations/tokens/decodedJWTTokenRetriever";
 import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { ISyncUserAuthenticator } from "./login/abstractions/userAuthenticator/ISyncUserAuthenticator";
-import { SyncLoginHandler } from "./login/implementations/loginHandler/syncLoginHandler";
+import { ISyncUserAuthenticator } from "./authentication/abstractions/userAuthenticator/ISyncUserAuthenticator";
+import { SyncLoginHandler } from "./authentication/implementations/loginHandler/syncLoginHandler";
 import { User } from "./entities/authentication/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
-import { IUserFromRequestExtractor } from "./login/abstractions/IUserFromRequestExtractor";
-import { UserFromRequestExtractor } from "./login/implementations/userFromRequestExtractor";
-import { IAuthenticationHttpResponseCreator } from "./login/abstractions/IAuthenticationHttpResponseCreator";
-import { AuthenticationHttpResponseCreator } from "./login/implementations/authenticationHttpResponseCreator";
-import { CacheSyncUserAuthenticator } from "./login/implementations/userAuthenticator/cacheSyncUserAuthenticator";
+import { IUserFromRequestExtractor } from "./authentication/abstractions/IUserFromRequestExtractor";
+import { UserFromRequestExtractor } from "./authentication/implementations/userFromRequestExtractor";
+import { IAuthenticationHttpResponseCreator } from "./authentication/abstractions/IAuthenticationHttpResponseCreator";
+import { AuthenticationHttpResponseCreator } from "./authentication/implementations/authenticationHttpResponseCreator";
+import { CacheSyncUserAuthenticator } from "./authentication/implementations/userAuthenticator/cacheSyncUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
-import { ActiveDirectoryAsyncUserAuthenticator } from './login/implementations/userAuthenticator/activeDirectory/activeDirectoryAsyncUserAuthenticator'
-import { ObjectToDecodedJWTConverter } from "./authorization/implementations/objectToDecodedJWTConverter";
-import { IObjectToDecodedJWTConverter } from './authorization/abstractions/IObjectToDecodedJWTConverter';
-import { IUserAuthorizer } from "./authorization/abstractions/IUserAuthorizer";
-import { ActiveDirectoryByGroupMemberUserAuthorizer } from "./authorization/implementations/activeDirectory/activeDirectoryByGroupMemberUserAuthorizer";
-import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
-import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler";
+import { ActiveDirectoryAsyncUserAuthenticator } from './authentication/implementations/userAuthenticator/activeDirectory/activeDirectoryAsyncUserAuthenticator'
+import { ObjectToDecodedJWTConverter } from "./authorization/implementations/tokens/objectToDecodedJWTConverter";
+import { IObjectToDecodedJWTConverter } from './authorization/abstractions/tokens/IObjectToDecodedJWTConverter';
+import { IUserAuthorizer } from "./authorization/abstractions/userAuthorizer/IUserAuthorizer";
+import { ActiveDirectoryByGroupMemberUserAuthorizer } from "./authorization/implementations/userAuthorizer/activeDirectory/activeDirectoryByGroupMemberUserAuthorizer";
+import { IAuthorizationHandler } from "./authorization/abstractions/authorizationHandler/IAuthorizationHandler";
+import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler/authorizationHandler";
 
 //#endregion
 
