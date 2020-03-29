@@ -16,16 +16,28 @@ export class AuthorizationHandler implements IAuthorizationHandler {
 
         if (decodedtoken) {
             let isAuthorized = await this.userAuthorizer.authorize(decodedtoken);
+            console.log(`user: ${decodedtoken.username} is authorized: ${isAuthorized}`);
 
             if (isAuthorized) {
+                //User is authorized. calling to a delegate for the continual flow.
                 next();
-                return;
+            }
+            else
+            {                        
+                //User is not authorized and flow can not be continued.
+                res.json({
+                    success: false,
+                    message: `User ${decodedtoken.username} is not authorized`
+                });
             }
         }
-        //In case token could not be decoded or user is not authorized
-        res.json({
-            success: false,
-            message: "User is not authorized"
-        });
+        else
+        {
+            //Received a token that does not match the secret key. Therefore, Token can not be decoded.    
+            res.json({
+                success: false,
+                message: "Can not decode the specified token. check you token's signature (when using JWT)"
+            });
+        }
     }
 }
