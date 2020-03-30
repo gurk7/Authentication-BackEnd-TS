@@ -1,7 +1,7 @@
-import { ILoginHandler } from "../../abstractions/loginHandler/ILoginHandler";
-import { ITokenCreator } from "../../abstractions/tokens/ITokenCreator";
-import { IAsyncUserAuthenticator } from "../../abstractions/userAuthenticator/IAsyncUserAuthenticator";
+import { ILoginHandler } from "../../abstractions/ILoginHandler";
 import { IUserFromRequestExtractor } from "../../abstractions/IUserFromRequestExtractor";
+import { IAsyncUserAuthenticator } from "../../../common/abstractions/authentication/IAsyncUserAuthenticator";
+import { ITokenCreator } from "../../abstractions/ITokenCreator";
 import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenticationHttpResponseCreator";
 
 export class AsyncLoginHandler implements ILoginHandler<Promise<void>> {

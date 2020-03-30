@@ -1,6 +1,6 @@
-import { ILoginHandler } from "../../abstractions/loginHandler/ILoginHandler";
-import { ITokenCreator } from "../../abstractions/tokens/ITokenCreator";
-import { ISyncUserAuthenticator } from "../../abstractions/userAuthenticator/ISyncUserAuthenticator";
+import { ILoginHandler } from "../../abstractions/ILoginHandler";
+import { ITokenCreator } from "../../abstractions/ITokenCreator";
+import { ISyncUserAuthenticator } from "../../../common/abstractions/authentication/ISyncUserAuthenticator";
 import { IUserFromRequestExtractor } from "../../abstractions/IUserFromRequestExtractor";
 import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenticationHttpResponseCreator";
 
