@@ -1,4 +1,4 @@
-import { IMissionCreator } from "../abstractions/IMissionCreator";
+import { IMissionCreator } from "../../abstractions/IMissionCreator";
 
 export class MockMissionCreator implements IMissionCreator {
   CreateMission(req: any, res: any) {

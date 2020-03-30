@@ -26,8 +26,8 @@ import { JwtTokenExtractor } from "./authorization/implementations/tokens/jwtTok
 import { ITokenExtractor } from "./authorization/abstractions/tokens/ITokenExtractor";
 import { IDecodedTokenRetriever } from "./authorization/abstractions/tokens/IDecodedTokenRetriever";
 import { DecodedJWTTokenRetriever } from "./authorization/implementations/tokens/decodedJWTTokenRetriever";
-import { IMissionCreator } from "./missions/abstractions/IMissionCreator";
-import { MockMissionCreator } from "./missions/implementations/mockMissionCreator";
+import { IMissionCreator } from "./authorizedLogics/missions/abstractions/IMissionCreator";
+import { MockMissionCreator } from "./authorizedLogics/missions/implementations/implementations/mockMissionCreator";
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
@@ -54,6 +54,11 @@ import { AuthorizationFailureHttpResponseCreator } from "./authorization/impleme
 import { ActiveDirectoryUserAuthorizer } from "./activeDirectory/authorization/activeDirectoryUserAuthorizer";
 import { IUserFinder } from "./common/abstractions/userFinder/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "./activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
+import { IUserInformationGetter } from "./authorizedLogics/userInformation/abstractions/IUserInformationGetter";
+import { ActiveDirectoryUserInformation } from "./activeDirectory/entities/userInformation/activeDirectoryUserInformation";
+import { UserInformationGetter } from "./authorizedLogics/userInformation/implementations/userInformationGetter";
+import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
+import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
 
 //#endregion
 
@@ -200,6 +205,20 @@ let authorizationHandler: IAuthorizationHandler = new AuthorizationHandler(decod
 
 //#endregion
 
+//#region user information
+
+//#region active directory
+
+let activeDirectoryUserInformationRetriever: IUserInformationRetriever<ActiveDirectoryUserInformation> = 
+new ActiveDirectoryUserInformationRetriever(activeDirectory);
+
+let activeDirectoryUserInformationGetter : IUserInformationGetter<ActiveDirectoryUserInformation> = 
+new UserInformationGetter<ActiveDirectoryUserInformation>(decodedTokenRetriever, activeDirectoryUserInformationRetriever);
+
+//#endregion
+
+//#endregion
+
 //#region missions
 
 let mockMissionCreator: IMissionCreator = new MockMissionCreator();
@@ -235,10 +254,18 @@ app.post(loginFromCacheRoute, (req, res) => {
 
 //#endregion
 
-app.post(missionRoute, (req, res) => {
-  authorizationHandler.handleAuthorization(req, res, () =>
-    mockMissionCreator.CreateMission(req, res)
-  );
+app.post("/user/information", async (req, res) => {
+  let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
+  if(isAuthorized)
+  {
+    let userInformation = await activeDirectoryUserInformationGetter.getUserInformation(req, res);
+    res.json(userInformation);
+  }
+});
+
+app.post(missionRoute, async (req, res) => {
+  let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
+  if(isAuthorized) mockMissionCreator.CreateMission(req, res);
 });
 
 https
