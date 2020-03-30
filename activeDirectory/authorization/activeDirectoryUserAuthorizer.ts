@@ -1,5 +1,5 @@
 import { IUserAuthorizer } from "../../common/abstractions/authorization/IUserAuthorizer";
-import { DecodedJWTAuthenticatedUser } from "../../entities/authorization/decodedJWTAuthenticatedUser";
+import { DecodedJWTAuthenticatedUser } from "../../common/entities/authorization/decodedJWTAuthenticatedUser";
 import { IUserFinder } from "../../common/abstractions/userFinder/IUserFinder";
 
 export class ActiveDirectoryUserAuthorizer implements IUserAuthorizer {

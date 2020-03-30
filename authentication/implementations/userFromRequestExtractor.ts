@@ -1,4 +1,4 @@
-import { User } from "../../entities/authentication/user";
+import { User } from "../../common/entities/authentication/user";
 import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
 
 export class UserFromRequestExtractor implements IUserFromRequestExtractor {

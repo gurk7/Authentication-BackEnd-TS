@@ -33,7 +33,7 @@ import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
 import { ISyncUserAuthenticator } from "./common/abstractions/authentication/ISyncUserAuthenticator";
 import { SyncLoginHandler } from "./authentication/implementations/loginHandler/syncLoginHandler";
-import { User } from "./entities/authentication/user";
+import { User } from "./common/entities/authentication/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
