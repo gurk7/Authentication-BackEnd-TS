@@ -1,5 +1,5 @@
 import { IAuthorizationFailureHttpResponseCreator } from "../abstractions/IAuthorizationFailureHttpResponseCreator";
-import { DecodedJWTAuthenticatedUser } from "../../entities/authorization/decodedJWTAuthenticatedUser";
+import { DecodedJWTAuthenticatedUser } from "../../common/entities/authorization/decodedJWTAuthenticatedUser";
 
 export class AuthorizationFailureHttpResponseCreator
   implements  IAuthorizationFailureHttpResponseCreator
