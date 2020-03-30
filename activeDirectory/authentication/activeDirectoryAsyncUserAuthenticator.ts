@@ -1,7 +1,6 @@
-import { User } from "../../../../entities/authentication/user";
-import { IAsyncUserAuthenticator } from "../../../abstractions/userAuthenticator/IAsyncUserAuthenticator";
+import { User } from "../../entities/authentication/user";
+import { IAsyncUserAuthenticator } from "../../common/abstractions/authentication/IAsyncUserAuthenticator";
 
-//Authenticate a user by validating that he is in a specific group in active directory
 export class ActiveDirectoryAsyncUserAuthenticator implements IAsyncUserAuthenticator {
     private activeDirectory: any;
 
@@ -13,13 +12,12 @@ export class ActiveDirectoryAsyncUserAuthenticator implements IAsyncUserAuthenti
         try
         {
             let isUserAuthenticated: boolean = await this.activeDirectory.user(inputUser.username).authenticate(inputUser.password);
-            console.log(`user ${inputUser.username} is authenticated: ${isUserAuthenticated}`);
-
             return isUserAuthenticated;
         }
         catch(e)
         {
-            console.log(`can't authenticate user from active directory. user: ${inputUser.username}`);
+            console.log(`Can't authenticate user: ${inputUser.username} in active directory. check your domain connection`)
+            console.log(e);
             return false;
         }
     }
