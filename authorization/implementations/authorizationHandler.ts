@@ -17,7 +17,7 @@ export class AuthorizationHandler implements IAuthorizationHandler {
         this.authorizationFailureHttpResponseCreator = authorizationFailureHttpResponseCreator;
     }
 
-    async handleAuthorization(req: any, res: any, next: any) {
+    async handleAuthorization(req: any, res: any) {
         let decodedtoken = this.decodedTokenRetriever.retrieveDecodedToken(req);
 
         if (decodedtoken) {
@@ -25,8 +25,7 @@ export class AuthorizationHandler implements IAuthorizationHandler {
             console.log(`user: ${decodedtoken.username} is authorized: ${isAuthorized}`);
 
             if (isAuthorized) {
-                //User is authorized. calling to a delegate for the continual flow.
-                next();
+                return true;
             }
             else
             {                        
@@ -39,5 +38,8 @@ export class AuthorizationHandler implements IAuthorizationHandler {
             //Received a token that does not match the secret key. Therefore, Token can not be decoded.    
             this.authorizationFailureHttpResponseCreator.createResponseForUnAuthenticatedUser(res);
         }
+        
+        //Authorization Failure
+        return false;
     }
 }
