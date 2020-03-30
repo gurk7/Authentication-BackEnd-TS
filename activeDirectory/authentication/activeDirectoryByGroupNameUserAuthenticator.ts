@@ -1,5 +1,5 @@
 import { IAsyncUserAuthenticator } from "../../common/abstractions/authentication/IAsyncUserAuthenticator";
-import { User } from "../../entities/authentication/user";
+import { User } from "../../common/entities/authentication/user";
 import { IUserFinder } from "../../common/abstractions/userFinder/IUserFinder";
 
 export class ActiveDirectoryByGroupNameUserAuthenticatorDecorator implements IAsyncUserAuthenticator {
@@ -14,7 +14,7 @@ export class ActiveDirectoryByGroupNameUserAuthenticatorDecorator implements IAs
   async authenticate(inputUser: User) {
       let isUserAuthenticatedInActiveDirectory = await this.innerActiveDirectoryUserAuthenticator.authenticate(inputUser);
       if(!isUserAuthenticatedInActiveDirectory) return false;
-      
+
       return await this.activeDirectoryGroupMemberUserFinder.find(inputUser.username);
       
   }
