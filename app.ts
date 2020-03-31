@@ -45,7 +45,7 @@ import { ObjectToDecodedJWTConverter } from "./authorization/implementations/tok
 import { IObjectToDecodedJWTConverter } from './authorization/abstractions/tokens/IObjectToDecodedJWTConverter';
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
 import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler";
-import { IUserAuthorizer } from "./common/abstractions/IUserAuthorizer";
+import { IUserAuthorizer } from "./authorization/abstractions/IUserAuthorizer";
 import { IAuthorizationFailureHttpResponseCreator } from "./authorization/abstractions/IAuthorizationFailureHttpResponseCreator";
 import { AuthorizationFailureHttpResponseCreator } from "./authorization/implementations/authorizationFailureHttpResponseCreator";
 import { ActiveDirectoryUserAuthorizer } from "./activeDirectory/authorization/activeDirectoryUserAuthorizer";
@@ -56,7 +56,7 @@ import { ActiveDirectoryUserInformation } from "./activeDirectory/entities/userI
 import { UserInformationGetter } from "./authorizedLogics/userInformation/implementations/userInformationGetter";
 import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
 import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
-import { IUserAuthenticator } from "./common/abstractions/IUserAuthenticator";
+import { IUserAuthenticator } from "./authentication/abstractions/IUserAuthenticator";
 
 //#endregion
 
@@ -136,26 +136,26 @@ let jwtTokenCreator: ITokenCreator = new JwtTokenCreator(
 
 let authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator = new AuthenticationHttpResponseCreator();
 
-//#region async (MongoDB)
+//#region MongoDB
 
-let mongoDBAsyncUserAuthenticator: IUserAuthenticator = new MongoDBUserAuthenticator(
+let mongoDBUserAuthenticator: IUserAuthenticator = new MongoDBUserAuthenticator(
   mongoConnectionString
 );
-let asyncLoginHandler: ILoginHandler = new LoginHandler(
+let mongoDBLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
-  mongoDBAsyncUserAuthenticator,
+  mongoDBUserAuthenticator,
   jwtTokenCreator,
   authenticationHttpResponseCreator
 );
 
 //#endregion
 
-//#region async (ActiveDirectory)
+//#region ActiveDirectory
 
 let activeDirectoryAsyncUserAuthenticator: IUserAuthenticator = new ActiveDirectoryUserAuthenticator(
   activeDirectory
 );
-let asyncActiveDirectoryLoginHandler: ILoginHandler = new LoginHandler(
+let activeDirectoryLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   activeDirectoryAsyncUserAuthenticator,
   jwtTokenCreator,
@@ -164,15 +164,15 @@ let asyncActiveDirectoryLoginHandler: ILoginHandler = new LoginHandler(
 
 //#endregion
 
-//#region sync (Cache)
+//#region Cache
 
 let allowedUsers: User[] = [new User("china", "china")];
-let cacheSyncUserAuthenticator: IUserAuthenticator = new CacheSyncUserAuthenticator(
+let cacheUserAuthenticator: IUserAuthenticator = new CacheSyncUserAuthenticator(
   allowedUsers
 );
-let syncLoginHandler: ILoginHandler = new LoginHandler(
+let cacheLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
-  cacheSyncUserAuthenticator,
+  cacheUserAuthenticator,
   jwtTokenCreator,
   authenticationHttpResponseCreator
 );
@@ -239,20 +239,20 @@ app.use(
 //#region log in API
 
 app.post(loginFromMongoDBRoute, (req, res) => {
-  asyncLoginHandler.handleLogin(req, res);
+  mongoDBLoginHandler.handleLogin(req, res);
 });
 
 app.post(loginFromActiveDirectory, (req, res) => {
-  asyncActiveDirectoryLoginHandler.handleLogin(req, res);
+  activeDirectoryLoginHandler.handleLogin(req, res);
 })
 
 app.post(loginFromCacheRoute, (req, res) => {
-  syncLoginHandler.handleLogin(req, res);
+  cacheLoginHandler.handleLogin(req, res);
 });
 
 //#endregion
 
-app.post("/user/information", async (req, res) => {
+app.get("/user/information", async (req, res) => {
   let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
   if(isAuthorized)
   {

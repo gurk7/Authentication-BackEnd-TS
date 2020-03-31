@@ -1,5 +1,5 @@
 import { User } from "../../common/entities/authentication/user";
-import { IUserAuthenticator } from "../../common/abstractions/IUserAuthenticator";
+import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
 
 export class ActiveDirectoryUserAuthenticator implements IUserAuthenticator {
     private activeDirectory: any;

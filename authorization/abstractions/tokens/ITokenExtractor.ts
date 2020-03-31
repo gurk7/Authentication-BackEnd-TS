@@ -1,3 +1,5 @@
+import express = require('express');
+
 export interface ITokenExtractor {
-  ExtractToken(req: any): string;
+  ExtractToken(req: express.Request): string | undefined;
 }

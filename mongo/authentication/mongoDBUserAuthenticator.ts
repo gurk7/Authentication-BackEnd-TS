@@ -1,6 +1,6 @@
 import { connect } from "mongodb";
 import { User } from "../../common/entities/authentication/user";
-import { IUserAuthenticator } from "../../common/abstractions/IUserAuthenticator";
+import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
 
 export class MongoDBUserAuthenticator implements IUserAuthenticator {
   private mongoUrl: string;

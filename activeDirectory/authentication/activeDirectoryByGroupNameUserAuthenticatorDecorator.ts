@@ -1,4 +1,4 @@
-import { IUserAuthenticator } from "../../common/abstractions/IUserAuthenticator";
+import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
 import { User } from "../../common/entities/authentication/user";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 

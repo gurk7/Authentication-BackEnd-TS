@@ -1,4 +1,4 @@
-import { IUserAuthorizer } from "../../common/abstractions/IUserAuthorizer";
+import { IUserAuthorizer } from "../../authorization/abstractions/IUserAuthorizer";
 import { DecodedJWTAuthenticatedUser } from "../../common/entities/authorization/decodedJWTAuthenticatedUser";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 

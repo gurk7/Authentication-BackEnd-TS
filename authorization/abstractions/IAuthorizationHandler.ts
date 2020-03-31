@@ -1,3 +1,5 @@
+import express = require('express');
+
 export interface IAuthorizationHandler {
-  handleAuthorization(req: any, res: any): Promise<boolean>;
+  handleAuthorization(req: express.Request, res: express.Response): Promise<boolean>;
 }
