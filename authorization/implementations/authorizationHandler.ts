@@ -1,7 +1,8 @@
 import { IAuthorizationHandler } from "../abstractions/IAuthorizationHandler";
 import { IDecodedTokenRetriever } from '../abstractions/tokens/IDecodedTokenRetriever';
-import { IUserAuthorizer } from "../../common/abstractions/authorization/IUserAuthorizer";
+import { IUserAuthorizer } from "../abstractions/IUserAuthorizer";
 import {IAuthorizationFailureHttpResponseCreator} from '../abstractions/IAuthorizationFailureHttpResponseCreator'
+import express = require('express');
 
 export class AuthorizationHandler implements IAuthorizationHandler {
     private decodedTokenRetriever: IDecodedTokenRetriever;
@@ -17,7 +18,7 @@ export class AuthorizationHandler implements IAuthorizationHandler {
         this.authorizationFailureHttpResponseCreator = authorizationFailureHttpResponseCreator;
     }
 
-    async handleAuthorization(req: any, res: any) {
+    async handleAuthorization(req: express.Request, res: express.Response) {
         let decodedtoken = this.decodedTokenRetriever.retrieveDecodedToken(req);
 
         if (decodedtoken) {

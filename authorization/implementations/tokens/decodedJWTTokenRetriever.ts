@@ -2,6 +2,7 @@ import jwt = require("jsonwebtoken");
 import { IDecodedTokenRetriever } from "../../abstractions/tokens/IDecodedTokenRetriever";
 import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
 import { IObjectToDecodedJWTConverter } from "../../abstractions/tokens/IObjectToDecodedJWTConverter";
+import express = require('express');
 
 export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
   private secretOrPublicKey: string;
@@ -14,13 +15,21 @@ export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
     this.converter = converter;
   }
 
-  retrieveDecodedToken(req: any) {
+  retrieveDecodedToken(req: express.Request) {
     let token = this.tokenExtractor.ExtractToken(req);
+    if(!token)
+    {
+      console.log("Can't extract token from request");
+      console.log(req.body);
+      return;
+    }     
     console.log(`extracted token: ${token}`);
 
-    try {
+    try
+    {
       let decoded = jwt.verify(token, this.secretOrPublicKey);
-      try {
+      try
+      {
         return this.converter.convert(decoded);
       }
       catch (e) {
@@ -28,7 +37,8 @@ export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
         console.log(e);
       }
     }
-    catch (e) {
+    catch(e)
+    {
       console.log(`can't retrieve decoded token for ${token}`);
       console.log(e);
     }
