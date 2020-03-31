@@ -10,7 +10,7 @@ export class ActiveDirectoryUserAuthorizer implements IUserAuthorizer {
   }
 
   async authorize(decodedUser: DecodedJWTAuthenticatedUser) {
-    return this.activeDirectoryUserFinder.find(decodedUser.username);
+    return await this.activeDirectoryUserFinder.find(decodedUser.username);
   }
 }
 
