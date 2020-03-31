@@ -16,9 +16,8 @@ const AD = require("ad");
 
 //#region inner imports
 
-import { AsyncLoginHandler } from "./authentication/implementations/loginHandler/asyncLoginHandler";
-import { IAsyncUserAuthenticator } from "./common/abstractions/authentication/IAsyncUserAuthenticator";
-import { MongoDBAsyncUserAuthenticator } from "./mongo/authentication/mongoDBAsyncUserAuthenticator";
+import { LoginHandler } from "./authentication/implementations/loginHandler";
+import { MongoDBUserAuthenticator } from "./mongo/authentication/mongoDBUserAuthenticator";
 import { ILoginHandler } from "./authentication/abstractions/ILoginHandler";
 import { JwtTokenCreator } from "./authentication/implementations/jwtTokenCreator";
 import { ITokenCreator } from "./authentication/abstractions/ITokenCreator";
@@ -31,8 +30,6 @@ import { MockMissionCreator } from "./authorizedLogics/missions/implementations/
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { ISyncUserAuthenticator } from "./common/abstractions/authentication/ISyncUserAuthenticator";
-import { SyncLoginHandler } from "./authentication/implementations/loginHandler/syncLoginHandler";
 import { User } from "./common/entities/authentication/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
@@ -41,24 +38,25 @@ import { IUserFromRequestExtractor } from "./authentication/abstractions/IUserFr
 import { UserFromRequestExtractor } from "./authentication/implementations/userFromRequestExtractor";
 import { IAuthenticationHttpResponseCreator } from "./authentication/abstractions/IAuthenticationHttpResponseCreator";
 import { AuthenticationHttpResponseCreator } from "./authentication/implementations/authenticationHttpResponseCreator";
-import { CacheSyncUserAuthenticator } from "./cache/authentication/cacheSyncUserAuthenticator";
+import { CacheSyncUserAuthenticator } from "./cache/authentication/cacheUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
-import { ActiveDirectoryAsyncUserAuthenticator } from './activeDirectory/authentication/activeDirectoryAsyncUserAuthenticator'
+import { ActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/activeDirectoryUserAuthenticator'
 import { ObjectToDecodedJWTConverter } from "./authorization/implementations/tokens/objectToDecodedJWTConverter";
 import { IObjectToDecodedJWTConverter } from './authorization/abstractions/tokens/IObjectToDecodedJWTConverter';
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
 import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler";
-import { IUserAuthorizer } from "./common/abstractions/authorization/IUserAuthorizer";
+import { IUserAuthorizer } from "./common/abstractions/IUserAuthorizer";
 import { IAuthorizationFailureHttpResponseCreator } from "./authorization/abstractions/IAuthorizationFailureHttpResponseCreator";
 import { AuthorizationFailureHttpResponseCreator } from "./authorization/implementations/authorizationFailureHttpResponseCreator";
 import { ActiveDirectoryUserAuthorizer } from "./activeDirectory/authorization/activeDirectoryUserAuthorizer";
-import { IUserFinder } from "./common/abstractions/userFinder/IUserFinder";
+import { IUserFinder } from "./common/abstractions/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "./activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
 import { IUserInformationGetter } from "./authorizedLogics/userInformation/abstractions/IUserInformationGetter";
 import { ActiveDirectoryUserInformation } from "./activeDirectory/entities/userInformation/activeDirectoryUserInformation";
 import { UserInformationGetter } from "./authorizedLogics/userInformation/implementations/userInformationGetter";
 import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
 import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
+import { IUserAuthenticator } from "./common/abstractions/IUserAuthenticator";
 
 //#endregion
 
@@ -140,10 +138,10 @@ let authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator = new 
 
 //#region async (MongoDB)
 
-let mongoDBAsyncUserAuthenticator: IAsyncUserAuthenticator = new MongoDBAsyncUserAuthenticator(
+let mongoDBAsyncUserAuthenticator: IUserAuthenticator = new MongoDBUserAuthenticator(
   mongoConnectionString
 );
-let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
+let asyncLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   mongoDBAsyncUserAuthenticator,
   jwtTokenCreator,
@@ -154,10 +152,10 @@ let asyncLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
 
 //#region async (ActiveDirectory)
 
-let activeDirectoryAsyncUserAuthenticator: IAsyncUserAuthenticator = new ActiveDirectoryAsyncUserAuthenticator(
+let activeDirectoryAsyncUserAuthenticator: IUserAuthenticator = new ActiveDirectoryUserAuthenticator(
   activeDirectory
 );
-let asyncActiveDirectoryLoginHandler: ILoginHandler<Promise<void>> = new AsyncLoginHandler(
+let asyncActiveDirectoryLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   activeDirectoryAsyncUserAuthenticator,
   jwtTokenCreator,
@@ -169,10 +167,10 @@ let asyncActiveDirectoryLoginHandler: ILoginHandler<Promise<void>> = new AsyncLo
 //#region sync (Cache)
 
 let allowedUsers: User[] = [new User("china", "china")];
-let cacheSyncUserAuthenticator: ISyncUserAuthenticator = new CacheSyncUserAuthenticator(
+let cacheSyncUserAuthenticator: IUserAuthenticator = new CacheSyncUserAuthenticator(
   allowedUsers
 );
-let syncLoginHandler: ILoginHandler<void> = new SyncLoginHandler(
+let syncLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   cacheSyncUserAuthenticator,
   jwtTokenCreator,

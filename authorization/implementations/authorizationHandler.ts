@@ -1,6 +1,6 @@
 import { IAuthorizationHandler } from "../abstractions/IAuthorizationHandler";
 import { IDecodedTokenRetriever } from '../abstractions/tokens/IDecodedTokenRetriever';
-import { IUserAuthorizer } from "../../common/abstractions/authorization/IUserAuthorizer";
+import { IUserAuthorizer } from "../../common/abstractions/IUserAuthorizer";
 import {IAuthorizationFailureHttpResponseCreator} from '../abstractions/IAuthorizationFailureHttpResponseCreator'
 
 export class AuthorizationHandler implements IAuthorizationHandler {

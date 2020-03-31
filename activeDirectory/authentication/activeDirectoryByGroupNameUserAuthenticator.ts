@@ -1,12 +1,12 @@
-import { IAsyncUserAuthenticator } from "../../common/abstractions/authentication/IAsyncUserAuthenticator";
+import { IUserAuthenticator } from "../../common/abstractions/IUserAuthenticator";
 import { User } from "../../common/entities/authentication/user";
-import { IUserFinder } from "../../common/abstractions/userFinder/IUserFinder";
+import { IUserFinder } from "../../common/abstractions/IUserFinder";
 
-export class ActiveDirectoryByGroupNameUserAuthenticatorDecorator implements IAsyncUserAuthenticator {
-  private innerActiveDirectoryUserAuthenticator: IAsyncUserAuthenticator;
+export class ActiveDirectoryByGroupNameUserAuthenticatorDecorator implements IUserAuthenticator {
+  private innerActiveDirectoryUserAuthenticator: IUserAuthenticator;
   private activeDirectoryGroupMemberUserFinder: IUserFinder;
 
-  constructor(innerActiveDirectoryUserAuthenticator: IAsyncUserAuthenticator, activeDirectoryGroupMemberUserFinder: IUserFinder) {
+  constructor(innerActiveDirectoryUserAuthenticator: IUserAuthenticator, activeDirectoryGroupMemberUserFinder: IUserFinder) {
     this.innerActiveDirectoryUserAuthenticator = innerActiveDirectoryUserAuthenticator;
     this.activeDirectoryGroupMemberUserFinder = activeDirectoryGroupMemberUserFinder;  
   }

@@ -1,18 +1,18 @@
-import { ILoginHandler } from "../../abstractions/ILoginHandler";
-import { IUserFromRequestExtractor } from "../../abstractions/IUserFromRequestExtractor";
-import { IAsyncUserAuthenticator } from "../../../common/abstractions/authentication/IAsyncUserAuthenticator";
-import { ITokenCreator } from "../../abstractions/ITokenCreator";
-import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenticationHttpResponseCreator";
+import { ILoginHandler } from "../abstractions/ILoginHandler";
+import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
+import { IUserAuthenticator } from "../../common/abstractions/IUserAuthenticator";
+import { ITokenCreator } from "../abstractions/ITokenCreator";
+import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
 
-export class AsyncLoginHandler implements ILoginHandler<Promise<void>> {
+export class LoginHandler implements ILoginHandler {
   private userFromRequestExtractor: IUserFromRequestExtractor;
-  private asyncUserAuthenticator: IAsyncUserAuthenticator;
+  private asyncUserAuthenticator: IUserAuthenticator;
   private tokenCreator: ITokenCreator;
   private authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator;
 
   constructor(
     userFromRequestExtractor: IUserFromRequestExtractor,
-    asyncUserAuthenticator: IAsyncUserAuthenticator,
+    asyncUserAuthenticator: IUserAuthenticator,
     tokenCreator: ITokenCreator,
     authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator
   ) {
