@@ -1,12 +1,13 @@
 import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
 import { User } from "../../common/entities/authentication/user";
+import express = require('express');
 
 export class AuthenticationHttpResponseCreator
   implements IAuthenticationHttpResponseCreator {
   createResponseForAuthenticatedUser(
     authonticatedUser: User,
     token: string,
-    res: any
+    res: express.Response
   ) {
     console.log(
       `retrieved for authenticated user: ${authonticatedUser.username} the token: ${token} `
@@ -19,7 +20,7 @@ export class AuthenticationHttpResponseCreator
     });
   }
 
-  createResponseForUnAuthenticatedUser(unauthenticatedUser: User, res: any) {
+  createResponseForUnAuthenticatedUser(unauthenticatedUser: User, res: express.Response) {
     console.log(
       `can't retrieve token for unauthenticated user: ${unauthenticatedUser.username}`
     );

@@ -1,5 +1,5 @@
-//Login is generic because HandleLogin might be a void function or it might return Promise<void>
+import express = require('express');
 
-export interface ILoginHandler<T> {
-  handleLogin(req: any, res: any): T;
+export interface ILoginHandler {
+  handleLogin(req: express.Request, res: express.Response): Promise<void>;
 }

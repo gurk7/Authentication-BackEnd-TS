@@ -1,31 +1,32 @@
-import { ILoginHandler } from "../../abstractions/ILoginHandler";
-import { IUserFromRequestExtractor } from "../../abstractions/IUserFromRequestExtractor";
-import { IAsyncUserAuthenticator } from "../../../common/abstractions/authentication/IAsyncUserAuthenticator";
-import { ITokenCreator } from "../../abstractions/ITokenCreator";
-import { IAuthenticationHttpResponseCreator } from "../../abstractions/IAuthenticationHttpResponseCreator";
+import { ILoginHandler } from "../abstractions/ILoginHandler";
+import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
+import { IUserAuthenticator } from "../abstractions/IUserAuthenticator";
+import { ITokenCreator } from "../abstractions/ITokenCreator";
+import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
+import express = require('express');
 
-export class AsyncLoginHandler implements ILoginHandler<Promise<void>> {
+export class LoginHandler implements ILoginHandler {
   private userFromRequestExtractor: IUserFromRequestExtractor;
-  private asyncUserAuthenticator: IAsyncUserAuthenticator;
+  private userAuthenticator: IUserAuthenticator;
   private tokenCreator: ITokenCreator;
   private authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator;
 
   constructor(
     userFromRequestExtractor: IUserFromRequestExtractor,
-    asyncUserAuthenticator: IAsyncUserAuthenticator,
+    asyncUserAuthenticator: IUserAuthenticator,
     tokenCreator: ITokenCreator,
     authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator
   ) {
     this.userFromRequestExtractor = userFromRequestExtractor;
-    this.asyncUserAuthenticator = asyncUserAuthenticator;
+    this.userAuthenticator = asyncUserAuthenticator;
     this.tokenCreator = tokenCreator;
     this.authenticationHttpResponseCreator = authenticationHttpResponseCreator;
   }
 
-  public async handleLogin(req: any, res: any) {
+  public async handleLogin(req: express.Request, res: express.Response) {
     let inputUser = this.userFromRequestExtractor.extract(req);
 
-    let isUserAuthenticated = await this.asyncUserAuthenticator.authenticate(
+    let isUserAuthenticated = await this.userAuthenticator.authenticate(
       inputUser
     );
 

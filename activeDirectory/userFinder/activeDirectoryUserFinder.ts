@@ -1,4 +1,4 @@
-import { IUserFinder } from "../../common/abstractions/userFinder/IUserFinder";
+import { IUserFinder } from "../../common/abstractions/IUserFinder";
 
 export class ActiveDirectoryUserFinder implements IUserFinder {
   private activeDirectory: any;
