@@ -1,4 +1,4 @@
-import { User } from "../../common/entities/authentication/user";
+import { User } from "../entities/user";
 import { IUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
 import express = require('express');
 

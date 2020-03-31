@@ -1,5 +1,5 @@
 import { IAuthenticationHttpResponseCreator } from "../abstractions/IAuthenticationHttpResponseCreator";
-import { User } from "../../common/entities/authentication/user";
+import { User } from "../entities/user";
 import express = require('express');
 
 export class AuthenticationHttpResponseCreator

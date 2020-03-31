@@ -1,5 +1,5 @@
 import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
-import { User } from "../../common/entities/authentication/user";
+import { User } from "../../authentication/entities/user";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 
 export class ActiveDirectoryByGroupNameUserAuthenticatorDecorator implements IUserAuthenticator {

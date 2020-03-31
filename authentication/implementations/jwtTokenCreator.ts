@@ -1,5 +1,5 @@
 import { ITokenCreator } from "../abstractions/ITokenCreator";
-import { User } from "../../common/entities/authentication/user";
+import { User } from "../entities/user";
 import jwt = require("jsonwebtoken");
 
 export class JwtTokenCreator implements ITokenCreator {

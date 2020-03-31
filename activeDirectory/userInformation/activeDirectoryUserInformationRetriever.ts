@@ -1,5 +1,5 @@
 import { IUserInformationRetriever } from "../../authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
-import { DecodedJWTAuthenticatedUser } from "../../common/entities/authorization/decodedJWTAuthenticatedUser";
+import { DecodedJWTAuthenticatedUser } from "../../authorization/entities/decodedJWTAuthenticatedUser";
 import { ActiveDirectoryUserInformation } from "../entities/userInformation/activeDirectoryUserInformation";
 
 export class ActiveDirectoryUserInformationRetriever implements IUserInformationRetriever<ActiveDirectoryUserInformation>

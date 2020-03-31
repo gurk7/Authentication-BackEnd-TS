@@ -30,7 +30,7 @@ import { MockMissionCreator } from "./authorizedLogics/missions/implementations/
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { User } from "./common/entities/authentication/user";
+import { User } from "./authentication/entities/user";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";

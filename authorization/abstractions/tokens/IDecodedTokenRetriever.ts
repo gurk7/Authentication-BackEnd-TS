@@ -1,4 +1,4 @@
-import { DecodedJWTAuthenticatedUser } from "../../../common/entities/authorization/decodedJWTAuthenticatedUser";
+import { DecodedJWTAuthenticatedUser } from "../../entities/decodedJWTAuthenticatedUser";
 import express = require('express');
 
 export interface IDecodedTokenRetriever {

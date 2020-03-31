@@ -1,4 +1,4 @@
-import { User } from "../../common/entities/authentication/user";
+import { User } from "../entities/user";
 
 export interface ITokenCreator {
   create(user: User): string;
