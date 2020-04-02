@@ -1,6 +1,7 @@
 //#region outer imports
 
 import express = require("express");
+import cors = require("cors");
 import https = require("https");
 import fs = require("fs");
 import bodyParser = require("body-parser");
@@ -89,7 +90,7 @@ let tokenExpirationTime = tokensConfig.tokenExpirationTime;
 //#region routes
 
 let loginFromMongoDBRoute = routesConfig.loginFromMongoDBRoute;
-let loginFromActiveDirectory = routesConfig.loginFromActiveDirectoryRoute;
+let loginFromActiveDirectoryRoute = routesConfig.loginFromActiveDirectoryRoute;
 let loginFromCacheRoute = routesConfig.loginFromCacheRoute;
 let missionRoute = routesConfig.missionRoute;
 
@@ -230,6 +231,7 @@ let mockMissionCreator: IMissionCreator = new MockMissionCreator();
 const app: express.Application = express();
 
 app.use(
+  cors(),
   bodyParser.urlencoded({
     extended: true
   }),
@@ -238,21 +240,21 @@ app.use(
 
 //#region log in API
 
-app.post(loginFromMongoDBRoute, (req, res) => {
+app.post(loginFromMongoDBRoute, (req: express.Request, res: express.Response) => {
   mongoDBLoginHandler.handleLogin(req, res);
 });
 
-app.post(loginFromActiveDirectory, (req, res) => {
+app.post(loginFromActiveDirectoryRoute, (req: express.Request, res: express.Response) => {
   activeDirectoryLoginHandler.handleLogin(req, res);
 })
 
-app.post(loginFromCacheRoute, (req, res) => {
+app.post(loginFromCacheRoute, (req: express.Request, res: express.Response) => {
   cacheLoginHandler.handleLogin(req, res);
 });
 
 //#endregion
 
-app.get("/user/information", async (req, res) => {
+app.get("/user/information", async (req: express.Request, res: express.Response) => {
   let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
   if(isAuthorized)
   {
@@ -261,7 +263,7 @@ app.get("/user/information", async (req, res) => {
   }
 });
 
-app.post(missionRoute, async (req, res) => {
+app.post(missionRoute, async (req: express.Request, res: express.Response) => {
   let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
   if(isAuthorized) mockMissionCreator.CreateMission(req, res);
 });
