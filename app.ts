@@ -47,8 +47,8 @@ import { IObjectToDecodedJWTConverter } from './authorization/abstractions/token
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
 import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler";
 import { IUserAuthorizer } from "./authorization/abstractions/IUserAuthorizer";
-import { IAuthorizationFailureHttpResponseCreator } from "./authorization/abstractions/IAuthorizationFailureHttpResponseCreator";
-import { AuthorizationFailureHttpResponseCreator } from "./authorization/implementations/authorizationFailureHttpResponseCreator";
+import { IAuthorizationFailureResponseCreator } from "./authorization/abstractions/IAuthorizationFailureResponseCreator";
+import { AuthorizationFailureResponseCreator } from "./authorization/implementations/authorizationFailureResponseCreator";
 import { ActiveDirectoryUserAuthorizer } from "./activeDirectory/authorization/activeDirectoryUserAuthorizer";
 import { IUserFinder } from "./common/abstractions/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "./activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
@@ -209,9 +209,13 @@ let activeDirectoryByGroupMemberUserAuthorizer: IUserAuthorizer = new ActiveDire
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let decodedJWTConverter: IObjectToDecodedJWTConverter = new ObjectToDecodedJWTConverter();
 let decodedTokenRetriever: IDecodedTokenRetriever = new DecodedJWTTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
-let authorizationFailureHttpResponseCreator: IAuthorizationFailureHttpResponseCreator = new AuthorizationFailureHttpResponseCreator();
+let authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator = new AuthorizationFailureResponseCreator();
 
-let authorizationHandler: IAuthorizationHandler = new AuthorizationHandler(decodedTokenRetriever, activeDirectoryByGroupMemberUserAuthorizer, authorizationFailureHttpResponseCreator);
+let authorizationHandler: IAuthorizationHandler = new AuthorizationHandler(
+  decodedTokenRetriever,
+   activeDirectoryByGroupMemberUserAuthorizer,
+    authorizationFailureHttpResponseCreator,
+    jsonHttpResponseSender);
 
 //#endregion
 

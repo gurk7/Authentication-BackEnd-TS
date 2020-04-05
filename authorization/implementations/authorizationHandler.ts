@@ -1,21 +1,26 @@
 import { IAuthorizationHandler } from "../abstractions/IAuthorizationHandler";
 import { IDecodedTokenRetriever } from '../abstractions/tokens/IDecodedTokenRetriever';
 import { IUserAuthorizer } from "../abstractions/IUserAuthorizer";
-import {IAuthorizationFailureHttpResponseCreator} from '../abstractions/IAuthorizationFailureHttpResponseCreator'
+import {IAuthorizationFailureResponseCreator} from '../abstractions/IAuthorizationFailureResponseCreator'
+import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
 import express = require('express');
+import { FailedAuthorizationResponse } from "../entities/response/failedAuthorizationResponse";
 
 export class AuthorizationHandler implements IAuthorizationHandler {
     private decodedTokenRetriever: IDecodedTokenRetriever;
     private userAuthorizer: IUserAuthorizer;
-    private authorizationFailureHttpResponseCreator: IAuthorizationFailureHttpResponseCreator;
+    private authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator;
+    private httpResponseSender: IHttpResponseSender;
 
     constructor(
         decodedTokenRetriever: IDecodedTokenRetriever, 
         userAuthorizer: IUserAuthorizer,
-        authorizationFailureHttpResponseCreator: IAuthorizationFailureHttpResponseCreator) {
+        authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator,
+        httpResponseSender: IHttpResponseSender) {
         this.decodedTokenRetriever = decodedTokenRetriever;
         this.userAuthorizer = userAuthorizer;
         this.authorizationFailureHttpResponseCreator = authorizationFailureHttpResponseCreator;
+        this.httpResponseSender = httpResponseSender;
     }
 
     async handleAuthorization(req: express.Request, res: express.Response) {
@@ -31,13 +36,15 @@ export class AuthorizationHandler implements IAuthorizationHandler {
             else
             {                        
                 //User is not authorized and flow can not be continued.
-                this.authorizationFailureHttpResponseCreator.createResponseForAuthenticatedUser(decodedtoken, res);
+                let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator.createResponseForAuthenticatedUser(decodedtoken);
+                this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, failedAuthorizationResponse);
             }
         }
         else
         {
             //Received a token that does not match the secret key. Therefore, Token can not be decoded.    
-            this.authorizationFailureHttpResponseCreator.createResponseForUnAuthenticatedUser(res);
+            let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator.createResponseForUnAuthenticatedUser();
+            this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, failedAuthorizationResponse);
         }
         
         //Authorization Failure
