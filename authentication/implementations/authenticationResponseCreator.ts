@@ -1,15 +1,15 @@
 import { IAuthenticationResponseCreator } from "../abstractions/IAuthenticationResponseCreator";
-import { SuccessAuthenticationHttpResponse } from "../entities/httpResponse/successAuthenticationHttpResponse";
-import { FailedAuthenticationHttpResponse } from "../entities/httpResponse/failedAuthenticationHttpResponse";
+import { SuccessAuthenticationResponse } from "../entities/response/successAuthenticationResponse";
+import { FailedAuthenticationResponse } from "../entities/response/failedAuthenticationResponse";
 
 export class AuthenticationResponseCreator implements IAuthenticationResponseCreator {   
   createResponseForAuthenticatedUser(token: string) {
-    return new SuccessAuthenticationHttpResponse(true, 
+    return new SuccessAuthenticationResponse(true, 
       "Authentication successful!", token);
   }
 
   createResponseForUnAuthenticatedUser() {
-    return new FailedAuthenticationHttpResponse(false, 
+    return new FailedAuthenticationResponse(false, 
       "Authenctication Failed! username or password is incorrect");
   }
 }

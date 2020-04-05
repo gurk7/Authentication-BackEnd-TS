@@ -1,5 +1,6 @@
 import express = require('express');
 
 export interface IHttpResponseSender{
-    SendResponse<T>(res: express.Response, responseObject: T): void
+    //Sends parsed response over http
+    SendResponse<T>(res: express.Response, response: T): void
 }

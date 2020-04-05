@@ -5,8 +5,8 @@ import { ITokenCreator } from "../abstractions/ITokenCreator";
 import { IAuthenticationResponseCreator } from "../abstractions/IAuthenticationResponseCreator";
 import express = require('express');
 import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
-import { SuccessAuthenticationHttpResponse } from "../entities/httpResponse/successAuthenticationHttpResponse";
-import { FailedAuthenticationHttpResponse } from "../entities/httpResponse/failedAuthenticationHttpResponse";
+import { SuccessAuthenticationResponse } from "../entities/response/successAuthenticationResponse";
+import { FailedAuthenticationResponse } from "../entities/response/failedAuthenticationResponse";
 
 export class LoginHandler implements ILoginHandler {
   private userFromRequestExtractor: IUserFromRequestExtractor;
@@ -41,11 +41,11 @@ export class LoginHandler implements ILoginHandler {
       let successAuthenticationResponse = this.authenticationResponseCreator.createResponseForAuthenticatedUser(
         token
       );
-      this.httpResponseSender.SendResponse<SuccessAuthenticationHttpResponse>(res, successAuthenticationResponse);
+      this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res, successAuthenticationResponse);
 
     } else {
       let failedAuthenticationResponse = this.authenticationResponseCreator.createResponseForUnAuthenticatedUser();
-      this.httpResponseSender.SendResponse<FailedAuthenticationHttpResponse>(res, failedAuthenticationResponse);
+      this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res, failedAuthenticationResponse);
     }
   }
 }

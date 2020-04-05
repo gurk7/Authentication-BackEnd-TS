@@ -1,4 +1,4 @@
-export class SuccessAuthenticationHttpResponse{
+export class SuccessAuthenticationResponse{
     success: boolean;
     message: string;
     token: string;

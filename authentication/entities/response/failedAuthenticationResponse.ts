@@ -1,4 +1,4 @@
-export class FailedAuthenticationHttpResponse{
+export class FailedAuthenticationResponse{
     success: boolean;
     message: string;
 
