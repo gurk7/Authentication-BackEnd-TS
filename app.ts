@@ -209,12 +209,12 @@ let activeDirectoryByGroupMemberUserAuthorizer: IUserAuthorizer = new ActiveDire
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let decodedJWTConverter: IObjectToDecodedJWTConverter = new ObjectToDecodedJWTConverter();
 let decodedTokenRetriever: IDecodedTokenRetriever = new DecodedJWTTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
-let authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator = new AuthorizationFailureResponseCreator();
+let authorizationFailureResponseCreator: IAuthorizationFailureResponseCreator = new AuthorizationFailureResponseCreator();
 
 let authorizationHandler: IAuthorizationHandler = new AuthorizationHandler(
   decodedTokenRetriever,
    activeDirectoryByGroupMemberUserAuthorizer,
-    authorizationFailureHttpResponseCreator,
+    authorizationFailureResponseCreator,
     jsonHttpResponseSender);
 
 //#endregion
