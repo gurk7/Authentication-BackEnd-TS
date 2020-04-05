@@ -37,8 +37,8 @@ import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
 import { IUserFromRequestExtractor } from "./authentication/abstractions/IUserFromRequestExtractor";
 import { UserFromRequestExtractor } from "./authentication/implementations/userFromRequestExtractor";
-import { IAuthenticationHttpResponseCreator } from "./authentication/abstractions/IAuthenticationHttpResponseCreator";
-import { AuthenticationHttpResponseCreator } from "./authentication/implementations/authenticationHttpResponseCreator";
+import { IAuthenticationResponseCreator } from "./authentication/abstractions/IAuthenticationResponseCreator";
+import { AuthenticationResponseCreator } from "./authentication/implementations/authenticationResponseCreator";
 import { CacheSyncUserAuthenticator } from "./cache/authentication/cacheUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
 import { ActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/activeDirectoryUserAuthenticator'
@@ -58,6 +58,8 @@ import { UserInformationGetter } from "./authorizedLogics/userInformation/implem
 import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
 import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
 import { IUserAuthenticator } from "./authentication/abstractions/IUserAuthenticator";
+import { IHttpResponseSender } from "./common/abstractions/IHttpResponseSender";
+import { JsonHttpResponseSender } from "./common/implementations/JsonHttpResponseSender";
 
 //#endregion
 
@@ -126,6 +128,12 @@ const activeDirectory = new AD({
 
 //#region initialize objects
 
+//#region common
+
+let jsonHttpResponseSender: IHttpResponseSender = new JsonHttpResponseSender();
+
+//#endregion
+
 //#region authentication
 
 let userFromRequestExtractor: IUserFromRequestExtractor = new UserFromRequestExtractor();
@@ -135,7 +143,7 @@ let jwtTokenCreator: ITokenCreator = new JwtTokenCreator(
   tokenExpirationTime
 );
 
-let authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator = new AuthenticationHttpResponseCreator();
+let authenticationResponseCreator: IAuthenticationResponseCreator = new AuthenticationResponseCreator();
 
 //#region MongoDB
 
@@ -146,7 +154,8 @@ let mongoDBLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   mongoDBUserAuthenticator,
   jwtTokenCreator,
-  authenticationHttpResponseCreator
+  authenticationResponseCreator,
+  jsonHttpResponseSender
 );
 
 //#endregion
@@ -160,7 +169,8 @@ let activeDirectoryLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   activeDirectoryAsyncUserAuthenticator,
   jwtTokenCreator,
-  authenticationHttpResponseCreator
+  authenticationResponseCreator,
+  jsonHttpResponseSender
 );
 
 //#endregion
@@ -175,7 +185,8 @@ let cacheLoginHandler: ILoginHandler = new LoginHandler(
   userFromRequestExtractor,
   cacheUserAuthenticator,
   jwtTokenCreator,
-  authenticationHttpResponseCreator
+  authenticationResponseCreator,
+  jsonHttpResponseSender
 );
 
 //#endregion
