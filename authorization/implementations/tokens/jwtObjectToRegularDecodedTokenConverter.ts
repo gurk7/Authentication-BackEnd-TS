@@ -1,7 +1,7 @@
 import { IObjectToRegularDecodedTokenConverter } from '../../abstractions/tokens/IObjectToRegularDecodedTokenConverter';
 import { RegularDecodedToken } from '../../entities/regularDecodedToken';
 
-export class ObjectToRegularDecodedTokenConverter implements IObjectToRegularDecodedTokenConverter {
+export class JwtObjectToRegularDecodedTokenConverter implements IObjectToRegularDecodedTokenConverter {
 
     convert(decodedToken: any): RegularDecodedToken {
         console.log(decodedToken);

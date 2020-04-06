@@ -6,9 +6,9 @@ export class RegularDecodedTokenAuthorizationFailureResponseCreator
   implements  IAuthorizationFailureResponseCreator<RegularDecodedToken>
   {
     createResponseForAuthenticatedUser(
-        decodedJWTAuthenticatedUser: RegularDecodedToken) {
+        regularDecodedToken: RegularDecodedToken) {
             return new FailedAuthorizationResponse(false, 
-                `User: ${decodedJWTAuthenticatedUser.username} is not authorized`);
+                `User: ${regularDecodedToken.username} is not authorized`);
         }
 
     createResponseForUnAuthenticatedUser(){

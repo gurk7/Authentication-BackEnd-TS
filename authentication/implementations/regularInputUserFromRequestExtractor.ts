@@ -1,5 +1,5 @@
 import { RegularInputUser } from "../entities/regularInputUser";
-import { IInputUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
+import { IInputUserFromRequestExtractor } from "../abstractions/IInputUserFromRequestExtractor";
 import express = require('express');
 
 export class RegularInputUserFromRequestExtractor implements 

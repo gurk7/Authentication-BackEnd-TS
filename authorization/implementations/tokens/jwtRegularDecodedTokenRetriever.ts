@@ -5,7 +5,7 @@ import { IObjectToRegularDecodedTokenConverter } from "../../abstractions/tokens
 import express = require('express');
 import { RegularDecodedToken } from "../../entities/regularDecodedToken";
 
-export class RegularDecodedTokenRetriever implements IDecodedTokenRetriever<RegularDecodedToken> {
+export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<RegularDecodedToken> {
   private secretOrPublicKey: string;
   private tokenExtractor: ITokenExtractor;
   private converter: IObjectToRegularDecodedTokenConverter;

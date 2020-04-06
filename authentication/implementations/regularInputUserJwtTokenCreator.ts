@@ -11,8 +11,8 @@ export class RegularInputUserJwtTokenCreator implements ITokenCreator<RegularInp
     this.expirationTime = expirationTime;
   }
 
-  create(user: RegularInputUser) {
-    return jwt.sign({ username: user.username }, this.secretOrPublicKey, {
+  create(inputUser: RegularInputUser) {
+    return jwt.sign({ username: inputUser.username }, this.secretOrPublicKey, {
       expiresIn: this.expirationTime
     });
   }

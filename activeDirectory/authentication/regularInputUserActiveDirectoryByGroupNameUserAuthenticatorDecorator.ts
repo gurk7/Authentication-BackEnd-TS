@@ -1,22 +1,22 @@
-import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
+import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 import { RegularInputUser } from "../../authentication/entities/regularInputUser";
 
 export class RegularInputUserActiveDirectoryByGroupNameUserAuthenticatorDecorator
-implements IUserAuthenticator<RegularInputUser> {
+implements IInputUserAuthenticator<RegularInputUser> {
 
-  private innerActiveDirectoryUserAuthenticator: IUserAuthenticator<RegularInputUser>;
+  private innerActiveDirectoryInputUserAuthenticator: IInputUserAuthenticator<RegularInputUser>;
   private activeDirectoryGroupMemberUserFinder: IUserFinder;
 
-  constructor(innerActiveDirectoryUserAuthenticator: IUserAuthenticator<RegularInputUser>, 
+  constructor(innerActiveDirectoryInputUserAuthenticator: IInputUserAuthenticator<RegularInputUser>, 
     activeDirectoryGroupMemberUserFinder: IUserFinder) {
-    this.innerActiveDirectoryUserAuthenticator = innerActiveDirectoryUserAuthenticator;
+    this.innerActiveDirectoryInputUserAuthenticator = innerActiveDirectoryInputUserAuthenticator;
     this.activeDirectoryGroupMemberUserFinder = activeDirectoryGroupMemberUserFinder;  
   }
 
   async authenticate(inputUser: RegularInputUser) {
       let isUserAuthenticatedInActiveDirectory = 
-        await this.innerActiveDirectoryUserAuthenticator.authenticate(inputUser);
+        await this.innerActiveDirectoryInputUserAuthenticator.authenticate(inputUser);
 
       if(!isUserAuthenticatedInActiveDirectory) return false;
 

@@ -1,8 +1,8 @@
 import { connect } from "mongodb";
 import { RegularInputUser } from "../../authentication/entities/regularInputUser";
-import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
+import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 
-export class RegularInputUserMongoDBUserAuthenticator implements IUserAuthenticator<RegularInputUser> {
+export class RegularInputUserMongoDBUserAuthenticator implements IInputUserAuthenticator<RegularInputUser> {
   private mongoUrl: string;
 
   constructor(mongoUrl: string) {

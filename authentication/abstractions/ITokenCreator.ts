@@ -1,4 +1,4 @@
 
-export interface ITokenCreator<T> {
-  create(user: T): string;
+export interface ITokenCreator<TInputUser> {
+  create(inputUser: TInputUser): string;
 }

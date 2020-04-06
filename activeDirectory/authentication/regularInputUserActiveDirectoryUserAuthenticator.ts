@@ -1,7 +1,7 @@
 import { RegularInputUser } from "../../authentication/entities/regularInputUser";
-import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
+import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 
-export class RegularInputUserActiveDirectoryUserAuthenticator implements IUserAuthenticator<RegularInputUser> {
+export class RegularInputUserActiveDirectoryUserAuthenticator implements IInputUserAuthenticator<RegularInputUser> {
     private activeDirectory: any;
 
     constructor(activeDirectory: any) {

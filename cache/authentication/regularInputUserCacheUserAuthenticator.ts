@@ -1,7 +1,7 @@
 import { RegularInputUser } from "../../authentication/entities/regularInputUser";
-import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
+import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 
-export class RegularInputUserCacheUserAuthenticator implements IUserAuthenticator<RegularInputUser> {
+export class RegularInputUserCacheUserAuthenticator implements IInputUserAuthenticator<RegularInputUser> {
   private allowedUsers: RegularInputUser[];
 
   constructor(allowedUsers: RegularInputUser[]) {

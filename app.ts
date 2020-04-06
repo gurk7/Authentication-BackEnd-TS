@@ -25,7 +25,7 @@ import { ITokenCreator } from "./authentication/abstractions/ITokenCreator";
 import { JwtTokenExtractor } from "./authorization/implementations/tokens/jwtTokenExtractor";
 import { ITokenExtractor } from "./authorization/abstractions/tokens/ITokenExtractor";
 import { IDecodedTokenRetriever } from "./authorization/abstractions/tokens/IDecodedTokenRetriever";
-import { RegularDecodedTokenRetriever } from "./authorization/implementations/tokens/regularDecodedTokenRetriever";
+import { JwtRegularDecodedTokenRetriever } from "./authorization/implementations/tokens/jwtRegularDecodedTokenRetriever";
 import { IMissionCreator } from "./authorizedLogics/missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./authorizedLogics/missions/implementations/implementations/mockMissionCreator";
 import { RoutesConfiguration } from "./config/entities/routes";
@@ -35,14 +35,14 @@ import { RegularInputUser } from "./authentication/entities/regularInputUser";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
-import { IInputUserFromRequestExtractor } from "./authentication/abstractions/IUserFromRequestExtractor";
+import { IInputUserFromRequestExtractor } from "./authentication/abstractions/IInputUserFromRequestExtractor";
 import { RegularInputUserFromRequestExtractor } from "./authentication/implementations/regularInputUserFromRequestExtractor";
 import { IAuthenticationResponseCreator } from "./authentication/abstractions/IAuthenticationResponseCreator";
 import { AuthenticationResponseCreator } from "./authentication/implementations/authenticationResponseCreator";
 import { RegularInputUserCacheUserAuthenticator } from "./cache/authentication/regularInputUserCacheUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
 import { RegularInputUserActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/regularInputUserActiveDirectoryUserAuthenticator'
-import { ObjectToRegularDecodedTokenConverter } from "./authorization/implementations/tokens/objectToRegularDecodedTokenConverter";
+import { JwtObjectToRegularDecodedTokenConverter } from "./authorization/implementations/tokens/jwtObjectToRegularDecodedTokenConverter";
 import { IObjectToRegularDecodedTokenConverter } from './authorization/abstractions/tokens/IObjectToRegularDecodedTokenConverter';
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
 import { TokenBasedAuthorizationHandler } from "./authorization/implementations/tokenBasedAuthorizationHandler";
@@ -57,7 +57,7 @@ import { ActiveDirectoryUserInformation } from "./activeDirectory/entities/userI
 import { UserInformationGetter } from "./authorizedLogics/userInformation/implementations/userInformationGetter";
 import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
 import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
-import { IUserAuthenticator } from "./authentication/abstractions/IUserAuthenticator";
+import { IInputUserAuthenticator } from "./authentication/abstractions/IInputUserAuthenticator";
 import { IHttpResponseSender } from "./common/abstractions/IHttpResponseSender";
 import { JsonHttpResponseSender } from "./common/implementations/JsonHttpResponseSender";
 import { RegularDecodedToken } from "./authorization/entities/regularDecodedToken";
@@ -149,7 +149,7 @@ let authenticationResponseCreator: IAuthenticationResponseCreator = new Authenti
 
 //#region MongoDB
 
-let regularInputUserMongoDBUserAuthenticator: IUserAuthenticator<RegularInputUser> = 
+let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
 new RegularInputUserMongoDBUserAuthenticator(
   mongoConnectionString
 );
@@ -166,7 +166,7 @@ let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBase
 
 //#region ActiveDirectory
 
-let regularInputUserActiveDirectoryUserAuthenticator: IUserAuthenticator<RegularInputUser> = 
+let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
 new RegularInputUserActiveDirectoryUserAuthenticator(
   activeDirectory
 );
@@ -185,7 +185,7 @@ new TokenBasedLoginHandler<RegularInputUser>(
 //#region Cache
 
 let allowedUsers: RegularInputUser[] = [new RegularInputUser("china", "china")];
-let regularInputUserCacheUserAuthenticator: IUserAuthenticator<RegularInputUser> = 
+let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
 new RegularInputUserCacheUserAuthenticator(
   allowedUsers
 );
@@ -219,10 +219,10 @@ new RegularDecodedTokenActiveDirectoryUserAuthorizer(activeDirectoryByGroupNameU
 //#endregion
 
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
-let decodedJWTConverter: IObjectToRegularDecodedTokenConverter = new ObjectToRegularDecodedTokenConverter();
+let decodedJWTConverter: IObjectToRegularDecodedTokenConverter = new JwtObjectToRegularDecodedTokenConverter();
 
 let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> = 
-new RegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
+new JwtRegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
 
 let regularDecodedTokenAuthorizationFailureResponseCreator: IAuthorizationFailureResponseCreator<RegularDecodedToken> = 
 new RegularDecodedTokenAuthorizationFailureResponseCreator();

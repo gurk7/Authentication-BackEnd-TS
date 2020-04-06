@@ -1,6 +1,6 @@
 import { ILoginHandler } from "../abstractions/ILoginHandler";
-import { IInputUserFromRequestExtractor } from "../abstractions/IUserFromRequestExtractor";
-import { IUserAuthenticator } from "../abstractions/IUserAuthenticator";
+import { IInputUserFromRequestExtractor } from "../abstractions/IInputUserFromRequestExtractor";
+import { IInputUserAuthenticator } from "../abstractions/IInputUserAuthenticator";
 import { ITokenCreator } from "../abstractions/ITokenCreator";
 import { IAuthenticationResponseCreator } from "../abstractions/IAuthenticationResponseCreator";
 import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
@@ -10,31 +10,31 @@ import express = require('express');
 
 export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
 
-  private userFromRequestExtractor: IInputUserFromRequestExtractor<TInputUser>;
-  private userAuthenticator: IUserAuthenticator<TInputUser>;
+  private inputUserFromRequestExtractor: IInputUserFromRequestExtractor<TInputUser>;
+  private inputUserAuthenticator: IInputUserAuthenticator<TInputUser>;
   private tokenCreator: ITokenCreator<TInputUser>;
   
   private authenticationResponseCreator: IAuthenticationResponseCreator;
   private httpResponseSender: IHttpResponseSender;
 
   constructor(
-    userFromRequestExtractor: IInputUserFromRequestExtractor<TInputUser>,
-    userAuthenticator: IUserAuthenticator<TInputUser>,
+    inputUserFromRequestExtractor: IInputUserFromRequestExtractor<TInputUser>,
+    inputUserAuthenticator: IInputUserAuthenticator<TInputUser>,
     tokenCreator: ITokenCreator<TInputUser>,
     authenticationResponseCreator: IAuthenticationResponseCreator,
     httpResponseSender: IHttpResponseSender
   ) {
-    this.userFromRequestExtractor = userFromRequestExtractor;
-    this.userAuthenticator = userAuthenticator;
+    this.inputUserFromRequestExtractor = inputUserFromRequestExtractor;
+    this.inputUserAuthenticator = inputUserAuthenticator;
     this.tokenCreator = tokenCreator;
     this.authenticationResponseCreator = authenticationResponseCreator;
     this.httpResponseSender = httpResponseSender;
   }
 
   public async handleLogin(req: express.Request, res: express.Response) {
-    let inputUser = this.userFromRequestExtractor.extract(req);
+    let inputUser = this.inputUserFromRequestExtractor.extract(req);
 
-    let isUserAuthenticated = await this.userAuthenticator.authenticate(
+    let isUserAuthenticated = await this.inputUserAuthenticator.authenticate(
       inputUser
     );
 

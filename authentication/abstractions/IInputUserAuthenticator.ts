@@ -1,4 +1,4 @@
 
-export interface IUserAuthenticator<TInputUser> {
+export interface IInputUserAuthenticator<TInputUser> {
   authenticate(inputUser:TInputUser): Promise<boolean>;
 }
