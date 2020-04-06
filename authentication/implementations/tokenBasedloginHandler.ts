@@ -8,15 +8,15 @@ import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSend
 import { SuccessAuthenticationResponse } from "../entities/response/successAuthenticationResponse";
 import { FailedAuthenticationResponse } from "../entities/response/failedAuthenticationResponse";
 
-export class TokenBasedLoginHandler<TUser> implements ILoginHandler {
-  private userFromRequestExtractor: IUserFromRequestExtractor<TUser>;
+export class TokenBasedLoginHandler implements ILoginHandler {
+  private userFromRequestExtractor: IUserFromRequestExtractor;
   private userAuthenticator: IUserAuthenticator;
   private tokenCreator: ITokenCreator;
   private authenticationResponseCreator: IAuthenticationResponseCreator;
   private httpResponseSender: IHttpResponseSender;
 
   constructor(
-    userFromRequestExtractor: IUserFromRequestExtractor<TUser>,
+    userFromRequestExtractor: IUserFromRequestExtractor,
     asyncUserAuthenticator: IUserAuthenticator,
     tokenCreator: ITokenCreator,
     authenticationResponseCreator: IAuthenticationResponseCreator,
