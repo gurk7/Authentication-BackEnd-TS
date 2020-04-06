@@ -17,7 +17,7 @@ const AD = require("ad");
 
 //#region inner imports
 
-import { LoginHandler } from "./authentication/implementations/loginHandler";
+import { TokenBasedLoginHandler } from "./authentication/implementations/tokenBasedloginHandler";
 import { MongoDBUserAuthenticator } from "./mongo/authentication/mongoDBUserAuthenticator";
 import { ILoginHandler } from "./authentication/abstractions/ILoginHandler";
 import { JwtTokenCreator } from "./authentication/implementations/jwtTokenCreator";
@@ -150,7 +150,7 @@ let authenticationResponseCreator: IAuthenticationResponseCreator = new Authenti
 let mongoDBUserAuthenticator: IUserAuthenticator = new MongoDBUserAuthenticator(
   mongoConnectionString
 );
-let mongoDBLoginHandler: ILoginHandler = new LoginHandler(
+let mongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler(
   userFromRequestExtractor,
   mongoDBUserAuthenticator,
   jwtTokenCreator,
@@ -165,7 +165,7 @@ let mongoDBLoginHandler: ILoginHandler = new LoginHandler(
 let activeDirectoryAsyncUserAuthenticator: IUserAuthenticator = new ActiveDirectoryUserAuthenticator(
   activeDirectory
 );
-let activeDirectoryLoginHandler: ILoginHandler = new LoginHandler(
+let activeDirectoryTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler(
   userFromRequestExtractor,
   activeDirectoryAsyncUserAuthenticator,
   jwtTokenCreator,
@@ -181,7 +181,7 @@ let allowedUsers: User[] = [new User("china", "china")];
 let cacheUserAuthenticator: IUserAuthenticator = new CacheSyncUserAuthenticator(
   allowedUsers
 );
-let cacheLoginHandler: ILoginHandler = new LoginHandler(
+let cacheTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler(
   userFromRequestExtractor,
   cacheUserAuthenticator,
   jwtTokenCreator,
@@ -256,15 +256,15 @@ app.use(
 //#region log in API
 
 app.post(loginFromMongoDBRoute, (req: express.Request, res: express.Response) => {
-  mongoDBLoginHandler.handleLogin(req, res);
+  mongoDBTokenBasedLoginHandler.handleLogin(req, res);
 });
 
 app.post(loginFromActiveDirectoryRoute, (req: express.Request, res: express.Response) => {
-  activeDirectoryLoginHandler.handleLogin(req, res);
+  activeDirectoryTokenBasedLoginHandler.handleLogin(req, res);
 })
 
 app.post(loginFromCacheRoute, (req: express.Request, res: express.Response) => {
-  cacheLoginHandler.handleLogin(req, res);
+  cacheTokenBasedLoginHandler.handleLogin(req, res);
 });
 
 //#endregion

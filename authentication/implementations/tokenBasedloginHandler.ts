@@ -8,15 +8,15 @@ import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSend
 import { SuccessAuthenticationResponse } from "../entities/response/successAuthenticationResponse";
 import { FailedAuthenticationResponse } from "../entities/response/failedAuthenticationResponse";
 
-export class LoginHandler implements ILoginHandler {
-  private userFromRequestExtractor: IUserFromRequestExtractor;
+export class TokenBasedLoginHandler<TUser> implements ILoginHandler {
+  private userFromRequestExtractor: IUserFromRequestExtractor<TUser>;
   private userAuthenticator: IUserAuthenticator;
   private tokenCreator: ITokenCreator;
   private authenticationResponseCreator: IAuthenticationResponseCreator;
   private httpResponseSender: IHttpResponseSender;
 
   constructor(
-    userFromRequestExtractor: IUserFromRequestExtractor,
+    userFromRequestExtractor: IUserFromRequestExtractor<TUser>,
     asyncUserAuthenticator: IUserAuthenticator,
     tokenCreator: ITokenCreator,
     authenticationResponseCreator: IAuthenticationResponseCreator,
@@ -42,8 +42,8 @@ export class LoginHandler implements ILoginHandler {
         token
       );
       this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res, successAuthenticationResponse);
-
-    } else {
+    }
+    else {
       let failedAuthenticationResponse = this.authenticationResponseCreator.createResponseForUnAuthenticatedUser();
       this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res, failedAuthenticationResponse);
     }
