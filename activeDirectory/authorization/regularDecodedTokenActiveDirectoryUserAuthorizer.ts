@@ -1,16 +1,16 @@
 import { IUserAuthorizer } from "../../authorization/abstractions/IUserAuthorizer";
-import { DecodedJWTAuthenticatedUser } from "../../authorization/entities/decodedJWTAuthenticatedUser";
+import { RegularDecodedToken } from "../../authorization/entities/regularDecodedToken";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 
-export class ActiveDirectoryUserAuthorizer implements IUserAuthorizer {
+export class RegularDecodedTokenActiveDirectoryUserAuthorizer implements IUserAuthorizer<RegularDecodedToken> {
   private activeDirectoryUserFinder: IUserFinder;
 
   constructor(activeDirectoryUserFinder: IUserFinder) {
     this.activeDirectoryUserFinder = activeDirectoryUserFinder;
   }
 
-  async authorize(decodedUser: DecodedJWTAuthenticatedUser) {
-    return await this.activeDirectoryUserFinder.find(decodedUser.username);
+  async authorize(decodedToken: RegularDecodedToken) {
+    return await this.activeDirectoryUserFinder.find(decodedToken.username);
   }
 }
 

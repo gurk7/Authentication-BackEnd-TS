@@ -1,22 +1,22 @@
 import { connect } from "mongodb";
-import { User } from "../../authentication/entities/user";
+import { RegularInputUser } from "../../authentication/entities/regularInputUser";
 import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
 
-export class MongoDBUserAuthenticator implements IUserAuthenticator {
+export class RegularInputUserMongoDBUserAuthenticator implements IUserAuthenticator<RegularInputUser> {
   private mongoUrl: string;
 
   constructor(mongoUrl: string) {
     this.mongoUrl = mongoUrl;
   }
 
-  async authenticate(inputUser: User) {
+  async authenticate(inputUser: RegularInputUser) {
     const client = await connect(this.mongoUrl, { useUnifiedTopology: true });
     const db = client.db("authentication");
     const collection = db.collection("users");
 
     let query = { username: inputUser.username, password: inputUser.password };
 
-    let returnedMongoUser = await collection.findOne<User>(query);
+    let returnedMongoUser = await collection.findOne<RegularInputUser>(query);
     client.close();
 
     if (returnedMongoUser) {

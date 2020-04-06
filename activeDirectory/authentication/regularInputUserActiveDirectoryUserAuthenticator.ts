@@ -1,14 +1,14 @@
-import { User } from "../../authentication/entities/user";
+import { RegularInputUser } from "../../authentication/entities/regularInputUser";
 import { IUserAuthenticator } from "../../authentication/abstractions/IUserAuthenticator";
 
-export class ActiveDirectoryUserAuthenticator implements IUserAuthenticator {
+export class RegularInputUserActiveDirectoryUserAuthenticator implements IUserAuthenticator<RegularInputUser> {
     private activeDirectory: any;
 
     constructor(activeDirectory: any) {
         this.activeDirectory = activeDirectory;
     }
 
-    async authenticate(inputUser: User) {
+    async authenticate(inputUser: RegularInputUser) {
         try
         {
             let isUserAuthenticated: boolean = await this.activeDirectory.user(inputUser.username).authenticate(inputUser.password);

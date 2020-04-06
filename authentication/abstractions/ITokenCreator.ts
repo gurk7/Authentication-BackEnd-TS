@@ -1,5 +1,4 @@
-import { User } from "../entities/user";
 
-export interface ITokenCreator {
-  create(user: User): string;
+export interface ITokenCreator<T> {
+  create(user: T): string;
 }

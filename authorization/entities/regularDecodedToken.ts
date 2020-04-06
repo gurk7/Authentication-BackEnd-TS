@@ -1,4 +1,4 @@
-export class DecodedJWTAuthenticatedUser {
+export class RegularDecodedToken {
     username: string;
     issuedAt: number;
     expirationTime: number;

@@ -1,5 +1,5 @@
 import { IUserInformationRetriever } from "../../authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
-import { DecodedJWTAuthenticatedUser } from "../../authorization/entities/decodedJWTAuthenticatedUser";
+import { RegularDecodedToken } from "../../authorization/entities/regularDecodedToken";
 import { ActiveDirectoryUserInformation } from "../entities/userInformation/activeDirectoryUserInformation";
 
 export class ActiveDirectoryUserInformationRetriever implements IUserInformationRetriever<ActiveDirectoryUserInformation>
@@ -10,8 +10,8 @@ export class ActiveDirectoryUserInformationRetriever implements IUserInformation
         this.activeDirectory = activeDirectory;
     }
 
-    async retrieve(authenticatedUser: DecodedJWTAuthenticatedUser){
-        let user = await this.activeDirectory.user(authenticatedUser.username).get();
+    async retrieve(decodedToken: RegularDecodedToken){
+        let user = await this.activeDirectory.user(decodedToken.username).get();
 
         let userGroups: string[] = [];
 

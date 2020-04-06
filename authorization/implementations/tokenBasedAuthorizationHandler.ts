@@ -3,19 +3,20 @@ import { IDecodedTokenRetriever } from '../abstractions/tokens/IDecodedTokenRetr
 import { IUserAuthorizer } from "../abstractions/IUserAuthorizer";
 import {IAuthorizationFailureResponseCreator} from '../abstractions/IAuthorizationFailureResponseCreator'
 import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
-import express = require('express');
 import { FailedAuthorizationResponse } from "../entities/response/failedAuthorizationResponse";
+import express = require('express');
 
-export class AuthorizationHandler implements IAuthorizationHandler {
-    private decodedTokenRetriever: IDecodedTokenRetriever;
-    private userAuthorizer: IUserAuthorizer;
-    private authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator;
+export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthorizationHandler {
+    private decodedTokenRetriever: IDecodedTokenRetriever<TDecodedToken>;
+    private userAuthorizer: IUserAuthorizer<TDecodedToken>;
+    private authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator<TDecodedToken>;
     private httpResponseSender: IHttpResponseSender;
 
     constructor(
-        decodedTokenRetriever: IDecodedTokenRetriever, 
-        userAuthorizer: IUserAuthorizer,
-        authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator,
+        decodedTokenRetriever: IDecodedTokenRetriever<TDecodedToken>, 
+        userAuthorizer: IUserAuthorizer<TDecodedToken>,
+        authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator<TDecodedToken>,
+
         httpResponseSender: IHttpResponseSender) {
         this.decodedTokenRetriever = decodedTokenRetriever;
         this.userAuthorizer = userAuthorizer;
@@ -28,7 +29,7 @@ export class AuthorizationHandler implements IAuthorizationHandler {
 
         if (decodedtoken) {
             let isAuthorized = await this.userAuthorizer.authorize(decodedtoken);
-            console.log(`user: ${decodedtoken.username} is authorized: ${isAuthorized}`);
+            console.log(`user is authorized: ${isAuthorized}`);
 
             if (isAuthorized) {
                 return true;
@@ -36,14 +37,16 @@ export class AuthorizationHandler implements IAuthorizationHandler {
             else
             {                        
                 //User is not authorized and flow can not be continued.
-                let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator.createResponseForAuthenticatedUser(decodedtoken);
+                let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator
+                .createResponseForAuthenticatedUser(decodedtoken);
                 this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, failedAuthorizationResponse);
             }
         }
         else
         {
             //Received a token that does not match the secret key. Therefore, Token can not be decoded.    
-            let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator.createResponseForUnAuthenticatedUser();
+            let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator
+            .createResponseForUnAuthenticatedUser();
             this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, failedAuthorizationResponse);
         }
         

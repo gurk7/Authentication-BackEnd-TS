@@ -1,5 +1,4 @@
-import { DecodedJWTAuthenticatedUser } from "../entities/decodedJWTAuthenticatedUser";
 
-export interface IUserAuthorizer {
-    authorize(decodedUser: DecodedJWTAuthenticatedUser): Promise<boolean>;
+export interface IUserAuthorizer<TDecodedToken> {
+    authorize(decodedToken: TDecodedToken): Promise<boolean>;
 }

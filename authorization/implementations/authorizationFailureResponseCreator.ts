@@ -1,12 +1,12 @@
 import { IAuthorizationFailureResponseCreator } from "../abstractions/IAuthorizationFailureResponseCreator";
-import { DecodedJWTAuthenticatedUser } from "../entities/decodedJWTAuthenticatedUser";
+import { RegularDecodedToken } from "../entities/regularDecodedToken";
 import { FailedAuthorizationResponse } from "../entities/response/failedAuthorizationResponse";
 
-export class AuthorizationFailureResponseCreator
-  implements  IAuthorizationFailureResponseCreator
+export class RegularDecodedTokenAuthorizationFailureResponseCreator
+  implements  IAuthorizationFailureResponseCreator<RegularDecodedToken>
   {
     createResponseForAuthenticatedUser(
-        decodedJWTAuthenticatedUser: DecodedJWTAuthenticatedUser) {
+        decodedJWTAuthenticatedUser: RegularDecodedToken) {
             return new FailedAuthorizationResponse(false, 
                 `User: ${decodedJWTAuthenticatedUser.username} is not authorized`);
         }

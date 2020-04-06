@@ -1,5 +1,5 @@
-import { DecodedJWTAuthenticatedUser } from "../../../authorization/entities/decodedJWTAuthenticatedUser";
+import { RegularDecodedToken } from "../../../authorization/entities/regularDecodedToken";
 
 export interface IUserInformationRetriever<T>{
-    retrieve(authenticatedUser: DecodedJWTAuthenticatedUser) : Promise<T>
+    retrieve(authenticatedUser: RegularDecodedToken) : Promise<T>
 }

@@ -1,8 +1,8 @@
 import { ITokenCreator } from "../abstractions/ITokenCreator";
-import { User } from "../entities/user";
+import { RegularInputUser } from "../entities/regularInputUser";
 import jwt = require("jsonwebtoken");
 
-export class JwtTokenCreator implements ITokenCreator {
+export class RegularInputUserJwtTokenCreator implements ITokenCreator<RegularInputUser> {
   private secretOrPublicKey: string;
   private expirationTime: string;
 
@@ -11,7 +11,7 @@ export class JwtTokenCreator implements ITokenCreator {
     this.expirationTime = expirationTime;
   }
 
-  create(user: User) {
+  create(user: RegularInputUser) {
     return jwt.sign({ username: user.username }, this.secretOrPublicKey, {
       expiresIn: this.expirationTime
     });
