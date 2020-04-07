@@ -1,0 +1,24 @@
+{
+  "tokens": {
+    "tokenSecretOrPublicKey": "pandemic",
+    "tokenExpirationTime": "24h"
+  },
+  "routes": {
+    "loginFromCacheRoute": "/login/cache",
+    "loginFromMongoDBRoute": "/login/mongo",
+    "loginFromActiveDirectoryRoute": "/login/activeDirectory",
+    "missionRoute": "/mission",
+    "defaultRoute": "/"
+  },
+  "ports": {
+    "listeningPort": 3000
+  },
+  "ssl": {
+    "passphrase": "gurk7"
+  },
+  "ldap": {
+    "url": "ldap://gurk.gurk7.com",
+    "userFullyQualifiedDomainName": "Gur@gurk7.com",
+    "password": "Password1"
+  }
+}
