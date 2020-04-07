@@ -3,7 +3,7 @@ import express = require('express');
 
 export class JsonHttpResponseSender implements IHttpResponseSender{
 
-    SendResponse<T>(res: express.Response, response: T){
-        res.json(response);
+    SendResponse<T>(res: express.Response, response: T, status: number){
+        res.status(status).json(response);
     }
 }

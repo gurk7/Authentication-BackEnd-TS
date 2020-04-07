@@ -5,6 +5,7 @@ import {IAuthorizationFailureResponseCreator} from '../abstractions/IAuthorizati
 import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
 import { FailedAuthorizationResponse } from "../entities/response/failedAuthorizationResponse";
 import express = require('express');
+import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesConsts";
 
 export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthorizationHandler {
     private decodedTokenRetriever: IDecodedTokenRetriever<TDecodedToken>;
@@ -25,10 +26,10 @@ export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthoriza
     }
 
     async handleAuthorization(req: express.Request, res: express.Response) {
-        let decodedtoken = this.decodedTokenRetriever.retrieveDecodedToken(req);
+        let decodedToken = this.decodedTokenRetriever.retrieveDecodedToken(req);
 
-        if (decodedtoken) {
-            let isAuthorized = await this.userAuthorizer.authorize(decodedtoken);
+        if (decodedToken) {
+            let isAuthorized = await this.userAuthorizer.authorize(decodedToken);
             console.log(`user is authorized: ${isAuthorized}`);
 
             if (isAuthorized) {
@@ -38,8 +39,9 @@ export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthoriza
             {                        
                 //User is not authorized and flow can not be continued.
                 let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator
-                .createResponseForAuthenticatedUser(decodedtoken);
-                this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, failedAuthorizationResponse);
+                .createResponseForAuthenticatedUser(decodedToken);
+                this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, 
+                    failedAuthorizationResponse, HttpResponseStatusesConsts.forbidden);
             }
         }
         else
@@ -47,7 +49,8 @@ export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthoriza
             //Received a token that does not match the secret key. Therefore, Token can not be decoded.    
             let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator
             .createResponseForUnAuthenticatedUser();
-            this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, failedAuthorizationResponse);
+            this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res, 
+                failedAuthorizationResponse, HttpResponseStatusesConsts.forbidden);
         }
         
         //Authorization Failure

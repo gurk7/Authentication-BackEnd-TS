@@ -7,6 +7,7 @@ import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSend
 import { SuccessAuthenticationResponse } from "../entities/response/successAuthenticationResponse";
 import { FailedAuthenticationResponse } from "../entities/response/failedAuthenticationResponse";
 import express = require('express');
+import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesConsts";
 
 export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
 
@@ -43,11 +44,17 @@ export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
       let successAuthenticationResponse = this.authenticationResponseCreator.createResponseForAuthenticatedUser(
         token
       );
-      this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res, successAuthenticationResponse);
+      
+      this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res, 
+        successAuthenticationResponse, 
+        HttpResponseStatusesConsts.unAuthorized);
     }
     else {
       let failedAuthenticationResponse = this.authenticationResponseCreator.createResponseForUnAuthenticatedUser();
-      this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res, failedAuthenticationResponse);
+
+      this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res, 
+        failedAuthenticationResponse, 
+        HttpResponseStatusesConsts.unAuthorized);
     }
   }
 }
