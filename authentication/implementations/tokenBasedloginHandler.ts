@@ -47,7 +47,7 @@ export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
       
       this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res, 
         successAuthenticationResponse, 
-        HttpResponseStatusesConsts.unAuthorized);
+        HttpResponseStatusesConsts.success);
     }
     else {
       let failedAuthenticationResponse = this.authenticationResponseCreator.createResponseForUnAuthenticatedUser();
