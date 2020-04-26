@@ -17,39 +17,39 @@ const AD = require("ad");
 
 //#region inner imports
 
-import { LoginHandler } from "./authentication/implementations/loginHandler";
-import { MongoDBUserAuthenticator } from "./mongo/authentication/mongoDBUserAuthenticator";
+import { TokenBasedLoginHandler } from "./authentication/implementations/tokenBasedloginHandler";
+import { RegularInputUserMongoDBUserAuthenticator } from "./mongo/authentication/regularInputUserMongoDBUserAuthenticator";
 import { ILoginHandler } from "./authentication/abstractions/ILoginHandler";
-import { JwtTokenCreator } from "./authentication/implementations/jwtTokenCreator";
+import { RegularInputUserJwtTokenCreator } from "./authentication/implementations/regularInputUserJwtTokenCreator";
 import { ITokenCreator } from "./authentication/abstractions/ITokenCreator";
 import { JwtTokenExtractor } from "./authorization/implementations/tokens/jwtTokenExtractor";
 import { ITokenExtractor } from "./authorization/abstractions/tokens/ITokenExtractor";
 import { IDecodedTokenRetriever } from "./authorization/abstractions/tokens/IDecodedTokenRetriever";
-import { DecodedJWTTokenRetriever } from "./authorization/implementations/tokens/decodedJWTTokenRetriever";
+import { JwtRegularDecodedTokenRetriever } from "./authorization/implementations/tokens/jwtRegularDecodedTokenRetriever";
 import { IMissionCreator } from "./authorizedLogics/missions/abstractions/IMissionCreator";
 import { MockMissionCreator } from "./authorizedLogics/missions/implementations/implementations/mockMissionCreator";
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { User } from "./authentication/entities/user";
+import { RegularInputUser } from "./authentication/entities/regularInputUser";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
-import { IUserFromRequestExtractor } from "./authentication/abstractions/IUserFromRequestExtractor";
-import { UserFromRequestExtractor } from "./authentication/implementations/userFromRequestExtractor";
-import { IAuthenticationHttpResponseCreator } from "./authentication/abstractions/IAuthenticationHttpResponseCreator";
-import { AuthenticationHttpResponseCreator } from "./authentication/implementations/authenticationHttpResponseCreator";
-import { CacheSyncUserAuthenticator } from "./cache/authentication/cacheUserAuthenticator";
+import { IInputUserFromRequestExtractor } from "./authentication/abstractions/IInputUserFromRequestExtractor";
+import { RegularInputUserFromRequestExtractor } from "./authentication/implementations/regularInputUserFromRequestExtractor";
+import { IAuthenticationResponseCreator } from "./authentication/abstractions/IAuthenticationResponseCreator";
+import { AuthenticationResponseCreator } from "./authentication/implementations/authenticationResponseCreator";
+import { RegularInputUserCacheUserAuthenticator } from "./cache/authentication/regularInputUserCacheUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
-import { ActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/activeDirectoryUserAuthenticator'
-import { ObjectToDecodedJWTConverter } from "./authorization/implementations/tokens/objectToDecodedJWTConverter";
-import { IObjectToDecodedJWTConverter } from './authorization/abstractions/tokens/IObjectToDecodedJWTConverter';
+import { RegularInputUserActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/regularInputUserActiveDirectoryUserAuthenticator'
+import { JwtObjectToRegularDecodedTokenConverter } from "./authorization/implementations/tokens/jwtObjectToRegularDecodedTokenConverter";
+import { IObjectToRegularDecodedTokenConverter } from './authorization/abstractions/tokens/IObjectToRegularDecodedTokenConverter';
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
-import { AuthorizationHandler } from "./authorization/implementations/authorizationHandler";
+import { TokenBasedAuthorizationHandler } from "./authorization/implementations/tokenBasedAuthorizationHandler";
 import { IUserAuthorizer } from "./authorization/abstractions/IUserAuthorizer";
-import { IAuthorizationFailureHttpResponseCreator } from "./authorization/abstractions/IAuthorizationFailureHttpResponseCreator";
-import { AuthorizationFailureHttpResponseCreator } from "./authorization/implementations/authorizationFailureHttpResponseCreator";
-import { ActiveDirectoryUserAuthorizer } from "./activeDirectory/authorization/activeDirectoryUserAuthorizer";
+import { IAuthorizationFailureResponseCreator } from "./authorization/abstractions/IAuthorizationFailureResponseCreator";
+import { RegularDecodedTokenAuthorizationFailureResponseCreator } from "./authorization/implementations/authorizationFailureResponseCreator";
+import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "./activeDirectory/authorization/regularDecodedTokenActiveDirectoryUserAuthorizer";
 import { IUserFinder } from "./common/abstractions/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "./activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
 import { IUserInformationGetter } from "./authorizedLogics/userInformation/abstractions/IUserInformationGetter";
@@ -57,7 +57,10 @@ import { ActiveDirectoryUserInformation } from "./activeDirectory/entities/userI
 import { UserInformationGetter } from "./authorizedLogics/userInformation/implementations/userInformationGetter";
 import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
 import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
-import { IUserAuthenticator } from "./authentication/abstractions/IUserAuthenticator";
+import { IInputUserAuthenticator } from "./authentication/abstractions/IInputUserAuthenticator";
+import { IHttpResponseSender } from "./common/abstractions/IHttpResponseSender";
+import { JsonHttpResponseSender } from "./common/implementations/JsonHttpResponseSender";
+import { RegularDecodedToken } from "./authorization/entities/regularDecodedToken";
 
 //#endregion
 
@@ -126,56 +129,73 @@ const activeDirectory = new AD({
 
 //#region initialize objects
 
+//#region common
+
+let jsonHttpResponseSender: IHttpResponseSender = new JsonHttpResponseSender();
+
+//#endregion
+
 //#region authentication
 
-let userFromRequestExtractor: IUserFromRequestExtractor = new UserFromRequestExtractor();
+let regularInputUserFromRequestExtractor: IInputUserFromRequestExtractor<RegularInputUser> = 
+new RegularInputUserFromRequestExtractor();
 
-let jwtTokenCreator: ITokenCreator = new JwtTokenCreator(
+let regularInputUserJwtTokenCreator: ITokenCreator<RegularInputUser> = new RegularInputUserJwtTokenCreator(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
 
-let authenticationHttpResponseCreator: IAuthenticationHttpResponseCreator = new AuthenticationHttpResponseCreator();
+let authenticationResponseCreator: IAuthenticationResponseCreator = new AuthenticationResponseCreator();
 
 //#region MongoDB
 
-let mongoDBUserAuthenticator: IUserAuthenticator = new MongoDBUserAuthenticator(
+let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
+new RegularInputUserMongoDBUserAuthenticator(
   mongoConnectionString
 );
-let mongoDBLoginHandler: ILoginHandler = new LoginHandler(
-  userFromRequestExtractor,
-  mongoDBUserAuthenticator,
-  jwtTokenCreator,
-  authenticationHttpResponseCreator
+
+let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler<RegularInputUser>(
+  regularInputUserFromRequestExtractor,
+  regularInputUserMongoDBUserAuthenticator,
+  regularInputUserJwtTokenCreator,
+  authenticationResponseCreator,
+  jsonHttpResponseSender
 );
 
 //#endregion
 
 //#region ActiveDirectory
 
-let activeDirectoryAsyncUserAuthenticator: IUserAuthenticator = new ActiveDirectoryUserAuthenticator(
+let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
+new RegularInputUserActiveDirectoryUserAuthenticator(
   activeDirectory
 );
-let activeDirectoryLoginHandler: ILoginHandler = new LoginHandler(
-  userFromRequestExtractor,
-  activeDirectoryAsyncUserAuthenticator,
-  jwtTokenCreator,
-  authenticationHttpResponseCreator
+
+let regularInputUserActiveDirectoryTokenBasedLoginHandler: ILoginHandler = 
+new TokenBasedLoginHandler<RegularInputUser>(
+  regularInputUserFromRequestExtractor,
+  regularInputUserActiveDirectoryUserAuthenticator,
+  regularInputUserJwtTokenCreator,
+  authenticationResponseCreator,
+  jsonHttpResponseSender
 );
 
 //#endregion
 
 //#region Cache
 
-let allowedUsers: User[] = [new User("china", "china")];
-let cacheUserAuthenticator: IUserAuthenticator = new CacheSyncUserAuthenticator(
+let allowedUsers: RegularInputUser[] = [new RegularInputUser("china", "china")];
+let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
+new RegularInputUserCacheUserAuthenticator(
   allowedUsers
 );
-let cacheLoginHandler: ILoginHandler = new LoginHandler(
-  userFromRequestExtractor,
-  cacheUserAuthenticator,
-  jwtTokenCreator,
-  authenticationHttpResponseCreator
+let regularInputUserCacheTokenBasedLoginHandler: ILoginHandler = 
+new TokenBasedLoginHandler<RegularInputUser>(
+  regularInputUserFromRequestExtractor,
+  regularInputUserCacheUserAuthenticator,
+  regularInputUserJwtTokenCreator,
+  authenticationResponseCreator,
+  jsonHttpResponseSender
 );
 
 //#endregion
@@ -188,19 +208,30 @@ let cacheLoginHandler: ILoginHandler = new LoginHandler(
 
 //#region group member
 
-let activeDirectoryByGroupNameUserFinder: IUserFinder = new ActiveDirectoryByGroupNameUserFinder(activeDirectory, "Allowed Users");
-let activeDirectoryByGroupMemberUserAuthorizer: IUserAuthorizer = new ActiveDirectoryUserAuthorizer(activeDirectoryByGroupNameUserFinder);
+let activeDirectoryByGroupNameUserFinder: IUserFinder = 
+new ActiveDirectoryByGroupNameUserFinder(activeDirectory, "Allowed Users");
+
+let regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer: IUserAuthorizer<RegularDecodedToken> = 
+new RegularDecodedTokenActiveDirectoryUserAuthorizer(activeDirectoryByGroupNameUserFinder);
 
 //#endregion
 
 //#endregion
 
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
-let decodedJWTConverter: IObjectToDecodedJWTConverter = new ObjectToDecodedJWTConverter();
-let decodedTokenRetriever: IDecodedTokenRetriever = new DecodedJWTTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
-let authorizationFailureHttpResponseCreator: IAuthorizationFailureHttpResponseCreator = new AuthorizationFailureHttpResponseCreator();
+let decodedJWTConverter: IObjectToRegularDecodedTokenConverter = new JwtObjectToRegularDecodedTokenConverter();
 
-let authorizationHandler: IAuthorizationHandler = new AuthorizationHandler(decodedTokenRetriever, activeDirectoryByGroupMemberUserAuthorizer, authorizationFailureHttpResponseCreator);
+let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> = 
+new JwtRegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
+
+let regularDecodedTokenAuthorizationFailureResponseCreator: IAuthorizationFailureResponseCreator<RegularDecodedToken> = 
+new RegularDecodedTokenAuthorizationFailureResponseCreator();
+
+let authorizationHandler: IAuthorizationHandler = new TokenBasedAuthorizationHandler(
+  regularDecodedTokenRetriever,
+   regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer,
+    regularDecodedTokenAuthorizationFailureResponseCreator,
+    jsonHttpResponseSender);
 
 //#endregion
 
@@ -212,7 +243,7 @@ let activeDirectoryUserInformationRetriever: IUserInformationRetriever<ActiveDir
 new ActiveDirectoryUserInformationRetriever(activeDirectory);
 
 let activeDirectoryUserInformationGetter : IUserInformationGetter<ActiveDirectoryUserInformation> = 
-new UserInformationGetter<ActiveDirectoryUserInformation>(decodedTokenRetriever, activeDirectoryUserInformationRetriever);
+new UserInformationGetter<ActiveDirectoryUserInformation>(regularDecodedTokenRetriever, activeDirectoryUserInformationRetriever);
 
 //#endregion
 
@@ -241,15 +272,15 @@ app.use(
 //#region log in API
 
 app.post(loginFromMongoDBRoute, (req: express.Request, res: express.Response) => {
-  mongoDBLoginHandler.handleLogin(req, res);
+  regularInputUserMongoDBTokenBasedLoginHandler.handleLogin(req, res);
 });
 
 app.post(loginFromActiveDirectoryRoute, (req: express.Request, res: express.Response) => {
-  activeDirectoryLoginHandler.handleLogin(req, res);
+  regularInputUserActiveDirectoryTokenBasedLoginHandler.handleLogin(req, res);
 })
 
 app.post(loginFromCacheRoute, (req: express.Request, res: express.Response) => {
-  cacheLoginHandler.handleLogin(req, res);
+  regularInputUserCacheTokenBasedLoginHandler.handleLogin(req, res);
 });
 
 //#endregion

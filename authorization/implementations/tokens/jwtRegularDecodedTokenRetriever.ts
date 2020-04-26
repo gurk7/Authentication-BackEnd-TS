@@ -1,15 +1,16 @@
 import jwt = require("jsonwebtoken");
 import { IDecodedTokenRetriever } from "../../abstractions/tokens/IDecodedTokenRetriever";
 import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
-import { IObjectToDecodedJWTConverter } from "../../abstractions/tokens/IObjectToDecodedJWTConverter";
+import { IObjectToRegularDecodedTokenConverter } from "../../abstractions/tokens/IObjectToRegularDecodedTokenConverter";
 import express = require('express');
+import { RegularDecodedToken } from "../../entities/regularDecodedToken";
 
-export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
+export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<RegularDecodedToken> {
   private secretOrPublicKey: string;
   private tokenExtractor: ITokenExtractor;
-  private converter: IObjectToDecodedJWTConverter;
+  private converter: IObjectToRegularDecodedTokenConverter;
 
-  constructor(secretOrPublicKey: string, tokenExtractor: ITokenExtractor, converter: IObjectToDecodedJWTConverter) {
+  constructor(secretOrPublicKey: string, tokenExtractor: ITokenExtractor, converter: IObjectToRegularDecodedTokenConverter) {
     this.secretOrPublicKey = secretOrPublicKey;
     this.tokenExtractor = tokenExtractor;
     this.converter = converter;
@@ -33,7 +34,8 @@ export class DecodedJWTTokenRetriever implements IDecodedTokenRetriever {
         return this.converter.convert(decoded);
       }
       catch (e) {
-        console.log(`can't convert token from object to DecodedJWTUser. token: ${token}`);
+        console.log("can't convert decoded token to RegularDecodedToken");
+        console.log(decoded);
         console.log(e);
       }
     }

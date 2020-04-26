@@ -1,4 +1,4 @@
-export class User {
+export class RegularInputUser {
   username: string;
   password: string;
 
@@ -7,7 +7,7 @@ export class User {
     this.password = password;
   }
 
-  equals(otherUser: User): boolean {
+  equals(otherUser: RegularInputUser): boolean {
     if (
       this.username === otherUser.username &&
       this.password === otherUser.password
