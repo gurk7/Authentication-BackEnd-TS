@@ -1,5 +1,5 @@
 //#region outer imports
-
+import "reflect-metadata"
 import express = require("express");
 import cors = require("cors");
 import https = require("https");
@@ -31,7 +31,7 @@ import { MockMissionCreator } from "./authorizedLogics/missions/implementations/
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { RegularInputUser } from "./authentication/entities/regularInputUser";
+import { LoginRegularInputUser } from "./authentication/entities/input/loginRegularInputUser";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
@@ -137,10 +137,10 @@ let jsonHttpResponseSender: IHttpResponseSender = new JsonHttpResponseSender();
 
 //#region authentication
 
-let regularInputUserFromRequestExtractor: IInputUserFromRequestExtractor<RegularInputUser> = 
-new RegularInputUserFromRequestExtractor();
+let regularInputUserFromRequestExtractor: IInputUserFromRequestExtractor<LoginRegularInputUser> =
+  new RegularInputUserFromRequestExtractor();
 
-let regularInputUserJwtTokenCreator: ITokenCreator<RegularInputUser> = new RegularInputUserJwtTokenCreator(
+let regularInputUserJwtTokenCreator: ITokenCreator<LoginRegularInputUser> = new RegularInputUserJwtTokenCreator(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
@@ -149,12 +149,12 @@ let authenticationResponseCreator: IAuthenticationResponseCreator = new Authenti
 
 //#region MongoDB
 
-let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
-new RegularInputUserMongoDBUserAuthenticator(
-  mongoConnectionString
-);
+let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser> =
+  new RegularInputUserMongoDBUserAuthenticator(
+    mongoConnectionString
+  );
 
-let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler<RegularInputUser>(
+let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler<LoginRegularInputUser>(
   regularInputUserFromRequestExtractor,
   regularInputUserMongoDBUserAuthenticator,
   regularInputUserJwtTokenCreator,
@@ -166,37 +166,37 @@ let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBase
 
 //#region ActiveDirectory
 
-let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
-new RegularInputUserActiveDirectoryUserAuthenticator(
-  activeDirectory
-);
+let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser> =
+  new RegularInputUserActiveDirectoryUserAuthenticator(
+    activeDirectory
+  );
 
-let regularInputUserActiveDirectoryTokenBasedLoginHandler: ILoginHandler = 
-new TokenBasedLoginHandler<RegularInputUser>(
-  regularInputUserFromRequestExtractor,
-  regularInputUserActiveDirectoryUserAuthenticator,
-  regularInputUserJwtTokenCreator,
-  authenticationResponseCreator,
-  jsonHttpResponseSender
-);
+let regularInputUserActiveDirectoryTokenBasedLoginHandler: ILoginHandler =
+  new TokenBasedLoginHandler<LoginRegularInputUser>(
+    regularInputUserFromRequestExtractor,
+    regularInputUserActiveDirectoryUserAuthenticator,
+    regularInputUserJwtTokenCreator,
+    authenticationResponseCreator,
+    jsonHttpResponseSender
+  );
 
 //#endregion
 
 //#region Cache
 
-let allowedUsers: RegularInputUser[] = [new RegularInputUser("china", "china")];
-let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<RegularInputUser> = 
-new RegularInputUserCacheUserAuthenticator(
-  allowedUsers
-);
-let regularInputUserCacheTokenBasedLoginHandler: ILoginHandler = 
-new TokenBasedLoginHandler<RegularInputUser>(
-  regularInputUserFromRequestExtractor,
-  regularInputUserCacheUserAuthenticator,
-  regularInputUserJwtTokenCreator,
-  authenticationResponseCreator,
-  jsonHttpResponseSender
-);
+let allowedUsers: LoginRegularInputUser[] = [new LoginRegularInputUser("china", "china")];
+let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser> =
+  new RegularInputUserCacheUserAuthenticator(
+    allowedUsers
+  );
+let regularInputUserCacheTokenBasedLoginHandler: ILoginHandler =
+  new TokenBasedLoginHandler<LoginRegularInputUser>(
+    regularInputUserFromRequestExtractor,
+    regularInputUserCacheUserAuthenticator,
+    regularInputUserJwtTokenCreator,
+    authenticationResponseCreator,
+    jsonHttpResponseSender
+  );
 
 //#endregion
 
@@ -208,11 +208,11 @@ new TokenBasedLoginHandler<RegularInputUser>(
 
 //#region group member
 
-let activeDirectoryByGroupNameUserFinder: IUserFinder = 
-new ActiveDirectoryByGroupNameUserFinder(activeDirectory, "Allowed Users");
+let activeDirectoryByGroupNameUserFinder: IUserFinder =
+  new ActiveDirectoryByGroupNameUserFinder(activeDirectory, "Allowed Users");
 
-let regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer: IUserAuthorizer<RegularDecodedToken> = 
-new RegularDecodedTokenActiveDirectoryUserAuthorizer(activeDirectoryByGroupNameUserFinder);
+let regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer: IUserAuthorizer<RegularDecodedToken> =
+  new RegularDecodedTokenActiveDirectoryUserAuthorizer(activeDirectoryByGroupNameUserFinder);
 
 //#endregion
 
@@ -221,17 +221,17 @@ new RegularDecodedTokenActiveDirectoryUserAuthorizer(activeDirectoryByGroupNameU
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let decodedJWTConverter: IObjectToRegularDecodedTokenConverter = new JwtObjectToRegularDecodedTokenConverter();
 
-let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> = 
-new JwtRegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
+let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> =
+  new JwtRegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
 
-let regularDecodedTokenAuthorizationFailureResponseCreator: IAuthorizationFailureResponseCreator<RegularDecodedToken> = 
-new RegularDecodedTokenAuthorizationFailureResponseCreator();
+let regularDecodedTokenAuthorizationFailureResponseCreator: IAuthorizationFailureResponseCreator<RegularDecodedToken> =
+  new RegularDecodedTokenAuthorizationFailureResponseCreator();
 
 let authorizationHandler: IAuthorizationHandler = new TokenBasedAuthorizationHandler(
   regularDecodedTokenRetriever,
-   regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer,
-    regularDecodedTokenAuthorizationFailureResponseCreator,
-    jsonHttpResponseSender);
+  regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer,
+  regularDecodedTokenAuthorizationFailureResponseCreator,
+  jsonHttpResponseSender);
 
 //#endregion
 
@@ -239,11 +239,11 @@ let authorizationHandler: IAuthorizationHandler = new TokenBasedAuthorizationHan
 
 //#region active directory
 
-let activeDirectoryUserInformationRetriever: IUserInformationRetriever<ActiveDirectoryUserInformation> = 
-new ActiveDirectoryUserInformationRetriever(activeDirectory);
+let activeDirectoryUserInformationRetriever: IUserInformationRetriever<ActiveDirectoryUserInformation> =
+  new ActiveDirectoryUserInformationRetriever(activeDirectory);
 
-let activeDirectoryUserInformationGetter : IUserInformationGetter<ActiveDirectoryUserInformation> = 
-new UserInformationGetter<ActiveDirectoryUserInformation>(regularDecodedTokenRetriever, activeDirectoryUserInformationRetriever);
+let activeDirectoryUserInformationGetter: IUserInformationGetter<ActiveDirectoryUserInformation> =
+  new UserInformationGetter<ActiveDirectoryUserInformation>(regularDecodedTokenRetriever, activeDirectoryUserInformationRetriever);
 
 //#endregion
 
@@ -287,8 +287,7 @@ app.post(loginFromCacheRoute, (req: express.Request, res: express.Response) => {
 
 app.get("/user/information", async (req: express.Request, res: express.Response) => {
   let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
-  if(isAuthorized)
-  {
+  if (isAuthorized) {
     let userInformation = await activeDirectoryUserInformationGetter.getUserInformation(req, res);
     res.json(userInformation);
   }
@@ -296,7 +295,7 @@ app.get("/user/information", async (req: express.Request, res: express.Response)
 
 app.post(missionRoute, async (req: express.Request, res: express.Response) => {
   let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
-  if(isAuthorized) mockMissionCreator.CreateMission(req, res);
+  if (isAuthorized) mockMissionCreator.CreateMission(req, res);
 });
 
 https

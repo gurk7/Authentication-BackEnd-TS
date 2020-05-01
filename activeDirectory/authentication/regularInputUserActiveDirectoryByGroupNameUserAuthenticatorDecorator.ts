@@ -1,27 +1,27 @@
 import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
-import { RegularInputUser } from "../../authentication/entities/regularInputUser";
+import { LoginRegularInputUser } from "../../authentication/entities/input/loginRegularInputUser";
 
 export class RegularInputUserActiveDirectoryByGroupNameUserAuthenticatorDecorator
-implements IInputUserAuthenticator<RegularInputUser> {
+  implements IInputUserAuthenticator<LoginRegularInputUser> {
 
-  private innerActiveDirectoryInputUserAuthenticator: IInputUserAuthenticator<RegularInputUser>;
+  private innerActiveDirectoryInputUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser>;
   private activeDirectoryGroupMemberUserFinder: IUserFinder;
 
-  constructor(innerActiveDirectoryInputUserAuthenticator: IInputUserAuthenticator<RegularInputUser>, 
+  constructor(innerActiveDirectoryInputUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser>,
     activeDirectoryGroupMemberUserFinder: IUserFinder) {
     this.innerActiveDirectoryInputUserAuthenticator = innerActiveDirectoryInputUserAuthenticator;
-    this.activeDirectoryGroupMemberUserFinder = activeDirectoryGroupMemberUserFinder;  
+    this.activeDirectoryGroupMemberUserFinder = activeDirectoryGroupMemberUserFinder;
   }
 
-  async authenticate(inputUser: RegularInputUser) {
-      let isUserAuthenticatedInActiveDirectory = 
-        await this.innerActiveDirectoryInputUserAuthenticator.authenticate(inputUser);
+  async authenticate(inputUser: LoginRegularInputUser) {
+    let isUserAuthenticatedInActiveDirectory =
+      await this.innerActiveDirectoryInputUserAuthenticator.authenticate(inputUser);
 
-      if(!isUserAuthenticatedInActiveDirectory) return false;
+    if (!isUserAuthenticatedInActiveDirectory) return false;
 
-      return await this.activeDirectoryGroupMemberUserFinder.find(inputUser.username);
-      
+    return await this.activeDirectoryGroupMemberUserFinder.find(inputUser.username);
+
   }
 }
 

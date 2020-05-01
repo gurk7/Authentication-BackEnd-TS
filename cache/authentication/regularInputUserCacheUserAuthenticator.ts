@@ -1,19 +1,18 @@
-import { RegularInputUser } from "../../authentication/entities/regularInputUser";
+import { LoginRegularInputUser } from "../../authentication/entities/input/loginRegularInputUser";
 import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 
-export class RegularInputUserCacheUserAuthenticator implements IInputUserAuthenticator<RegularInputUser> {
-  private allowedUsers: RegularInputUser[];
+export class RegularInputUserCacheUserAuthenticator implements IInputUserAuthenticator<LoginRegularInputUser> {
+  private allowedUsers: LoginRegularInputUser[];
 
-  constructor(allowedUsers: RegularInputUser[]) {
+  constructor(allowedUsers: LoginRegularInputUser[]) {
     this.allowedUsers = allowedUsers;
   }
 
-  async authenticate(inputUser: RegularInputUser) {
+  async authenticate(inputUser: LoginRegularInputUser) {
     return await this.IsUserExists(inputUser);
   }
 
-  private IsUserExists(inputUser: RegularInputUser) : boolean
-  {
+  private IsUserExists(inputUser: LoginRegularInputUser): boolean {
     for (let allowedUser of this.allowedUsers) {
       if (allowedUser.equals(inputUser)) {
         return true;
