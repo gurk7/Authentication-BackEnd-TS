@@ -5,10 +5,12 @@ import { buildSchema } from "type-graphql";
 import { Container } from 'typedi'
 import { LoginResolver } from "../../authentication/graphql/loginResolver";
 import { GraphqlLoginBootstrapper } from "./graphqlLoginBootstrapper";
+import { GraphqlAuthorizationBootstrapper } from "./graphqlAuthorizationBootstrapper";
 
 const main = async () => {
 
     await GraphqlLoginBootstrapper.bootstrap();
+    await GraphqlAuthorizationBootstrapper.bootstrap();
 
     const schema = await buildSchema({
         resolvers: [LoginResolver],
