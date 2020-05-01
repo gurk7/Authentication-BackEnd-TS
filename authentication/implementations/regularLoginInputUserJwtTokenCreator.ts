@@ -1,8 +1,8 @@
 import { ITokenCreator } from "../abstractions/ITokenCreator";
-import { LoginRegularInputUser } from "../entities/input/loginRegularInputUser";
+import { RegularLoginInputUser } from "../entities/input/regularLoginInputUser";
 import jwt = require("jsonwebtoken");
 
-export class RegularInputUserJwtTokenCreator implements ITokenCreator<LoginRegularInputUser> {
+export class RegularLoginInputUserJwtTokenCreator implements ITokenCreator<RegularLoginInputUser> {
   private secretOrPublicKey: string;
   private expirationTime: string;
 
@@ -11,7 +11,7 @@ export class RegularInputUserJwtTokenCreator implements ITokenCreator<LoginRegul
     this.expirationTime = expirationTime;
   }
 
-  create(inputUser: LoginRegularInputUser) {
+  create(inputUser: RegularLoginInputUser) {
     return jwt.sign({ username: inputUser.username }, this.secretOrPublicKey, {
       expiresIn: this.expirationTime
     });

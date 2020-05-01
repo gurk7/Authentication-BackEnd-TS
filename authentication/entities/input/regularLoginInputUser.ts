@@ -1,11 +1,12 @@
 import { InputType, Field } from "type-graphql";
 
-/*Decorators are created for TypeGraphQL reflection, allowance for GraphQL's schema input
+/*
+  Decorators are created for TypeGraphQL reflection, allowance for GraphQL's schema
   This type is used For both REST and GraphQL
 */
 
 @InputType()
-export class LoginRegularInputUser {
+export class RegularLoginInputUser {
   @Field()
   username: string;
 
@@ -17,7 +18,7 @@ export class LoginRegularInputUser {
     this.password = password;
   }
 
-  equals(otherUser: LoginRegularInputUser): boolean {
+  equals(otherUser: RegularLoginInputUser): boolean {
     if (
       this.username === otherUser.username &&
       this.password === otherUser.password

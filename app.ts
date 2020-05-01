@@ -18,9 +18,9 @@ const AD = require("ad");
 //#region inner imports
 
 import { TokenBasedLoginHandler } from "./authentication/implementations/tokenBasedloginHandler";
-import { RegularInputUserMongoDBUserAuthenticator } from "./mongo/authentication/regularInputUserMongoDBUserAuthenticator";
+import { RegularLoginInputUserMongoDBUserAuthenticator } from "./mongo/authentication/regularLoginInputUserMongoDBUserAuthenticator";
 import { ILoginHandler } from "./authentication/abstractions/ILoginHandler";
-import { RegularInputUserJwtTokenCreator } from "./authentication/implementations/regularInputUserJwtTokenCreator";
+import { RegularLoginInputUserJwtTokenCreator } from "./authentication/implementations/regularLoginInputUserJwtTokenCreator";
 import { ITokenCreator } from "./authentication/abstractions/ITokenCreator";
 import { JwtTokenExtractor } from "./authorization/implementations/tokens/jwtTokenExtractor";
 import { ITokenExtractor } from "./authorization/abstractions/tokens/ITokenExtractor";
@@ -31,17 +31,17 @@ import { MockMissionCreator } from "./authorizedLogics/missions/implementations/
 import { RoutesConfiguration } from "./config/entities/routes";
 import { TokensConfiguration } from "./config/entities/tokens";
 import { PortsConfiguration } from "./config/entities/ports";
-import { LoginRegularInputUser } from "./authentication/entities/input/loginRegularInputUser";
+import { RegularLoginInputUser } from "./authentication/entities/input/regularLoginInputUser";
 import { SSLConfiguration } from "./config/entities/ssl";
 import { ConigurationConsts } from "./consts/configurationConsts";
 import { SSLConsts } from "./consts/sslConsts";
 import { IInputUserFromRequestExtractor } from "./authentication/abstractions/IInputUserFromRequestExtractor";
-import { RegularInputUserFromRequestExtractor } from "./authentication/implementations/regularInputUserFromRequestExtractor";
+import { RegularLoginInputUserFromRequestExtractor } from "./authentication/implementations/regularLoginInputUserFromRequestExtractor";
 import { IAuthenticationResponseCreator } from "./authentication/abstractions/IAuthenticationResponseCreator";
 import { AuthenticationResponseCreator } from "./authentication/implementations/authenticationResponseCreator";
-import { RegularInputUserCacheUserAuthenticator } from "./cache/authentication/regularInputUserCacheUserAuthenticator";
+import { RegularLoginInputUserCacheUserAuthenticator } from "./cache/authentication/regularLoginInputUserCacheUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
-import { RegularInputUserActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/regularInputUserActiveDirectoryUserAuthenticator'
+import { RegularLoginInputUserActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/regularLoginInputUserActiveDirectoryUserAuthenticator'
 import { JwtObjectToRegularDecodedTokenConverter } from "./authorization/implementations/tokens/jwtObjectToRegularDecodedTokenConverter";
 import { IObjectToRegularDecodedTokenConverter } from './authorization/abstractions/tokens/IObjectToRegularDecodedTokenConverter';
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
@@ -137,10 +137,10 @@ let jsonHttpResponseSender: IHttpResponseSender = new JsonHttpResponseSender();
 
 //#region authentication
 
-let regularInputUserFromRequestExtractor: IInputUserFromRequestExtractor<LoginRegularInputUser> =
-  new RegularInputUserFromRequestExtractor();
+let regularInputUserFromRequestExtractor: IInputUserFromRequestExtractor<RegularLoginInputUser> =
+  new RegularLoginInputUserFromRequestExtractor();
 
-let regularInputUserJwtTokenCreator: ITokenCreator<LoginRegularInputUser> = new RegularInputUserJwtTokenCreator(
+let regularInputUserJwtTokenCreator: ITokenCreator<RegularLoginInputUser> = new RegularLoginInputUserJwtTokenCreator(
   tokenSecretOrPublicKey,
   tokenExpirationTime
 );
@@ -149,12 +149,12 @@ let authenticationResponseCreator: IAuthenticationResponseCreator = new Authenti
 
 //#region MongoDB
 
-let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser> =
-  new RegularInputUserMongoDBUserAuthenticator(
+let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<RegularLoginInputUser> =
+  new RegularLoginInputUserMongoDBUserAuthenticator(
     mongoConnectionString
   );
 
-let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler<LoginRegularInputUser>(
+let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBasedLoginHandler<RegularLoginInputUser>(
   regularInputUserFromRequestExtractor,
   regularInputUserMongoDBUserAuthenticator,
   regularInputUserJwtTokenCreator,
@@ -166,13 +166,13 @@ let regularInputUserMongoDBTokenBasedLoginHandler: ILoginHandler = new TokenBase
 
 //#region ActiveDirectory
 
-let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser> =
-  new RegularInputUserActiveDirectoryUserAuthenticator(
+let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<RegularLoginInputUser> =
+  new RegularLoginInputUserActiveDirectoryUserAuthenticator(
     activeDirectory
   );
 
 let regularInputUserActiveDirectoryTokenBasedLoginHandler: ILoginHandler =
-  new TokenBasedLoginHandler<LoginRegularInputUser>(
+  new TokenBasedLoginHandler<RegularLoginInputUser>(
     regularInputUserFromRequestExtractor,
     regularInputUserActiveDirectoryUserAuthenticator,
     regularInputUserJwtTokenCreator,
@@ -184,13 +184,13 @@ let regularInputUserActiveDirectoryTokenBasedLoginHandler: ILoginHandler =
 
 //#region Cache
 
-let allowedUsers: LoginRegularInputUser[] = [new LoginRegularInputUser("china", "china")];
-let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<LoginRegularInputUser> =
-  new RegularInputUserCacheUserAuthenticator(
+let allowedUsers: RegularLoginInputUser[] = [new RegularLoginInputUser("china", "china")];
+let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<RegularLoginInputUser> =
+  new RegularLoginInputUserCacheUserAuthenticator(
     allowedUsers
   );
 let regularInputUserCacheTokenBasedLoginHandler: ILoginHandler =
-  new TokenBasedLoginHandler<LoginRegularInputUser>(
+  new TokenBasedLoginHandler<RegularLoginInputUser>(
     regularInputUserFromRequestExtractor,
     regularInputUserCacheUserAuthenticator,
     regularInputUserJwtTokenCreator,
