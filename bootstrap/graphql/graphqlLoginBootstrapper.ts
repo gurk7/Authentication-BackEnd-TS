@@ -73,7 +73,7 @@ export class GraphqlLoginBootstrapper {
         //#endregion
 
         let graphqlLoginHandler = new GraphqlLoginHandler(
-            regularInputUserActiveDirectoryUserAuthenticator,
+            regularInputUserCacheUserAuthenticator,
             regularLoginInputUserJwtTokenCreator);
 
         Container.set({ id: "LOGIN_HANDLER", factory: () => graphqlLoginHandler });

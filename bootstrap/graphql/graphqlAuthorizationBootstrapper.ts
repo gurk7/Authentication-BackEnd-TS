@@ -21,14 +21,15 @@ import { IUserAuthorizer } from "../../authorization/abstractions/IUserAuthorize
 import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "../../activeDirectory/authorization/regularDecodedTokenActiveDirectoryUserAuthorizer";
 
 import { Container } from 'typedi'
+import { AuthorizationChecker } from "../../authorization/graphql/authorizationChecker";
 const AD = require("ad");
 
 export class GraphqlAuthorizationBootstrapper {
     public static bootstrap(): void {
 
-        const ldapConfig = config.get<LDAPConfiguration>(ConigurationConsts.ldap);
-
         //#region ldap
+
+        const ldapConfig = config.get<LDAPConfiguration>(ConigurationConsts.ldap);
 
         let url = ldapConfig.url;
         let userFullyQualifiedDomainName = ldapConfig.userFullyQualifiedDomainName;
@@ -41,16 +42,6 @@ export class GraphqlAuthorizationBootstrapper {
         })
 
         //#endregion
-
-        const tokensConfig = config.get<TokensConfiguration>(ConigurationConsts.tokens);
-        let tokenSecretOrPublicKey = tokensConfig.tokenSecretOrPublicKey;
-
-        let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
-        let decodedJWTConverter: IObjectToRegularDecodedTokenConverter =
-            new JwtObjectToRegularDecodedTokenConverter();
-
-        let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> =
-            new JwtRegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
 
         //#region active directory
 
@@ -66,18 +57,7 @@ export class GraphqlAuthorizationBootstrapper {
 
         //#endregion
 
-        let regularDecodedTokenAuthorizationFailureResponseCreator:
-            IAuthorizationFailureResponseCreator<RegularDecodedToken> =
-            new RegularDecodedTokenAuthorizationFailureResponseCreator();
-
-        let jsonHttpResponseSender: IHttpResponseSender = new JsonHttpResponseSender();
-
-        let authorizationHandler: IAuthorizationHandler = new TokenBasedAuthorizationHandler(
-            regularDecodedTokenRetriever,
-            regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer,
-            regularDecodedTokenAuthorizationFailureResponseCreator,
-            jsonHttpResponseSender);
-
-        Container.set({ id: "AUTHORIZATION_HANDLER", factory: () => authorizationHandler });
+        let authorizationChecker = new AuthorizationChecker(
+            regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer);
     }
 }

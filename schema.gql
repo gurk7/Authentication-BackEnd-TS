@@ -5,6 +5,7 @@
 
 type AuthenticationResponse {
   token: String
+  userInformation: UserInformation
 }
 
 type Mutation {
@@ -18,4 +19,12 @@ type Query {
 input RegularLoginInputUser {
   username: String!
   password: String!
+}
+
+type UserInformation {
+  userName: String!
+  firstName: String
+  lastName: String
+  email: String
+  groups: [String!]
 }
