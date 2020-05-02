@@ -43,6 +43,8 @@ export class GraphqlAuthorizationBootstrapper {
 
         //#endregion
 
+        let currentUserParser: IObjectToRegularDecodedTokenConverter =
+            new JwtObjectToRegularDecodedTokenConverter();
         //#region active directory
 
         //#region group member
@@ -57,7 +59,7 @@ export class GraphqlAuthorizationBootstrapper {
 
         //#endregion
 
-        let authorizationChecker = new AuthorizationChecker(
+        let authorizationChecker = new AuthorizationChecker(currentUserParser,
             regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer);
     }
 }
