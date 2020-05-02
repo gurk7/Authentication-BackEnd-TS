@@ -1,9 +1,9 @@
-import { IObjectToRegularDecodedTokenConverter } from '../../abstractions/tokens/IObjectToRegularDecodedTokenConverter';
+import { IDecodedTokenParser } from '../../abstractions/tokens/IDecodedTokenParser';
 import { RegularDecodedToken } from '../../entities/regularDecodedToken';
 
-export class JwtObjectToRegularDecodedTokenConverter implements IObjectToRegularDecodedTokenConverter {
+export class JwtObjectToRegularDecodedTokenConverter implements IDecodedTokenParser {
 
-    convert(decodedToken: any): RegularDecodedToken {
+    parse(decodedToken: any): RegularDecodedToken {
         console.log(decodedToken);
         return new RegularDecodedToken(decodedToken.username, decodedToken.iat, decodedToken.exp)
     }

@@ -3,6 +3,7 @@ import { Service } from "typedi";
 import { LoginService } from "./loginService";
 import { RegularLoginInputUser } from "../entities/input/regularLoginInputUser";
 import { AuthenticationResponse } from "../entities/response/authenticationResponse";
+import { UserInformation } from "../entities/userInformation";
 
 @Service()
 @Resolver()
@@ -12,15 +13,13 @@ export class LoginResolver {
         private readonly loginService: LoginService
     ) { }
 
-    @Query(returns => Boolean)
+    @Query(returns => UserInformation)
     @Authorized()
     async user(@Arg("username") username: string) {
-        console.log("got here");
-        return true;
+        return new UserInformation(username);
     }
 
     @Mutation(returns => AuthenticationResponse, { nullable: true })
-    @Authorized()
     async login(
         @Arg("user") logInInputUser: RegularLoginInputUser): Promise<AuthenticationResponse | undefined> {
         return await this.loginService.login(logInInputUser);

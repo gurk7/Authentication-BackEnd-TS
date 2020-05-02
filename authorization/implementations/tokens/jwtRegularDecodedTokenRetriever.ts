@@ -1,16 +1,16 @@
 import jwt = require("jsonwebtoken");
 import { IDecodedTokenRetriever } from "../../abstractions/tokens/IDecodedTokenRetriever";
 import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
-import { IObjectToRegularDecodedTokenConverter } from "../../abstractions/tokens/IObjectToRegularDecodedTokenConverter";
+import { IDecodedTokenParser } from "../../abstractions/tokens/IDecodedTokenParser";
 import express = require('express');
 import { RegularDecodedToken } from "../../entities/regularDecodedToken";
 
 export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<RegularDecodedToken> {
   private secretOrPublicKey: string;
   private tokenExtractor: ITokenExtractor;
-  private converter: IObjectToRegularDecodedTokenConverter;
+  private converter: IDecodedTokenParser;
 
-  constructor(secretOrPublicKey: string, tokenExtractor: ITokenExtractor, converter: IObjectToRegularDecodedTokenConverter) {
+  constructor(secretOrPublicKey: string, tokenExtractor: ITokenExtractor, converter: IDecodedTokenParser) {
     this.secretOrPublicKey = secretOrPublicKey;
     this.tokenExtractor = tokenExtractor;
     this.converter = converter;
@@ -18,20 +18,17 @@ export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<R
 
   retrieveDecodedToken(req: express.Request) {
     let token = this.tokenExtractor.ExtractToken(req);
-    if(!token)
-    {
+    if (!token) {
       console.log("Can't extract token from request");
       console.log(req.body);
       return;
-    }     
+    }
     console.log(`extracted token: ${token}`);
 
-    try
-    {
+    try {
       let decoded = jwt.verify(token, this.secretOrPublicKey);
-      try
-      {
-        return this.converter.convert(decoded);
+      try {
+        return this.converter.parse(decoded);
       }
       catch (e) {
         console.log("can't convert decoded token to RegularDecodedToken");
@@ -39,8 +36,7 @@ export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<R
         console.log(e);
       }
     }
-    catch(e)
-    {
+    catch (e) {
       console.log(`can't retrieve decoded token for ${token}`);
       console.log(e);
     }

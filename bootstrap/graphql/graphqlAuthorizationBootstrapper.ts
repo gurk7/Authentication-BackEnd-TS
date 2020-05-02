@@ -1,18 +1,7 @@
-import { ITokenExtractor } from "../../authorization/abstractions/tokens/ITokenExtractor";
-import { JwtTokenExtractor } from "../../authorization/implementations/tokens/jwtTokenExtractor";
-import { IObjectToRegularDecodedTokenConverter } from "../../authorization/abstractions/tokens/IObjectToRegularDecodedTokenConverter";
+import { IDecodedTokenParser } from "../../authorization/abstractions/tokens/IDecodedTokenParser";
 import { JwtObjectToRegularDecodedTokenConverter } from "../../authorization/implementations/tokens/jwtObjectToRegularDecodedTokenConverter";
-import { IDecodedTokenRetriever } from "../../authorization/abstractions/tokens/IDecodedTokenRetriever";
 import { RegularDecodedToken } from "../../authorization/entities/regularDecodedToken";
-import { JwtRegularDecodedTokenRetriever } from "../../authorization/implementations/tokens/jwtRegularDecodedTokenRetriever";
-import { TokensConfiguration } from "../../config/entities/tokens";
 import { ConigurationConsts } from "../../consts/configurationConsts";
-import { IAuthorizationFailureResponseCreator } from "../../authorization/abstractions/IAuthorizationFailureResponseCreator";
-import { RegularDecodedTokenAuthorizationFailureResponseCreator } from "../../authorization/implementations/authorizationFailureResponseCreator";
-import { IAuthorizationHandler } from "../../authorization/abstractions/IAuthorizationHandler";
-import { TokenBasedAuthorizationHandler } from "../../authorization/implementations/tokenBasedAuthorizationHandler";
-import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
-import { JsonHttpResponseSender } from "../../common/implementations/JsonHttpResponseSender";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "../../activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
 import { LDAPConfiguration } from "../../config/entities/ldap";
@@ -20,8 +9,9 @@ import config = require("config");
 import { IUserAuthorizer } from "../../authorization/abstractions/IUserAuthorizer";
 import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "../../activeDirectory/authorization/regularDecodedTokenActiveDirectoryUserAuthorizer";
 
-import { Container } from 'typedi'
-import { AuthorizationChecker } from "../../authorization/graphql/authorizationChecker";
+import { GraphqlAuthorizationChecker } from "../../authorization/graphql/authorizationChecker";
+import { RegularDecodedTokenGraphqlAuthorizationHandler } from "../../authorization/graphql/regularDecodedTokenGraphqlAuthorizationHandler";
+import { RegularDecodedTokenCacheUserAuthorizer } from "../../cache/authorization/regularDecodedTokenCacheUserAuthorizer";
 const AD = require("ad");
 
 export class GraphqlAuthorizationBootstrapper {
@@ -43,8 +33,13 @@ export class GraphqlAuthorizationBootstrapper {
 
         //#endregion
 
-        let currentUserParser: IObjectToRegularDecodedTokenConverter =
+        //#region current user parser
+
+        let currentUserParser: IDecodedTokenParser =
             new JwtObjectToRegularDecodedTokenConverter();
+
+        //#endregion
+
         //#region active directory
 
         //#region group member
@@ -59,7 +54,20 @@ export class GraphqlAuthorizationBootstrapper {
 
         //#endregion
 
-        let authorizationChecker = new AuthorizationChecker(currentUserParser,
+        //#region cache 
+
+        let allowedCacheUsers: string[] = ["china"];
+        let cacheUserAuthorizer: IUserAuthorizer<RegularDecodedToken> = new RegularDecodedTokenCacheUserAuthorizer(allowedCacheUsers);
+
+        //#endregion
+
+        let graphqlCacheAuthorizationHandler = new RegularDecodedTokenGraphqlAuthorizationHandler(currentUserParser,
+            cacheUserAuthorizer);
+
+        let graphqlActiveDirectoryAuthoriztionHandler = new RegularDecodedTokenGraphqlAuthorizationHandler(currentUserParser,
             regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer);
+
+        //static members should be initialized by this and not by a Container of specific instances
+        new GraphqlAuthorizationChecker(graphqlCacheAuthorizationHandler);
     }
 }

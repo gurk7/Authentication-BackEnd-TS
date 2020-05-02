@@ -6,8 +6,8 @@ import { Container } from 'typedi'
 import { LoginResolver } from "../../authentication/graphql/loginResolver";
 import { GraphqlLoginBootstrapper } from "./graphqlLoginBootstrapper";
 import { GraphqlAuthorizationBootstrapper } from "./graphqlAuthorizationBootstrapper";
-import { createContext } from "../../context";
-import { customAuthChecker, AuthorizationChecker } from "../../authorization/graphql/authorizationChecker";
+import { createContext, Context } from "../../context";
+import { customAuthChecker, GraphqlAuthorizationChecker } from "../../authorization/graphql/authorizationChecker";
 
 const main = async () => {
 
@@ -26,7 +26,9 @@ const main = async () => {
 
     const server = new ApolloServer({
         schema,
-        context: ({ req, res }) => createContext(req, res)
+        context: ({ req, res }): Context => {
+            return createContext(req, res)
+        }
     });
 
     const app = express();

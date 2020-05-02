@@ -1,29 +1,17 @@
 import 'reflect-metadata'
 import { AuthChecker } from 'type-graphql'
 import { Context } from '../../context';
-import { IUserAuthorizer } from '../abstractions/IUserAuthorizer';
-import { RegularDecodedToken } from '../entities/regularDecodedToken';
-import { IObjectToRegularDecodedTokenConverter } from '../abstractions/tokens/IObjectToRegularDecodedTokenConverter';
+import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
 
-export class AuthorizationChecker {
-    private static currentUserParser: IObjectToRegularDecodedTokenConverter;
-    private static userAuthorizer: IUserAuthorizer<RegularDecodedToken>;
+export class GraphqlAuthorizationChecker {
+    private static graphqlAuthorizationHandler: IGraphQLAuthorizationHandler;
 
-    constructor(currentUserParser: IObjectToRegularDecodedTokenConverter,
-        userAuthorizer: IUserAuthorizer<RegularDecodedToken>) {
-        AuthorizationChecker.currentUserParser = currentUserParser;
-        AuthorizationChecker.userAuthorizer = userAuthorizer;
+    constructor(graphqlAuthorizationHandler: IGraphQLAuthorizationHandler) {
+        GraphqlAuthorizationChecker.graphqlAuthorizationHandler = graphqlAuthorizationHandler;
     }
 
     static async authorize(context: Context): Promise<boolean> {
-        let currentUserObject = context?.currentUser;
-        let currentUser = this.currentUserParser.convert(currentUserObject);
-
-        if (currentUser) {
-            console.log(currentUser);
-            return await this.userAuthorizer.authorize(currentUser);
-        }
-        return false;
+        return this.graphqlAuthorizationHandler.authorize(context);
     }
 }
 
@@ -32,5 +20,5 @@ export const customAuthChecker: AuthChecker<Context> = async (
     { root, args, context, info },
     roles,
 ) => {
-    return await AuthorizationChecker.authorize(context);
+    return await GraphqlAuthorizationChecker.authorize(context);
 };
