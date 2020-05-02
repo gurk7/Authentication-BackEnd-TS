@@ -5,7 +5,6 @@ import { IUserAuthorizer } from '../abstractions/IUserAuthorizer';
 import { RegularDecodedToken } from '../entities/regularDecodedToken';
 
 export class AuthorizationChecker {
-
     private static userAuthorizer: IUserAuthorizer<RegularDecodedToken>;
 
     constructor(userAuthorizer: IUserAuthorizer<RegularDecodedToken>) {
@@ -23,7 +22,7 @@ export class AuthorizationChecker {
     }
 }
 
-
+//For each @Authorize(..) TypeGraphQL uses this function
 export const customAuthChecker: AuthChecker<Context> = async (
     { root, args, context, info },
     roles,
