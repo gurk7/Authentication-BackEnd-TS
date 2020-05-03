@@ -1,7 +1,7 @@
-import "reflect-metadata";
-import { ApolloServer } from "apollo-server-express";
-import express from "express";
-import { buildSchema } from "type-graphql";
+import "./node_modules/reflect-metadata";
+import { ApolloServer } from 'apollo-server-express'
+import express from 'express'
+import { buildSchema } from 'type-graphql'
 import { Container } from 'typedi'
 import { Context } from "./context/context";
 import { createContext } from "./context/contextCreator";

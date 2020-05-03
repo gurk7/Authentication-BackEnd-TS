@@ -9,8 +9,8 @@ import { RegularLoginInputUserMongoDBUserAuthenticator } from "../../mongo/authe
 import { RegularLoginInputUserActiveDirectoryUserAuthenticator } from "../../activeDirectory/authentication/regularLoginInputUserActiveDirectoryUserAuthenticator";
 import { LDAPConfiguration } from "../../config/entities/ldap";
 
-import config = require("config");
-import { Container } from 'typedi'
+import config from 'config';
+import { Container } from 'typedi';
 import { GraphQLLoginHandler } from "../login/GraphQLLoginHandler";
 const AD = require("ad");
 

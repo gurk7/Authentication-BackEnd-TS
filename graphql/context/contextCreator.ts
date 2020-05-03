@@ -1,8 +1,8 @@
-import config = require("config");
+import config from 'config';
 import { Request, Response } from 'express';
 import { TokensConfiguration } from "../../config/entities/tokens";
 import { ConigurationConsts } from "../../consts/configurationConsts";
-import jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken';
 import { Context } from "./context";
 
 /*this implementation represents a world wide convention about tokens

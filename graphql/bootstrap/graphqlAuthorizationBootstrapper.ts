@@ -4,7 +4,7 @@ import { ConigurationConsts } from "../../consts/configurationConsts";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "../../activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
 import { LDAPConfiguration } from "../../config/entities/ldap";
-import config = require("config");
+import config from 'config'
 import { IUserAuthorizer } from "../../authorization/abstractions/IUserAuthorizer";
 import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "../../activeDirectory/authorization/regularDecodedTokenActiveDirectoryUserAuthorizer";
 import { RegularDecodedTokenCacheUserAuthorizer } from "../../cache/authorization/regularDecodedTokenCacheUserAuthorizer";

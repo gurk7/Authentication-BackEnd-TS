@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Arg, Query, Authorized, Ctx } from "type-graphql";
-import { Service } from "typedi";
+import { Service } from 'typedi'
 import { GraphQLLoginService } from "../login/GraphQLLoginService";
 import { RegularLoginInputUser } from "../../authentication/entities/input/regularLoginInputUser";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";

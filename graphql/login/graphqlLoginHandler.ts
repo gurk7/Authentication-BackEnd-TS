@@ -1,7 +1,7 @@
 import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 import { ITokenCreator } from "../../authentication/abstractions/ITokenCreator";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
-import { AuthenticationError } from "apollo-server-express";
+import { AuthenticationError } from 'apollo-server-express';
 
 export class GraphQLLoginHandler<TInputUser>{
 
