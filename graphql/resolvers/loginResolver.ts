@@ -13,7 +13,7 @@ import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesCon
 export class LoginResolver {
     constructor(
         //constructor injection of a service
-        private readonly authenticationService: GraphQLAuthenticationService
+        private readonly authenticationService: GraphQLAuthenticationService<RegularLoginInputUser>
     ) { }
 
     @Query(returns => UserInformation)
