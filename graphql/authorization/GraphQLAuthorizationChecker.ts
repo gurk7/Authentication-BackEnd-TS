@@ -1,4 +1,4 @@
-import './node_modules/reflect-metadata'
+import 'reflect-metadata'
 import { AuthChecker } from 'type-graphql'
 import { Context } from '../context/context';
 import { IGraphQLAuthorizationHandler } from './IGraphQLAuthorizationHandler';

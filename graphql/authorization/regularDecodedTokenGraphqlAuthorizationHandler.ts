@@ -1,4 +1,4 @@
-import './node_modules/reflect-metadata'
+import 'reflect-metadata'
 import { Context } from '../context/context';
 import { IUserAuthorizer } from '../../authorization/abstractions/IUserAuthorizer';
 import { RegularDecodedToken } from '../../authorization/entities/regularDecodedToken';

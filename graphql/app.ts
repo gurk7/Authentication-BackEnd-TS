@@ -1,4 +1,4 @@
-import "./node_modules/reflect-metadata";
+import "reflect-metadata";
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
