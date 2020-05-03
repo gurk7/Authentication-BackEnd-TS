@@ -9,7 +9,7 @@ export class GraphQLLoginService {
     private readonly loginHandler!: GraphQLLoginHandler<RegularLoginInputUser>;
 
     public async login(inputUser: RegularLoginInputUser):
-        Promise<AuthenticationResponse | undefined> {
+        Promise<AuthenticationResponse> {
 
         return this.loginHandler.handleLogin(inputUser);
     }

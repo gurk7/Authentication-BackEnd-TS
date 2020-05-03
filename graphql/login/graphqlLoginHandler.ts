@@ -17,7 +17,7 @@ export class GraphQLLoginHandler<TInputUser>{
     }
 
     public async handleLogin(inputUser: TInputUser):
-        Promise<AuthenticationResponse | undefined> {
+        Promise<AuthenticationResponse> {
 
         let isUserAuthenticated = await this.inputUserAuthenticator.authenticate(
             inputUser
@@ -28,7 +28,7 @@ export class GraphQLLoginHandler<TInputUser>{
             return new AuthenticationResponse(token);
         }
         else {
-            throw new AuthenticationError("user is not authenticated");
+            throw new AuthenticationError("User is not authenticated. Username or password is incorrect");
         }
     }
 }
