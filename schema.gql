@@ -21,7 +21,6 @@ input RegularLoginInputUser {
 }
 
 type UserInformation {
-  userName: String!
   firstName: String
   lastName: String
   email: String

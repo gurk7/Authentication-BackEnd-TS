@@ -1,8 +1,10 @@
 import { IUserInformationGetter } from "../abstractions/IUserInformationGetter";
 import { IUserInformationRetriever } from "../abstractions/IUserInformationRetriever";
 import { IDecodedTokenRetriever } from "../../../REST/authorization/abstractions/request/IDecodedTokenRetriever";
+import { UserInformation } from "../../../authentication/entities/userInformation";
+import { Request } from "express";
 
-export class UserInformationGetter<T> implements IUserInformationGetter<T>{
+export class UserInformationGetter<T> implements IUserInformationGetter {
     private decodedTokenRetriever: IDecodedTokenRetriever<T>;
     private userInformationRetriever: IUserInformationRetriever<T>;
 
@@ -11,12 +13,8 @@ export class UserInformationGetter<T> implements IUserInformationGetter<T>{
         this.userInformationRetriever = userInformationRetriever;
     }
 
-    getUserInformation(req: any, res: any) {
+    getUserInformation(req: Request): Promise<UserInformation> {
         let decodedtoken = this.decodedTokenRetriever.retrieveDecodedToken(req);
-
-        if (decodedtoken) {
-            return this.userInformationRetriever.retrieve(decodedtoken);
-        }
+        return this.userInformationRetriever.retrieve(decodedtoken);
     }
-
 }

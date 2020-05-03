@@ -7,9 +7,6 @@ import { ObjectType, Field } from "type-graphql";
 @ObjectType()
 export class UserInformation {
 
-  @Field()
-  userName!: string;
-
   @Field({ nullable: true })
   firstName?: string;
 
@@ -23,12 +20,10 @@ export class UserInformation {
   @Field(type => [String], { nullable: true })
   groups?: string[];
 
-  constructor(userName: string,
-    firstName?: string,
+  constructor(firstName?: string,
     lastName?: string,
     email?: string,
     groups?: string[]) {
-    this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;

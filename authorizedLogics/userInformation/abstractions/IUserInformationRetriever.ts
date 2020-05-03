@@ -1,5 +1,5 @@
-import { RegularDecodedToken } from "../../../authorization/entities/regularDecodedToken";
+import { UserInformation } from "../../../authentication/entities/userInformation";
 
-export interface IUserInformationRetriever<T>{
-    retrieve(authenticatedUser: RegularDecodedToken) : Promise<T>
+export interface IUserInformationRetriever<TDecodedToken> {
+    retrieve(crrentUser: TDecodedToken): Promise<UserInformation>
 }

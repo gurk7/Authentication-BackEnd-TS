@@ -1,5 +1,5 @@
 import { Request } from 'express';
 
 export interface ITokenExtractor {
-  ExtractToken(req: Request): string | undefined;
+  ExtractToken(req: Request): string;
 }

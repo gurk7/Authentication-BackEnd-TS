@@ -1,11 +1,11 @@
 //#region outer imports
 import "reflect-metadata"
-import express = require("express");
-import cors = require("cors");
-import https = require("https");
-import fs = require("fs");
-import bodyParser = require("body-parser");
-import config = require("config");
+import express from "express";
+import cors from "cors";
+import https from "https";
+import fs from "fs";
+import bodyParser from "body-parser";
+import config from "config";
 
 //#region js packages
 
@@ -52,7 +52,6 @@ import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "./activeDirect
 import { IUserFinder } from "./common/abstractions/IUserFinder";
 import { ActiveDirectoryByGroupNameUserFinder } from "./activeDirectory/userFinder/activeDirectoryByGroupNameUserFinder";
 import { IUserInformationGetter } from "./authorizedLogics/userInformation/abstractions/IUserInformationGetter";
-import { ActiveDirectoryUserInformation } from "./activeDirectory/entities/userInformation/activeDirectoryUserInformation";
 import { UserInformationGetter } from "./authorizedLogics/userInformation/implementations/userInformationGetter";
 import { IUserInformationRetriever } from "./authorizedLogics/userInformation/abstractions/IUserInformationRetriever";
 import { ActiveDirectoryUserInformationRetriever } from "./activeDirectory/userInformation/activeDirectoryUserInformationRetriever";
@@ -252,11 +251,11 @@ let authorizationHandler: IRESTAuthorizationHandler = new TokenBasedAuthorizatio
 
 //#region active directory
 
-let activeDirectoryUserInformationRetriever: IUserInformationRetriever<ActiveDirectoryUserInformation> =
+let activeDirectoryUserInformationRetriever: IUserInformationRetriever<RegularDecodedToken> =
   new ActiveDirectoryUserInformationRetriever(activeDirectory);
 
-let activeDirectoryUserInformationGetter: IUserInformationGetter<ActiveDirectoryUserInformation> =
-  new UserInformationGetter<ActiveDirectoryUserInformation>(regularDecodedTokenRetriever, activeDirectoryUserInformationRetriever);
+let activeDirectoryUserInformationGetter: IUserInformationGetter =
+  new UserInformationGetter(regularDecodedTokenRetriever, activeDirectoryUserInformationRetriever);
 
 //#endregion
 
