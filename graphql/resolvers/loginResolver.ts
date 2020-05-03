@@ -16,12 +16,6 @@ export class LoginResolver {
         private readonly authenticationService: GraphQLAuthenticationService<RegularLoginInputUser>
     ) { }
 
-    @Query(returns => UserInformation)
-    @Authorized()
-    async user(@Arg("username") username: string) {
-        return new UserInformation(username);
-    }
-
     @Mutation(returns => AuthenticationResponse, { nullable: true })
     async login(
         @Arg("user") logInInputUser: RegularLoginInputUser,

@@ -9,14 +9,17 @@ import { LoginResolver } from "./resolvers/loginResolver";
 import { GraphQLAuthenticationBootstrapper } from "./bootstrap/GraphQLAuthenticationBootstrapper";
 import { GraphQLAuthorizationBootstrapper } from "./bootstrap/GraphQLAuthorizationBootstrapper";
 import { customAuthChecker } from "./authorization/GraphQLAuthorizationChecker";
+import { UserInformationResolver } from "./resolvers/userInformationResolver";
+import { GraphQLUserInformationBootstrapper } from "./bootstrap/GraphQLUserInformationBootstrapper";
 
 const main = async () => {
 
     await GraphQLAuthenticationBootstrapper.bootstrap();
     await GraphQLAuthorizationBootstrapper.bootstrap();
+    await GraphQLUserInformationBootstrapper.bootstrap();
 
     const schema = await buildSchema({
-        resolvers: [LoginResolver],
+        resolvers: [LoginResolver, UserInformationResolver],
         container: Container,
         emitSchemaFile: true,
         validate: false,

@@ -12,7 +12,7 @@ type Mutation {
 }
 
 type Query {
-  user(username: String!): UserInformation!
+  user: UserInformation!
 }
 
 input RegularLoginInputUser {
