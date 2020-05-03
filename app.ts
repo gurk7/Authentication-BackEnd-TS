@@ -325,10 +325,24 @@ app.post(loginFromCacheRoute, (req: express.Request, res: express.Response) => {
 //#endregion
 
 app.get("/user/information", async (req: express.Request, res: express.Response) => {
-  let isAuthorized = await cacheAuthorizationHandler.handleAuthorization(req, res);
-  if (isAuthorized) {
+  try {
+    let isAuthorized = await cacheAuthorizationHandler.handleAuthorization(req, res);
+    if (!isAuthorized) {
+      res.status(403).json("user is not authorized");
+      return;
+    }
+  }
+  catch (error) {
+    res.status(401).json("user is not authenticated");
+    return;
+  }
+  try {
     let userInformation = await cacheMockUserInformationGetter.getUserInformation(req);
     res.json(userInformation);
+  }
+  catch (error) {
+    console.log(error);
+    res.status(500).json("error happened while trying to retrieve user information");
   }
 });
 
