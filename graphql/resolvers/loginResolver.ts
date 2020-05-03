@@ -5,6 +5,8 @@ import { RegularLoginInputUser } from "../../authentication/entities/input/regul
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 import { UserInformation } from "../../authentication/entities/userInformation";
 import { Context } from "../context/context";
+import { HttpResponseStatusProvider } from "../../common/implementations/httpResponseStatusProvider";
+import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesConsts";
 
 @Service()
 @Resolver()
@@ -28,7 +30,8 @@ export class LoginResolver {
             return await this.loginService.login(logInInputUser);
         }
         catch (error) {
-            context.res.status(401);
+            HttpResponseStatusProvider.add(context.res,
+                HttpResponseStatusesConsts.unAuthorized);
             throw (error);
         }
     }

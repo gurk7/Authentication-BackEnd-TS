@@ -25,7 +25,7 @@ export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthoriza
         this.httpResponseSender = httpResponseSender;
     }
 
-    async handleAuthorization(req: express.Request, res: express.Response) {
+    async handleAuthorization(req: express.Request, res: express.Response): Promise<boolean> {
         let decodedToken = this.decodedTokenRetriever.retrieveDecodedToken(req);
 
         if (decodedToken) {

@@ -3,12 +3,12 @@ import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import { buildSchema } from "type-graphql";
 import { Container } from 'typedi'
-import { GraphqlLoginBootstrapper } from "./graphqlLoginBootstrapper";
-import { GraphqlAuthorizationBootstrapper } from "./graphqlAuthorizationBootstrapper";
-import { LoginResolver } from "../resolvers/loginResolver";
-import { customAuthChecker } from "../authorization/authorizationChecker";
-import { Context } from "../context/context";
-import { createContext } from "../context/contextCreator";
+import { Context } from "./context/context";
+import { createContext } from "./context/contextCreator";
+import { LoginResolver } from "./resolvers/loginResolver";
+import { GraphqlLoginBootstrapper } from "./bootstrap/graphqlLoginBootstrapper";
+import { GraphqlAuthorizationBootstrapper } from "./bootstrap/graphqlAuthorizationBootstrapper";
+import { customAuthChecker } from "./authorization/authorizationChecker";
 
 const main = async () => {
 
