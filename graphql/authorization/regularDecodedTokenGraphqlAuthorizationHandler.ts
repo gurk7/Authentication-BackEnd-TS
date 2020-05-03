@@ -3,12 +3,12 @@ import { Context } from '../context/context';
 import { IUserAuthorizer } from '../../authorization/abstractions/IUserAuthorizer';
 import { RegularDecodedToken } from '../../authorization/entities/regularDecodedToken';
 import { IDecodedTokenParser } from '../../authorization/abstractions/IDecodedTokenParser';
-import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express';
 import { HttpResponseStatusProvider } from '../../common/implementations/httpResponseStatusProvider';
 import { HttpResponseStatusesConsts } from '../../consts/httpResponseStatusesConsts';
+import { IGraphQLAuthorizationHandler } from './IGraphQLAuthorizationHandler';
 
-export class RegularDecodedTokenGraphqlAuthorizationHandler implements IGraphQLAuthorizationHandler {
+export class RegularDecodedTokenGraphQLAuthorizationHandler implements IGraphQLAuthorizationHandler {
     private currentUserParser: IDecodedTokenParser;
     private userAuthorizer: IUserAuthorizer<RegularDecodedToken>;
 

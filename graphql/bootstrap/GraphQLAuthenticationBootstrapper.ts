@@ -11,10 +11,10 @@ import { LDAPConfiguration } from "../../config/entities/ldap";
 
 import config = require("config");
 import { Container } from 'typedi'
-import { GraphqlLoginHandler } from "../login/graphqlLoginHandler";
+import { GraphQLLoginHandler } from "../login/GraphQLLoginHandler";
 const AD = require("ad");
 
-export class GraphqlLoginBootstrapper {
+export class GraphQLAuthenticationBootstrapper {
     public static bootstrap(): void {
 
         const tokensConfig = config.get<TokensConfiguration>(ConigurationConsts.tokens);
@@ -72,7 +72,7 @@ export class GraphqlLoginBootstrapper {
 
         //#endregion
 
-        let graphqlLoginHandler = new GraphqlLoginHandler(
+        let graphqlLoginHandler = new GraphQLLoginHandler(
             regularInputUserCacheUserAuthenticator,
             regularLoginInputUserJwtTokenCreator);
 

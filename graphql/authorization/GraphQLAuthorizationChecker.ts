@@ -1,13 +1,13 @@
 import 'reflect-metadata'
 import { AuthChecker } from 'type-graphql'
 import { Context } from '../context/context';
-import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
+import { IGraphQLAuthorizationHandler } from './IGraphQLAuthorizationHandler';
 
-export class GraphqlAuthorizationChecker {
+export class GraphQLAuthorizationChecker {
     private static graphqlAuthorizationHandler: IGraphQLAuthorizationHandler;
 
     constructor(graphqlAuthorizationHandler: IGraphQLAuthorizationHandler) {
-        GraphqlAuthorizationChecker.graphqlAuthorizationHandler = graphqlAuthorizationHandler;
+        GraphQLAuthorizationChecker.graphqlAuthorizationHandler = graphqlAuthorizationHandler;
     }
 
     static async authorize(context: Context): Promise<boolean> {
@@ -20,5 +20,5 @@ export const customAuthChecker: AuthChecker<Context> = async (
     { root, args, context, info },
     roles,
 ) => {
-    return await GraphqlAuthorizationChecker.authorize(context);
+    return await GraphQLAuthorizationChecker.authorize(context);
 };

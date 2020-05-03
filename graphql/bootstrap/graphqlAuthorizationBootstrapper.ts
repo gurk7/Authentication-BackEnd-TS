@@ -8,12 +8,12 @@ import config = require("config");
 import { IUserAuthorizer } from "../../authorization/abstractions/IUserAuthorizer";
 import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "../../activeDirectory/authorization/regularDecodedTokenActiveDirectoryUserAuthorizer";
 import { RegularDecodedTokenCacheUserAuthorizer } from "../../cache/authorization/regularDecodedTokenCacheUserAuthorizer";
-import { RegularDecodedTokenGraphqlAuthorizationHandler } from "../authorization/regularDecodedTokenGraphqlAuthorizationHandler";
-import { GraphqlAuthorizationChecker } from "../authorization/authorizationChecker";
+import { RegularDecodedTokenGraphQLAuthorizationHandler } from "../authorization/regularDecodedTokenGraphQLAuthorizationHandler";
+import { GraphQLAuthorizationChecker } from "../authorization/GraphQLAuthorizationChecker";
 import { JwtRegularDecodedTokenParser } from "../../authorization/implementations/jwtRegularDecodedTokenParser";
 const AD = require("ad");
 
-export class GraphqlAuthorizationBootstrapper {
+export class GraphQLAuthorizationBootstrapper {
     public static bootstrap(): void {
 
         //#region ldap
@@ -60,13 +60,13 @@ export class GraphqlAuthorizationBootstrapper {
 
         //#endregion
 
-        let graphqlCacheAuthorizationHandler = new RegularDecodedTokenGraphqlAuthorizationHandler(currentUserParser,
+        let graphqlCacheAuthorizationHandler = new RegularDecodedTokenGraphQLAuthorizationHandler(currentUserParser,
             cacheUserAuthorizer);
 
-        let graphqlActiveDirectoryAuthoriztionHandler = new RegularDecodedTokenGraphqlAuthorizationHandler(currentUserParser,
+        let graphqlActiveDirectoryAuthoriztionHandler = new RegularDecodedTokenGraphQLAuthorizationHandler(currentUserParser,
             regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer);
 
         //static members should be initialized by this and not by a Container of specific instances
-        new GraphqlAuthorizationChecker(graphqlCacheAuthorizationHandler);
+        new GraphQLAuthorizationChecker(graphqlCacheAuthorizationHandler);
     }
 }

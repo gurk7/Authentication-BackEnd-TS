@@ -3,7 +3,7 @@ import { ITokenCreator } from "../../authentication/abstractions/ITokenCreator";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 import { AuthenticationError } from "apollo-server-express";
 
-export class GraphqlLoginHandler<TInputUser>{
+export class GraphQLLoginHandler<TInputUser>{
 
     private inputUserAuthenticator: IInputUserAuthenticator<TInputUser>;
     private tokenCreator: ITokenCreator<TInputUser>;

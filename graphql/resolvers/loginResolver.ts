@@ -1,6 +1,6 @@
 import { Resolver, Mutation, Arg, Query, Authorized, Ctx } from "type-graphql";
 import { Service } from "typedi";
-import { LoginService } from "../login/loginService";
+import { GraphQLLoginService } from "../login/GraphQLLoginService";
 import { RegularLoginInputUser } from "../../authentication/entities/input/regularLoginInputUser";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 import { UserInformation } from "../../authentication/entities/userInformation";
@@ -13,7 +13,7 @@ import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesCon
 export class LoginResolver {
     constructor(
         //constructor injection of a service
-        private readonly loginService: LoginService
+        private readonly loginService: GraphQLLoginService
     ) { }
 
     @Query(returns => UserInformation)

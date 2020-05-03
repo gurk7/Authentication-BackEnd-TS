@@ -6,14 +6,14 @@ import { Container } from 'typedi'
 import { Context } from "./context/context";
 import { createContext } from "./context/contextCreator";
 import { LoginResolver } from "./resolvers/loginResolver";
-import { GraphqlLoginBootstrapper } from "./bootstrap/graphqlLoginBootstrapper";
-import { GraphqlAuthorizationBootstrapper } from "./bootstrap/graphqlAuthorizationBootstrapper";
-import { customAuthChecker } from "./authorization/authorizationChecker";
+import { GraphQLAuthenticationBootstrapper } from "./bootstrap/GraphQLAuthenticationBootstrapper";
+import { GraphQLAuthorizationBootstrapper } from "./bootstrap/GraphQLAuthorizationBootstrapper";
+import { customAuthChecker } from "./authorization/GraphQLAuthorizationChecker";
 
 const main = async () => {
 
-    await GraphqlLoginBootstrapper.bootstrap();
-    await GraphqlAuthorizationBootstrapper.bootstrap();
+    await GraphQLAuthenticationBootstrapper.bootstrap();
+    await GraphQLAuthorizationBootstrapper.bootstrap();
 
     const schema = await buildSchema({
         resolvers: [LoginResolver],

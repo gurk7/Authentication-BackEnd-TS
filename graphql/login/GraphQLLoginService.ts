@@ -1,12 +1,12 @@
 import { Service, Inject } from "typedi";
 import { RegularLoginInputUser } from "../../authentication/entities/input/regularLoginInputUser";
-import { GraphqlLoginHandler } from "./graphqlLoginHandler";
+import { GraphQLLoginHandler } from "./GraphQLLoginHandler";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 
 @Service()
-export class LoginService {
+export class GraphQLLoginService {
     @Inject("LOGIN_HANDLER")
-    private readonly loginHandler!: GraphqlLoginHandler<RegularLoginInputUser>;
+    private readonly loginHandler!: GraphQLLoginHandler<RegularLoginInputUser>;
 
     public async login(inputUser: RegularLoginInputUser):
         Promise<AuthenticationResponse | undefined> {
