@@ -1,7 +1,7 @@
 import { Service, Inject } from "typedi";
-import { RegularLoginInputUser } from "../entities/input/regularLoginInputUser";
+import { RegularLoginInputUser } from "../../authentication/entities/input/regularLoginInputUser";
 import { GraphqlLoginHandler } from "./graphqlLoginHandler";
-import { AuthenticationResponse } from "../entities/response/authenticationResponse";
+import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 
 @Service()
 export class LoginService {

@@ -1,4 +1,4 @@
-import { Context } from "../../context";
+import { Context } from "../context/context";
 
 export interface IGraphQLAuthorizationHandler {
     authorize(context: Context): Promise<boolean>

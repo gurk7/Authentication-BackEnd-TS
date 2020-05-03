@@ -1,9 +1,9 @@
 import { Resolver, Mutation, Arg, Query, Authorized } from "type-graphql";
 import { Service } from "typedi";
-import { LoginService } from "./loginService";
-import { RegularLoginInputUser } from "../entities/input/regularLoginInputUser";
-import { AuthenticationResponse } from "../entities/response/authenticationResponse";
-import { UserInformation } from "../entities/userInformation";
+import { LoginService } from "../login/loginService";
+import { RegularLoginInputUser } from "../../authentication/entities/input/regularLoginInputUser";
+import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
+import { UserInformation } from "../../authentication/entities/userInformation";
 
 @Service()
 @Resolver()

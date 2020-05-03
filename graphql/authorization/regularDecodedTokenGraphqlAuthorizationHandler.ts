@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import { Context } from '../../context';
-import { IUserAuthorizer } from '../abstractions/IUserAuthorizer';
-import { RegularDecodedToken } from '../entities/regularDecodedToken';
-import { IDecodedTokenParser } from '../abstractions/tokens/IDecodedTokenParser';
+import { Context } from '../context/context';
+import { IUserAuthorizer } from '../../authorization/abstractions/IUserAuthorizer';
+import { RegularDecodedToken } from '../../authorization/entities/regularDecodedToken';
+import { IDecodedTokenParser } from '../../authorization/abstractions/tokens/IDecodedTokenParser';
 import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express';
 

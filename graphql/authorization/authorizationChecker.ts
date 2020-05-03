@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { AuthChecker } from 'type-graphql'
-import { Context } from '../../context';
+import { Context } from '../context/context';
 import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
 
 export class GraphqlAuthorizationChecker {

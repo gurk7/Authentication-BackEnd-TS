@@ -1,7 +1,7 @@
 import { IDecodedTokenParser } from '../../abstractions/tokens/IDecodedTokenParser';
 import { RegularDecodedToken } from '../../entities/regularDecodedToken';
 
-export class JwtObjectToRegularDecodedTokenConverter implements IDecodedTokenParser {
+export class JwtRegularDecodedTokenParser implements IDecodedTokenParser {
 
     parse(decodedToken: any): RegularDecodedToken {
         console.log(decodedToken);

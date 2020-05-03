@@ -1,6 +1,6 @@
-import { IInputUserAuthenticator } from "../abstractions/IInputUserAuthenticator";
-import { ITokenCreator } from "../abstractions/ITokenCreator";
-import { AuthenticationResponse } from "../entities/response/authenticationResponse";
+import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
+import { ITokenCreator } from "../../authentication/abstractions/ITokenCreator";
+import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 
 export class GraphqlLoginHandler<TInputUser>{
 

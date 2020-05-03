@@ -42,7 +42,7 @@ import { AuthenticationResponseCreator } from "./authentication/implementations/
 import { RegularLoginInputUserCacheUserAuthenticator } from "./cache/authentication/regularLoginInputUserCacheUserAuthenticator";
 import { LDAPConfiguration } from "./config/entities/ldap";
 import { RegularLoginInputUserActiveDirectoryUserAuthenticator } from './activeDirectory/authentication/regularLoginInputUserActiveDirectoryUserAuthenticator'
-import { JwtObjectToRegularDecodedTokenConverter } from "./authorization/implementations/tokens/jwtObjectToRegularDecodedTokenConverter";
+import { JwtRegularDecodedTokenParser } from "./authorization/implementations/tokens/jwtRegularDecodedTokenParser";
 import { IDecodedTokenParser } from './authorization/abstractions/tokens/IDecodedTokenParser';
 import { IAuthorizationHandler } from "./authorization/abstractions/IAuthorizationHandler";
 import { TokenBasedAuthorizationHandler } from "./authorization/implementations/tokenBasedAuthorizationHandler";
@@ -219,7 +219,7 @@ let regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer: IUserAuthoriz
 //#endregion
 
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
-let decodedJWTConverter: IDecodedTokenParser = new JwtObjectToRegularDecodedTokenConverter();
+let decodedJWTConverter: IDecodedTokenParser = new JwtRegularDecodedTokenParser();
 
 let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> =
   new JwtRegularDecodedTokenRetriever(tokenSecretOrPublicKey, jwtTokenExtractor, decodedJWTConverter);
