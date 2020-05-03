@@ -14,7 +14,7 @@ export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
   private inputUserFromRequestExtractor: IInputUserFromRequestExtractor<TInputUser>;
   private inputUserAuthenticator: IInputUserAuthenticator<TInputUser>;
   private tokenCreator: ITokenCreator<TInputUser>;
-  
+
   private authenticationResponseCreator: IAuthenticationResponseCreator;
   private httpResponseSender: IHttpResponseSender;
 
@@ -44,16 +44,16 @@ export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
       let successAuthenticationResponse = this.authenticationResponseCreator.createResponseForAuthenticatedUser(
         token
       );
-      
-      this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res, 
-        successAuthenticationResponse, 
+
+      this.httpResponseSender.SendResponse<SuccessAuthenticationResponse>(res,
+        successAuthenticationResponse,
         HttpResponseStatusesConsts.success);
     }
     else {
       let failedAuthenticationResponse = this.authenticationResponseCreator.createResponseForUnAuthenticatedUser();
 
-      this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res, 
-        failedAuthenticationResponse, 
+      this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res,
+        failedAuthenticationResponse,
         HttpResponseStatusesConsts.unAuthorized);
     }
   }

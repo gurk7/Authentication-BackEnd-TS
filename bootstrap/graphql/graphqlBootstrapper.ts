@@ -7,7 +7,7 @@ import { LoginResolver } from "../../authentication/graphql/loginResolver";
 import { GraphqlLoginBootstrapper } from "./graphqlLoginBootstrapper";
 import { GraphqlAuthorizationBootstrapper } from "./graphqlAuthorizationBootstrapper";
 import { createContext, Context } from "../../context";
-import { customAuthChecker, GraphqlAuthorizationChecker } from "../../authorization/graphql/authorizationChecker";
+import { customAuthChecker } from "../../authorization/graphql/authorizationChecker";
 
 const main = async () => {
 
@@ -19,9 +19,8 @@ const main = async () => {
         container: Container,
         emitSchemaFile: true,
         validate: false,
-        authChecker: customAuthChecker
+        authChecker: customAuthChecker,
     });
-
 
 
     const server = new ApolloServer({

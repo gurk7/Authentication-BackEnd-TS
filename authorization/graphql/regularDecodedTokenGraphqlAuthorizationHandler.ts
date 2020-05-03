@@ -4,6 +4,7 @@ import { IUserAuthorizer } from '../abstractions/IUserAuthorizer';
 import { RegularDecodedToken } from '../entities/regularDecodedToken';
 import { IDecodedTokenParser } from '../abstractions/tokens/IDecodedTokenParser';
 import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
+import { AuthenticationError, ForbiddenError } from 'apollo-server-express';
 
 export class RegularDecodedTokenGraphqlAuthorizationHandler implements IGraphQLAuthorizationHandler {
     private currentUserParser: IDecodedTokenParser;
@@ -17,12 +18,21 @@ export class RegularDecodedTokenGraphqlAuthorizationHandler implements IGraphQLA
 
     async authorize(context: Context): Promise<boolean> {
         let currentUserObject = context?.currentUser;
-        let currentUser = this.currentUserParser.parse(currentUserObject);
-
-        if (currentUser) {
-            console.log(currentUser);
-            return await this.userAuthorizer.authorize(currentUser);
+        try {
+            let currentUser = this.currentUserParser.parse(currentUserObject);
+            let authorized = await this.userAuthorizer.authorize(currentUser);
+            if (!authorized) {
+                context.res.status(403);
+                throw new ForbiddenError("user in not authorized for that functionallity");
+            }
+            return true;
         }
-        return false;
+        catch (error) {
+            if (!(error instanceof ForbiddenError)) {
+                context.res.status(401);
+                throw new AuthenticationError("user is not authenticated");
+            }
+            throw (error);
+        }
     }
 }

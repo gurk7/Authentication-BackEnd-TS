@@ -76,6 +76,7 @@ export class GraphqlLoginBootstrapper {
             regularInputUserCacheUserAuthenticator,
             regularLoginInputUserJwtTokenCreator);
 
+        //Injection for GraphQL loginService
         Container.set({ id: "LOGIN_HANDLER", factory: () => graphqlLoginHandler });
     }
 }
