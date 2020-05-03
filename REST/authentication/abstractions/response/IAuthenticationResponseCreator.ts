@@ -1,7 +1,7 @@
-import { SuccessAuthenticationResponse } from "../../entities/response/successAuthenticationResponse";
 import { FailedAuthenticationResponse as FailedAuthenticationResponse } from "../../entities/response/failedAuthenticationResponse";
+import { AuthenticationResponse } from "../../../../authentication/entities/response/authenticationResponse";
 
 export interface IAuthenticationResponseCreator {
-  createResponseForAuthenticatedUser(token: string): SuccessAuthenticationResponse;
+  createResponseForAuthenticatedUser(token: string): AuthenticationResponse;
   createResponseForUnAuthenticatedUser(): FailedAuthenticationResponse;
 }

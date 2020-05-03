@@ -1,11 +1,10 @@
 import { IAuthenticationResponseCreator } from "../../abstractions/response/IAuthenticationResponseCreator";
-import { SuccessAuthenticationResponse } from "../../entities/response/successAuthenticationResponse";
 import { FailedAuthenticationResponse } from "../../entities/response/failedAuthenticationResponse";
+import { AuthenticationResponse } from "../../../../authentication/entities/response/authenticationResponse";
 
 export class AuthenticationResponseCreator implements IAuthenticationResponseCreator {
   createResponseForAuthenticatedUser(token: string) {
-    return new SuccessAuthenticationResponse(true,
-      "Authentication successful!", token);
+    return new AuthenticationResponse(token);
   }
 
   createResponseForUnAuthenticatedUser() {

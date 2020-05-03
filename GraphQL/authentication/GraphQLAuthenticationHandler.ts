@@ -2,8 +2,9 @@ import { IInputUserAuthenticator } from "../../authentication/abstractions/IInpu
 import { ITokenCreator } from "../../authentication/abstractions/ITokenCreator";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 import { AuthenticationError } from 'apollo-server-express';
+import { IAuthenticationHandler } from "../../authentication/abstractions/IAuthenticationHandler";
 
-export class GraphQLLoginHandler<TInputUser>{
+export class GraphQLAuthenticationHandler<TInputUser> implements IAuthenticationHandler<TInputUser>{
 
     private inputUserAuthenticator: IInputUserAuthenticator<TInputUser>;
     private tokenCreator: ITokenCreator<TInputUser>;
@@ -16,7 +17,7 @@ export class GraphQLLoginHandler<TInputUser>{
         this.tokenCreator = tokenCreator;
     }
 
-    public async handleLogin(inputUser: TInputUser):
+    public async handleAuthentication(inputUser: TInputUser):
         Promise<AuthenticationResponse> {
 
         let isUserAuthenticated = await this.inputUserAuthenticator.authenticate(

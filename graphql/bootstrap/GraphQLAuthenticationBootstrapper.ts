@@ -11,7 +11,7 @@ import { LDAPConfiguration } from "../../config/entities/ldap";
 
 import config from 'config';
 import { Container } from 'typedi';
-import { GraphQLLoginHandler } from "../login/GraphQLLoginHandler";
+import { GraphQLAuthenticationHandler } from "../authentication/GraphQLAuthenticationHandler";
 const AD = require("ad");
 
 export class GraphQLAuthenticationBootstrapper {
@@ -72,11 +72,11 @@ export class GraphQLAuthenticationBootstrapper {
 
         //#endregion
 
-        let graphqlLoginHandler = new GraphQLLoginHandler(
+        let graphQLAuthenticationHandler = new GraphQLAuthenticationHandler(
             regularInputUserCacheUserAuthenticator,
             regularLoginInputUserJwtTokenCreator);
 
         //Injection for GraphQL loginService
-        Container.set({ id: "LOGIN_HANDLER", factory: () => graphqlLoginHandler });
+        Container.set({ id: "AUTHENTICATION_HANDLER", factory: () => graphQLAuthenticationHandler });
     }
 }

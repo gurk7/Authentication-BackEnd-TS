@@ -61,6 +61,8 @@ import { IHttpResponseSender } from "./common/abstractions/IHttpResponseSender";
 import { JsonHttpResponseSender } from "./common/implementations/JsonHttpResponseSender";
 import { RegularDecodedToken } from "./authorization/entities/regularDecodedToken";
 import { ITokenExtractor } from "./REST/authorization/abstractions/request/ITokenExtractor";
+import { IAuthenticationHandler } from "./authentication/abstractions/IAuthenticationHandler";
+import { RESTAuthenticationHandler } from "./REST/authentication/implementations/RESTAuthenticationHandler";
 
 //#endregion
 
@@ -154,10 +156,13 @@ let regularInputUserMongoDBUserAuthenticator: IInputUserAuthenticator<RegularLog
     mongoConnectionString
   );
 
+let mongoRESTauthenticationHandler: IAuthenticationHandler<RegularLoginInputUser> =
+  new RESTAuthenticationHandler(regularInputUserMongoDBUserAuthenticator,
+    regularInputUserJwtTokenCreator);
+
 let regularInputUserMongoDBTokenBasedLoginHandler: IRESTLoginHandler = new TokenBasedRESTLoginHandler<RegularLoginInputUser>(
   regularInputUserFromRequestExtractor,
-  regularInputUserMongoDBUserAuthenticator,
-  regularInputUserJwtTokenCreator,
+  mongoRESTauthenticationHandler,
   authenticationResponseCreator,
   jsonHttpResponseSender
 );
@@ -171,11 +176,14 @@ let regularInputUserActiveDirectoryUserAuthenticator: IInputUserAuthenticator<Re
     activeDirectory
   );
 
+let activeDirectoryRESTauthenticationHandler: IAuthenticationHandler<RegularLoginInputUser> =
+  new RESTAuthenticationHandler(regularInputUserActiveDirectoryUserAuthenticator,
+    regularInputUserJwtTokenCreator);
+
 let regularInputUserActiveDirectoryTokenBasedLoginHandler: IRESTLoginHandler =
   new TokenBasedRESTLoginHandler<RegularLoginInputUser>(
     regularInputUserFromRequestExtractor,
-    regularInputUserActiveDirectoryUserAuthenticator,
-    regularInputUserJwtTokenCreator,
+    activeDirectoryRESTauthenticationHandler,
     authenticationResponseCreator,
     jsonHttpResponseSender
   );
@@ -185,15 +193,20 @@ let regularInputUserActiveDirectoryTokenBasedLoginHandler: IRESTLoginHandler =
 //#region Cache
 
 let allowedUsers: RegularLoginInputUser[] = [new RegularLoginInputUser("china", "china")];
+
 let regularInputUserCacheUserAuthenticator: IInputUserAuthenticator<RegularLoginInputUser> =
   new RegularLoginInputUserCacheUserAuthenticator(
     allowedUsers
   );
+
+let cacheRESTauthenticationHandler: IAuthenticationHandler<RegularLoginInputUser> =
+  new RESTAuthenticationHandler(regularInputUserCacheUserAuthenticator,
+    regularInputUserJwtTokenCreator);
+
 let regularInputUserCacheTokenBasedLoginHandler: IRESTLoginHandler =
   new TokenBasedRESTLoginHandler<RegularLoginInputUser>(
     regularInputUserFromRequestExtractor,
-    regularInputUserCacheUserAuthenticator,
-    regularInputUserJwtTokenCreator,
+    cacheRESTauthenticationHandler,
     authenticationResponseCreator,
     jsonHttpResponseSender
   );
