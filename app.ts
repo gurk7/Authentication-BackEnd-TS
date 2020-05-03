@@ -62,6 +62,8 @@ import { RegularDecodedToken } from "./authorization/entities/regularDecodedToke
 import { ITokenExtractor } from "./REST/authorization/abstractions/request/ITokenExtractor";
 import { IAuthenticationHandler } from "./authentication/abstractions/IAuthenticationHandler";
 import { RESTAuthenticationHandler } from "./REST/authentication/implementations/RESTAuthenticationHandler";
+import { MockUserInformationRetriever } from "./cache/userInformation/mockUserInformationRetriever";
+import { RegularDecodedTokenCacheUserAuthorizer } from "./cache/authorization/regularDecodedTokenCacheUserAuthorizer";
 
 //#endregion
 
@@ -230,6 +232,13 @@ let regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer: IUserAuthoriz
 
 //#endregion
 
+//#region cache
+
+let regularDecodedTokenCacheUserAuthorizer: IUserAuthorizer<RegularDecodedToken> =
+  new RegularDecodedTokenCacheUserAuthorizer(["china"]);
+
+//#endregion
+
 let jwtTokenExtractor: ITokenExtractor = new JwtTokenExtractor();
 let decodedJWTConverter: IDecodedTokenParser = new JwtRegularDecodedTokenParser();
 
@@ -239,11 +248,19 @@ let regularDecodedTokenRetriever: IDecodedTokenRetriever<RegularDecodedToken> =
 let regularDecodedTokenAuthorizationFailureResponseCreator: IAuthorizationFailureResponseCreator<RegularDecodedToken> =
   new RegularDecodedTokenAuthorizationFailureResponseCreator();
 
-let authorizationHandler: IRESTAuthorizationHandler = new TokenBasedAuthorizationHandler(
-  regularDecodedTokenRetriever,
-  regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer,
-  regularDecodedTokenAuthorizationFailureResponseCreator,
-  jsonHttpResponseSender);
+let activeDirectoryAuthorizationHandler: IRESTAuthorizationHandler =
+  new TokenBasedAuthorizationHandler(
+    regularDecodedTokenRetriever,
+    regularDecodedTokenActiveDirectoryByGroupMemberUserAuthorizer,
+    regularDecodedTokenAuthorizationFailureResponseCreator,
+    jsonHttpResponseSender);
+
+let cacheAuthorizationHandler: IRESTAuthorizationHandler =
+  new TokenBasedAuthorizationHandler(
+    regularDecodedTokenRetriever,
+    regularDecodedTokenCacheUserAuthorizer,
+    regularDecodedTokenAuthorizationFailureResponseCreator,
+    jsonHttpResponseSender);
 
 //#endregion
 
@@ -256,6 +273,16 @@ let activeDirectoryUserInformationRetriever: IUserInformationRetriever<RegularDe
 
 let activeDirectoryUserInformationGetter: IUserInformationGetter =
   new UserInformationGetter(regularDecodedTokenRetriever, activeDirectoryUserInformationRetriever);
+
+//#endregion
+
+//#region cache
+
+let cacheMockUserInformationRetriever: IUserInformationRetriever<RegularDecodedToken> =
+  new MockUserInformationRetriever();
+
+let cacheMockUserInformationGetter: IUserInformationGetter =
+  new UserInformationGetter(regularDecodedTokenRetriever, cacheMockUserInformationRetriever);
 
 //#endregion
 
@@ -298,15 +325,15 @@ app.post(loginFromCacheRoute, (req: express.Request, res: express.Response) => {
 //#endregion
 
 app.get("/user/information", async (req: express.Request, res: express.Response) => {
-  let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
+  let isAuthorized = await cacheAuthorizationHandler.handleAuthorization(req, res);
   if (isAuthorized) {
-    let userInformation = await activeDirectoryUserInformationGetter.getUserInformation(req, res);
+    let userInformation = await cacheMockUserInformationGetter.getUserInformation(req);
     res.json(userInformation);
   }
 });
 
 app.post(missionRoute, async (req: express.Request, res: express.Response) => {
-  let isAuthorized = await authorizationHandler.handleAuthorization(req, res);
+  let isAuthorized = await activeDirectoryAuthorizationHandler.handleAuthorization(req, res);
   if (isAuthorized) mockMissionCreator.CreateMission(req, res);
 });
 
