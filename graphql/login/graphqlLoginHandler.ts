@@ -1,6 +1,7 @@
 import { IInputUserAuthenticator } from "../../authentication/abstractions/IInputUserAuthenticator";
 import { ITokenCreator } from "../../authentication/abstractions/ITokenCreator";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
+import { AuthenticationError } from "apollo-server-express";
 
 export class GraphqlLoginHandler<TInputUser>{
 
@@ -25,6 +26,9 @@ export class GraphqlLoginHandler<TInputUser>{
         if (isUserAuthenticated) {
             let token = this.tokenCreator.create(inputUser);
             return new AuthenticationResponse(token);
+        }
+        else {
+            throw new AuthenticationError("user is not authenticated");
         }
     }
 }

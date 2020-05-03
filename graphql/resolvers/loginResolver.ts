@@ -1,9 +1,10 @@
-import { Resolver, Mutation, Arg, Query, Authorized } from "type-graphql";
+import { Resolver, Mutation, Arg, Query, Authorized, Ctx } from "type-graphql";
 import { Service } from "typedi";
 import { LoginService } from "../login/loginService";
 import { RegularLoginInputUser } from "../../authentication/entities/input/regularLoginInputUser";
 import { AuthenticationResponse } from "../../authentication/entities/response/authenticationResponse";
 import { UserInformation } from "../../authentication/entities/userInformation";
+import { Context } from "../context/context";
 
 @Service()
 @Resolver()
@@ -21,7 +22,14 @@ export class LoginResolver {
 
     @Mutation(returns => AuthenticationResponse, { nullable: true })
     async login(
-        @Arg("user") logInInputUser: RegularLoginInputUser): Promise<AuthenticationResponse | undefined> {
-        return await this.loginService.login(logInInputUser);
+        @Arg("user") logInInputUser: RegularLoginInputUser,
+        @Ctx() context: Context): Promise<AuthenticationResponse | undefined> {
+        try {
+            return await this.loginService.login(logInInputUser);
+        }
+        catch (error) {
+            context.res.status(401);
+            throw (error);
+        }
     }
 }
