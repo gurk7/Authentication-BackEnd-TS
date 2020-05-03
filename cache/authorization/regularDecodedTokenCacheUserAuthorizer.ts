@@ -8,9 +8,9 @@ export class RegularDecodedTokenCacheUserAuthorizer implements IUserAuthorizer<R
         this.allowedUsers = allowedUsers;
     }
 
-    async authorize(decodedToken: RegularDecodedToken): Promise<boolean> {
+    async authorize(currentUser: RegularDecodedToken): Promise<boolean> {
         for (let allowedUser of this.allowedUsers) {
-            if (allowedUser == decodedToken.username) {
+            if (allowedUser == currentUser.username) {
                 return true;
             }
         }

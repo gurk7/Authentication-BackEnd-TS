@@ -1,5 +1,5 @@
-import { IDecodedTokenParser } from '../../abstractions/tokens/IDecodedTokenParser';
-import { RegularDecodedToken } from '../../entities/regularDecodedToken';
+import { IDecodedTokenParser } from '../abstractions/IDecodedTokenParser';
+import { RegularDecodedToken } from '../entities/regularDecodedToken';
 
 export class JwtRegularDecodedTokenParser implements IDecodedTokenParser {
 

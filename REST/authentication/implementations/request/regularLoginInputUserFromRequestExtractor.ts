@@ -1,5 +1,5 @@
-import { RegularLoginInputUser } from "../entities/input/regularLoginInputUser";
-import { IInputUserFromRequestExtractor } from "../abstractions/IInputUserFromRequestExtractor";
+import { RegularLoginInputUser } from "../../../../authentication/entities/input/regularLoginInputUser";
+import { IInputUserFromRequestExtractor } from "../../abstractions/request/IInputUserFromRequestExtractor";
 import express = require('express');
 
 export class RegularLoginInputUserFromRequestExtractor implements

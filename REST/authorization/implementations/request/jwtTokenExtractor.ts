@@ -1,8 +1,8 @@
-import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
-import express = require('express');
+import { Request } from 'express';
+import { ITokenExtractor } from '../../abstractions/request/ITokenExtractor';
 
 export class JwtTokenExtractor implements ITokenExtractor {
-  ExtractToken(req: express.Request) {
+  ExtractToken(req: Request) {
     let token = req.headers["authorization"];
     if (!token) return;
 

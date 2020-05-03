@@ -1,6 +1,6 @@
 import { IUserInformationGetter } from "../abstractions/IUserInformationGetter";
 import { IUserInformationRetriever } from "../abstractions/IUserInformationRetriever";
-import { IDecodedTokenRetriever } from "../../../authorization/abstractions/tokens/IDecodedTokenRetriever";
+import { IDecodedTokenRetriever } from "../../../REST/authorization/abstractions/request/IDecodedTokenRetriever";
 
 export class UserInformationGetter<T> implements IUserInformationGetter<T>{
     private decodedTokenRetriever: IDecodedTokenRetriever<T>;

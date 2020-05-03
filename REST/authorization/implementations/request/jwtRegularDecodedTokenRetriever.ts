@@ -1,22 +1,22 @@
-import jwt = require("jsonwebtoken");
-import { IDecodedTokenRetriever } from "../../abstractions/tokens/IDecodedTokenRetriever";
-import { ITokenExtractor } from "../../abstractions/tokens/ITokenExtractor";
-import { IDecodedTokenParser } from "../../abstractions/tokens/IDecodedTokenParser";
-import express = require('express');
-import { RegularDecodedToken } from "../../entities/regularDecodedToken";
+import jwt from 'jsonwebtoken';
+import { ITokenExtractor } from "../../abstractions/request/ITokenExtractor";
+import { IDecodedTokenParser } from "../../../../authorization/abstractions/IDecodedTokenParser";
+import { Request } from 'express'
+import { RegularDecodedToken } from "../../../../authorization/entities/regularDecodedToken";
+import { IDecodedTokenRetriever } from '../../abstractions/request/IDecodedTokenRetriever';
 
 export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<RegularDecodedToken> {
   private secretOrPublicKey: string;
   private tokenExtractor: ITokenExtractor;
-  private converter: IDecodedTokenParser;
+  private parser: IDecodedTokenParser;
 
-  constructor(secretOrPublicKey: string, tokenExtractor: ITokenExtractor, converter: IDecodedTokenParser) {
+  constructor(secretOrPublicKey: string, tokenExtractor: ITokenExtractor, parser: IDecodedTokenParser) {
     this.secretOrPublicKey = secretOrPublicKey;
     this.tokenExtractor = tokenExtractor;
-    this.converter = converter;
+    this.parser = parser;
   }
 
-  retrieveDecodedToken(req: express.Request) {
+  retrieveDecodedToken(req: Request) {
     let token = this.tokenExtractor.ExtractToken(req);
     if (!token) {
       console.log("Can't extract token from request");
@@ -28,7 +28,7 @@ export class JwtRegularDecodedTokenRetriever implements IDecodedTokenRetriever<R
     try {
       let decoded = jwt.verify(token, this.secretOrPublicKey);
       try {
-        return this.converter.parse(decoded);
+        return this.parser.parse(decoded);
       }
       catch (e) {
         console.log("can't convert decoded token to RegularDecodedToken");

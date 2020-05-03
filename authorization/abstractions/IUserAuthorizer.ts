@@ -1,4 +1,4 @@
 
-export interface IUserAuthorizer<TDecodedToken> {
-    authorize(decodedToken: TDecodedToken): Promise<boolean>;
+export interface IUserAuthorizer<TCurrentUser> {
+    authorize(currentUser: TCurrentUser): Promise<boolean>;
 }

@@ -1,4 +1,4 @@
-import { IDecodedTokenParser } from "../../authorization/abstractions/tokens/IDecodedTokenParser";
+import { IDecodedTokenParser } from "../../authorization/abstractions/IDecodedTokenParser";
 import { RegularDecodedToken } from "../../authorization/entities/regularDecodedToken";
 import { ConigurationConsts } from "../../consts/configurationConsts";
 import { IUserFinder } from "../../common/abstractions/IUserFinder";
@@ -10,7 +10,7 @@ import { RegularDecodedTokenActiveDirectoryUserAuthorizer } from "../../activeDi
 import { RegularDecodedTokenCacheUserAuthorizer } from "../../cache/authorization/regularDecodedTokenCacheUserAuthorizer";
 import { RegularDecodedTokenGraphqlAuthorizationHandler } from "../authorization/regularDecodedTokenGraphqlAuthorizationHandler";
 import { GraphqlAuthorizationChecker } from "../authorization/authorizationChecker";
-import { JwtRegularDecodedTokenParser } from "../../authorization/implementations/tokens/jwtRegularDecodedTokenParser";
+import { JwtRegularDecodedTokenParser } from "../../authorization/implementations/jwtRegularDecodedTokenParser";
 const AD = require("ad");
 
 export class GraphqlAuthorizationBootstrapper {

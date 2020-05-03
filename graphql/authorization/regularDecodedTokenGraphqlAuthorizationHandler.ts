@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import { Context } from '../context/context';
 import { IUserAuthorizer } from '../../authorization/abstractions/IUserAuthorizer';
 import { RegularDecodedToken } from '../../authorization/entities/regularDecodedToken';
-import { IDecodedTokenParser } from '../../authorization/abstractions/tokens/IDecodedTokenParser';
+import { IDecodedTokenParser } from '../../authorization/abstractions/IDecodedTokenParser';
 import { IGraphQLAuthorizationHandler } from './IGraphqlAuthorizationHandler';
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express';
 import { HttpResponseStatusProvider } from '../../common/implementations/httpResponseStatusProvider';

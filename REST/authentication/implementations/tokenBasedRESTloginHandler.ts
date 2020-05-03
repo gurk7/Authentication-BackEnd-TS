@@ -1,15 +1,15 @@
-import { ILoginHandler } from "../abstractions/ILoginHandler";
-import { IInputUserFromRequestExtractor } from "../abstractions/IInputUserFromRequestExtractor";
-import { IInputUserAuthenticator } from "../abstractions/IInputUserAuthenticator";
-import { ITokenCreator } from "../abstractions/ITokenCreator";
-import { IAuthenticationResponseCreator } from "../abstractions/IAuthenticationResponseCreator";
-import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
+import { IRESTLoginHandler } from "../abstractions/IRESTLoginHandler";
+import { IInputUserFromRequestExtractor } from "../abstractions/request/IInputUserFromRequestExtractor";
+import { IInputUserAuthenticator } from "../../../authentication/abstractions/IInputUserAuthenticator";
+import { ITokenCreator } from "../../../authentication/abstractions/ITokenCreator";
+import { IAuthenticationResponseCreator } from "../abstractions/response/IAuthenticationResponseCreator";
+import { IHttpResponseSender } from "../../../common/abstractions/IHttpResponseSender";
 import { SuccessAuthenticationResponse } from "../entities/response/successAuthenticationResponse";
 import { FailedAuthenticationResponse } from "../entities/response/failedAuthenticationResponse";
 import express = require('express');
-import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesConsts";
+import { HttpResponseStatusesConsts } from "../../../consts/httpResponseStatusesConsts";
 
-export class TokenBasedLoginHandler<TInputUser> implements ILoginHandler {
+export class TokenBasedRESTLoginHandler<TInputUser> implements IRESTLoginHandler {
 
   private inputUserFromRequestExtractor: IInputUserFromRequestExtractor<TInputUser>;
   private inputUserAuthenticator: IInputUserAuthenticator<TInputUser>;

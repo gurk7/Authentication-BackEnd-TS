@@ -1,13 +1,13 @@
-import { IAuthorizationHandler } from "../abstractions/IAuthorizationHandler";
-import { IDecodedTokenRetriever } from '../abstractions/tokens/IDecodedTokenRetriever';
-import { IUserAuthorizer } from "../abstractions/IUserAuthorizer";
-import { IAuthorizationFailureResponseCreator } from '../abstractions/IAuthorizationFailureResponseCreator'
-import { IHttpResponseSender } from "../../common/abstractions/IHttpResponseSender";
-import { FailedAuthorizationResponse } from "../entities/response/failedAuthorizationResponse";
-import { HttpResponseStatusesConsts } from "../../consts/httpResponseStatusesConsts";
-import express = require('express');
+import { IUserAuthorizer } from "../../../authorization/abstractions/IUserAuthorizer";
+import { IHttpResponseSender } from "../../../common/abstractions/IHttpResponseSender";
+import { HttpResponseStatusesConsts } from "../../../consts/httpResponseStatusesConsts";
+import { Request, Response } from 'express';
+import { IRESTAuthorizationHandler } from "../abstractions/IRESTAuthorizationHandler";
+import { IDecodedTokenRetriever } from "../abstractions/request/IDecodedTokenRetriever";
+import { IAuthorizationFailureResponseCreator } from "../abstractions/response/IAuthorizationFailureResponseCreator";
+import { FailedAuthenticationResponse } from "../../authentication/entities/response/failedAuthenticationResponse";
 
-export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthorizationHandler {
+export class TokenBasedAuthorizationHandler<TDecodedToken> implements IRESTAuthorizationHandler {
     private decodedTokenRetriever: IDecodedTokenRetriever<TDecodedToken>;
     private userAuthorizer: IUserAuthorizer<TDecodedToken>;
     private authorizationFailureHttpResponseCreator: IAuthorizationFailureResponseCreator<TDecodedToken>;
@@ -25,7 +25,7 @@ export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthoriza
         this.httpResponseSender = httpResponseSender;
     }
 
-    async handleAuthorization(req: express.Request, res: express.Response): Promise<boolean> {
+    async handleAuthorization(req: Request, res: Response): Promise<boolean> {
         let decodedToken = this.decodedTokenRetriever.retrieveDecodedToken(req);
 
         if (decodedToken) {
@@ -39,7 +39,7 @@ export class TokenBasedAuthorizationHandler<TDecodedToken> implements IAuthoriza
                 //User is not authorized and flow can not be continued.
                 let failedAuthorizationResponse = this.authorizationFailureHttpResponseCreator
                     .createResponseForAuthenticatedUser(decodedToken);
-                this.httpResponseSender.SendResponse<FailedAuthorizationResponse>(res,
+                this.httpResponseSender.SendResponse<FailedAuthenticationResponse>(res,
                     failedAuthorizationResponse, HttpResponseStatusesConsts.forbidden);
             }
         }
